@@ -1,5 +1,6 @@
 import {ArrowRight} from 'lucide-react';
 import Link from 'next/link';
+import {SocialNetworks} from './components/SocialNertworks';
 
 export default function Home() {
   return (
@@ -35,6 +36,10 @@ export default function Home() {
               >
                 Contact me
               </Link>
+            </div>
+
+            <div className="pt-4">
+              <SocialNetworks />
             </div>
           </div>
           <nav className="hidden md:flex flex-col gap-4">

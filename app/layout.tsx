@@ -3,6 +3,7 @@ import type {Metadata} from 'next';
 import {Inter, Geist_Mono} from 'next/font/google';
 import './globals.css';
 import Header from './components/Header';
+import {Analytics} from '@vercel/analytics/next';
 
 const _inter = Inter({subsets: ['latin']});
 const _geistMono = Geist_Mono({subsets: ['latin']});
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={`font-sans antialiased`}>
         <Header />
         <main className="min-h-screen">{children}</main>
+        <Analytics />
       </body>
     </html>
   );
