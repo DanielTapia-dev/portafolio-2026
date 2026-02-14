@@ -105,7 +105,7 @@ const experience = [
   {
     period: 'Mar 2023 — Mar 2025',
     title: 'Senior Full Stack Developer (Angular)',
-    company: 'MushroomSoft · Axle Informatics (USA)',
+    company: 'MushroomSoft · Axle Informatics 🇺🇸',
     description:
       'I worked on high-impact systems used in U.S. scientific and academic environments: optimizing NIH’s HITS platform and contributing to Smart-IRB (used by top-tier universities). I built Angular-based microfrontend UI and NestJS services with PostgreSQL/MongoDB, and contributed to WordPress modernization with reusable Gutenberg blocks and SEO improvements.',
     techs: [
