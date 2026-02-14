@@ -1,12 +1,20 @@
-import type React from 'react';
 import type {Metadata} from 'next';
 import {Inter, Geist_Mono} from 'next/font/google';
+import {Analytics} from '@vercel/analytics/next';
 import './globals.css';
 import Header from './components/Header';
-import {Analytics} from '@vercel/analytics/next';
 
-const _inter = Inter({subsets: ['latin']});
-const _geistMono = Geist_Mono({subsets: ['latin']});
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap'
+});
+
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap'
+});
 
 export const metadata: Metadata = {
   title: 'Daniel Tapia | Full Stack Developer',
@@ -21,7 +29,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`font-sans antialiased`}>
+      <body
+        className={`${inter.variable} ${geistMono.variable} font-sans antialiased`}
+      >
         <Header />
         <main className="min-h-screen">{children}</main>
         <Analytics />
