@@ -1,3 +1,4 @@
+import ProfileAvatar from '@/app/components/ProfileAvatar';
 import {SocialNetworks} from '@/app/components/SocialNertworks';
 
 const skills = [
@@ -79,14 +80,14 @@ const experience = [
   {
     period: 'Oct 2025 — Jan 2026',
     title: 'Semi Senior Full Stack Developer',
-    company: 'SmartJob · Falabella',
+    company: 'Stafi 🇺🇸',
     description:
       'Contributed to the design and implementation of scalable backend services using NestJS and PostgreSQL for a production-grade platform. Delivered core backend modules such as Escalations and Meetings, ensuring data integrity, performance, and reliability. Built and maintained database models, migrations, and optimized queries with TypeORM, while collaborating closely with cross-functional teams to translate business requirements into robust, maintainable technical solutions aligned with engineering best practices.',
     techs: ['Next.js', 'Nest.js', 'Microservices', 'Vercel', 'Postgres']
   },
   {
-    period: 'Mar 2025 — Nov 2025',
-    title: 'Freelance Full Stack Developer',
+    period: 'Mar 2025 — Oct 2025',
+    title: 'Software Architect',
     company: 'Freelance',
     description:
       'I delivered automation and high-traffic web solutions end-to-end: n8n workflows integrating CRMs, WhatsApp API, Google Sheets, and WordPress; AWS S3 + CloudFront setups; CI/CD with GitHub Actions and WP-CLI; and performance/security improvements (indexing, caching, SSL/WAF/access control).',
@@ -141,7 +142,7 @@ const experience = [
     techs: ['Angular', 'Node.js', 'React', 'Spring Boot', 'WordPress', 'SQL']
   },
   {
-    period: 'Jan 2020 — Present',
+    period: 'Jan 2020 — Aug 2021',
     title: 'Freelance Web Developer',
     company: 'Freelance',
     description:
@@ -176,6 +177,11 @@ export default function AboutPage() {
                 A quick snapshot of my background
               </p>
             </div>
+
+            <ProfileAvatar
+              src="/Profile.jpg"
+              alt="Daniel Tapia - Senior Full Stack Developer"
+            />
 
             <nav className="flex flex-row lg:flex-col gap-4">
               {sections.map((item) => (
