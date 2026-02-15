@@ -6,7 +6,7 @@ const projects = [
     title: 'Falabella Seller Center — Promotions (Enterprise)',
     description:
       'Enterprise-scale promotions experiences for Falabella Seller Center across Chile, Colombia, and Peru. Built reusable React + TypeScript components for configuration-driven promotional flows and high-traffic seller dashboards, collaborating closely with product, design, and backend teams in an Agile environment.',
-    image: '/falabella_1.png',
+    image: '/Falabella.png',
     techs: ['React', 'TypeScript', 'Microfrontends', 'i18n', 'Design Systems'],
     featured: true
   },
