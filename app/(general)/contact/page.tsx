@@ -73,12 +73,12 @@ export default function Contact() {
                   <Mail className="text-primary" size={20} />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Email</p>
                   <a
-                    href="d.tapialopez1@gmail.com"
-                    className="text-foreground hover:text-primary transition-colors"
+                    href="mailto:d.tapialopez1@gmail.com"
+                    className="inline-flex w-40 items-center justify-center rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:border-primary/60 hover:text-primary transition-colors"
+                    aria-label="Send me an email"
                   >
-                    d.tapialopez1@gmail.com
+                    Email
                   </a>
                 </div>
               </div>

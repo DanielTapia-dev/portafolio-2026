@@ -1,20 +1,44 @@
-import Link from 'next/link';
-import {ExternalLink, Github} from 'lucide-react';
+'use client';
 
-const projects = [
+import {useMemo, useState} from 'react';
+import Link from 'next/link';
+import {ExternalLink, Folder, Github} from 'lucide-react';
+import ImageGalleryModal from '../../components/ImageGalleryModal';
+
+type Project = {
+  title: string;
+  description: string;
+  images?: string[];
+  techs: string[];
+  liveUrl?: string;
+  githubUrl?: string;
+  featured: boolean;
+};
+
+const projects: Project[] = [
   {
-    title: 'Falabella Seller Center — Promotions (Enterprise)',
+    title: 'Falabella Seller Center - Promotions (Enterprise)',
     description:
       'Enterprise-scale promotions experiences for Falabella Seller Center across Chile, Colombia, and Peru. Built reusable React + TypeScript components for configuration-driven promotional flows and high-traffic seller dashboards, collaborating closely with product, design, and backend teams in an Agile environment.',
-    image: '/Falabella.png',
+    images: [
+      '/Falabella.png',
+      '/Falabella.png',
+      '/Falabella.png',
+      '/Falabella.png'
+    ],
     techs: ['React', 'TypeScript', 'Microfrontends', 'i18n', 'Design Systems'],
     featured: true
   },
   {
-    title: 'NIH — HITS Platform (USA)',
+    title: 'NIH - HITS Platform (USA)',
     description:
       'Developed and optimized the HITS system for the U.S. National Institutes of Health, improving efficiency and scalability for scientific research workflows.',
-    image: '/NIH_Axle.png',
+    images: [
+      '/NIH_Axle.png',
+      '/NIH_Axle.png',
+      '/NIH_Axle.png',
+      '/NIH_Axle.png'
+    ],
     techs: [
       'Angular',
       'NestJS',
@@ -25,26 +49,36 @@ const projects = [
     featured: true
   },
   {
-    title: 'Smart-IRB — New Version (Top U.S. Universities)',
+    title: 'Smart-IRB - New Version (Top U.S. Universities)',
     description:
       'Contributed to the new version of Smart-IRB, used by top-tier universities in the U.S. (including Harvard). Delivered frontend in an Angular microfrontend architecture and backend services with NestJS and SQL/NoSQL data stores.',
-    image: '/Smart_IRB.png',
+    images: [
+      '/Smart_IRB.png',
+      '/Smart_IRB.png',
+      '/Smart_IRB.png',
+      '/Smart_IRB.png'
+    ],
     techs: ['Angular', 'PrimeNG', 'NestJS', 'PostgreSQL', 'MongoDB'],
     featured: true
   },
   {
-    title: 'CERTERO — Certificate Issuance & Verification (Blockchain)',
+    title: 'CERTERO - Certificate Issuance & Verification (Blockchain)',
     description:
       'At Zeyo, I contributed to CERTERO, a blockchain-based platform focused on secure certificate issuance and verification. I worked on building and refining user-facing flows and integrations that improved transparency and trust in the certification lifecycle, collaborating with cross-functional teams to deliver maintainable, production-ready features.',
-    image: '/Certero.png',
+    images: ['/Certero.png', '/Certero.png', '/Certero.png', '/Certero.png'],
     techs: ['React', 'Node.js', 'REST APIs', 'Blockchain', 'Security'],
     featured: true
   },
   {
-    title: 'Safetrack — QR Labeling & Traceability',
+    title: 'Safetrack - QR Labeling & Traceability',
     description:
       'At Zeyo, I worked on Safetrack, a traceability solution for product labeling and authenticity verification using QR-based flows and blockchain-backed records. I delivered key modules such as purchase order management and traceability/reporting features, improving operational control and transparency across fragmented supply chains.',
-    image: '/Safetrack.png',
+    images: [
+      '/Safetrack.png',
+      '/Safetrack.png',
+      '/Safetrack.png',
+      '/Safetrack.png'
+    ],
     techs: ['React', 'Node.js', 'Python', 'AWS S3', 'QR', 'Traceability'],
     featured: true
   },
@@ -52,15 +86,19 @@ const projects = [
     title: 'Electronic Invoicing System',
     description:
       'Built an electronic invoicing platform with Node.js and Angular, improving payment integration and streamlining invoice management.',
-    image: '/FactuPro.png',
+    images: [
+      '/FactuPro.png',
+      '/FactuPro.png',
+      '/FactuPro.png',
+      '/FactuPro.png'
+    ],
     techs: ['Angular', 'Node.js', 'Payments', 'Postgres'],
     featured: true
   },
 
   // Other Projects
-
   {
-    title: 'Weather App — Real-Time Forecast',
+    title: 'Weather App - Real-Time Forecast',
     description:
       'This is a sample Angular project that demonstrates how to use the OpenWeather and VisualCrossing APIs to create an admin panel and a daily weather visualization.',
     techs: ['Angular', 'OpenWeather API', 'CSS'],
@@ -69,7 +107,7 @@ const projects = [
     featured: false
   },
   {
-    title: 'Personal Portfolio — 2026 (Version 2)',
+    title: 'Personal Portfolio - 2026 (Version 2)',
     description:
       'Second iteration of my personal portfolio, built with Next.js and modern frontend tooling. Focused on clean UI, performance, SEO, and clear presentation of professional experience and real-world projects.',
     techs: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Vercel'],
@@ -78,7 +116,7 @@ const projects = [
     featured: false
   },
   {
-    title: 'Personal Portfolio — 2020 (Version 1)',
+    title: 'Personal Portfolio - 2020 (Version 1)',
     description:
       'First version of my personal portfolio, developed as an early-career project. It showcases my initial work in frontend development and marks the starting point of my professional growth as a software developer.',
     techs: ['Angular', 'Tailwind CSS', 'HTML', 'SCSS'],
@@ -88,10 +126,15 @@ const projects = [
   },
   {
     title:
-      'Clinical Records Backend — Municipal Health Center (Thesis Project)',
+      'Clinical Records Backend - Municipal Health Center (Thesis Project)',
     description:
       'Backend system for managing clinical histories, developed as my university thesis for the Municipal Patronage of Latacunga. Designed to handle patient records, medical consultations, and secure data access for healthcare personnel.',
-    image: '/projects/clinical-records-backend.png',
+    images: [
+      '/projects/clinical-records-backend.png',
+      '/projects/clinical-records-backend.png',
+      '/projects/clinical-records-backend.png',
+      '/projects/clinical-records-backend.png'
+    ],
     techs: ['Angular', 'Nodejs', 'REST APIs', 'MySQL', 'Security'],
     liveUrl: '#',
     githubUrl: 'https://github.com/DanielTapia-dev/Tesis',
@@ -103,20 +146,37 @@ export default function Projects() {
   const featuredProjects = projects.filter((p) => p.featured);
   const otherProjects = projects.filter((p) => !p.featured);
 
+  const [activeProjectIndex, setActiveProjectIndex] = useState<number | null>(
+    null
+  );
+
+  const activeProject =
+    activeProjectIndex === null ? null : featuredProjects[activeProjectIndex];
+  const activeImages = useMemo(
+    () => activeProject?.images ?? [],
+    [activeProject?.images]
+  );
+
+  const openGallery = (projectIndex: number) => {
+    setActiveProjectIndex(projectIndex);
+  };
+
+  const closeGallery = () => {
+    setActiveProjectIndex(null);
+  };
+
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="max-w-6xl mx-auto px-6">
-        {/* Header */}
         <div className="mb-16 space-y-4">
           <h1 className="text-4xl font-bold text-foreground">Projects</h1>
           <p className="text-muted-foreground">
-            A curated selection of real-world projects I’ve contributed to —
+            A curated selection of real-world projects I have contributed to,
             from enterprise platforms and microfrontends to automation systems
             and end-to-end full-stack deliveries.
           </p>
         </div>
 
-        {/* Featured Projects */}
         <section className="mb-20">
           <h2 className="text-sm font-semibold text-muted-foreground tracking-wider uppercase mb-8">
             Featured Projects
@@ -128,21 +188,27 @@ export default function Projects() {
                 key={project.title}
                 className={`grid lg:grid-cols-2 gap-8 items-center ${index % 2 === 1 ? 'lg:direction-rtl' : ''}`}
               >
-                {/* Image */}
                 <div
                   className={`relative group ${index % 2 === 1 ? 'lg:order-2' : ''}`}
                 >
-                  <div className="overflow-hidden rounded-lg border border-border">
-                    <img
-                      src={project.image || '/placeholder.svg'}
-                      alt={project.title}
-                      className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
+                  <button
+                    type="button"
+                    className="w-full text-left"
+                    onClick={() => openGallery(index)}
+                    aria-label={`Open gallery for ${project.title}`}
+                    disabled={!project.images?.length}
+                  >
+                    <div className="overflow-hidden rounded-lg border border-border">
+                      <img
+                        src={project.images?.[0] || '/placeholder.svg'}
+                        alt={project.title}
+                        className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
+                  </button>
                 </div>
 
-                {/* Content */}
                 <div
                   className={`space-y-4 ${index % 2 === 1 ? 'lg:order-1 lg:text-right' : ''}`}
                 >
@@ -170,7 +236,7 @@ export default function Projects() {
                       className={`flex gap-4 pt-2 ${index % 2 === 1 ? 'lg:justify-end' : ''}`}
                     >
                       <Link
-                        href={project.githubUrl}
+                        href={project.githubUrl || '#'}
                         className={`text-muted-foreground hover:text-primary transition-colors ${
                           project.githubUrl === '#'
                             ? 'pointer-events-none opacity-40'
@@ -200,7 +266,6 @@ export default function Projects() {
           </div>
         </section>
 
-        {/* Other Projects */}
         <section>
           <h2 className="text-sm font-semibold text-muted-foreground tracking-wider uppercase mb-8">
             Other Projects
@@ -214,13 +279,13 @@ export default function Projects() {
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <span className="text-primary text-lg">📁</span>
+                    <Folder size={18} className="text-primary" />
                   </div>
 
                   {project.liveUrl && (
                     <div className="flex gap-3">
                       <Link
-                        href={project.githubUrl}
+                        href={project.githubUrl || '#'}
                         className={`text-muted-foreground hover:text-primary transition-colors ${
                           project.githubUrl === '#'
                             ? 'pointer-events-none opacity-40'
@@ -267,6 +332,13 @@ export default function Projects() {
           </div>
         </section>
       </div>
+
+      <ImageGalleryModal
+        isOpen={!!activeProject}
+        title={activeProject?.title || ''}
+        images={activeImages}
+        onClose={closeGallery}
+      />
     </div>
   );
 }
