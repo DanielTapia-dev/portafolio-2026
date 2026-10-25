@@ -83,6 +83,7 @@
 
 @theme {
   --animate-fade-up: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-down: fade-down 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-letter-in: letter-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-aurora: aurora 18s ease-in-out infinite alternate;
   --animate-caret: caret 1s step-end infinite;
@@ -91,6 +92,17 @@
     from {
       opacity: 0;
       transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes fade-down {
+    from {
+      opacity: 0;
+      transform: translateY(-100%);
     }
     to {
       opacity: 1;
