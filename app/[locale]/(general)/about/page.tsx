@@ -1,7 +1,7 @@
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import type {Locale} from 'next-intl';
 import ProfileAvatar from '@/app/components/ProfileAvatar';
-import {SocialNetworks} from '@/app/components/SocialNertworks';
+import {SocialNetworks} from '@/app/components/SocialNetworks';
 
 const skills = [
   {

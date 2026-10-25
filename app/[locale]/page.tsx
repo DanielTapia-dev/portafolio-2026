@@ -2,7 +2,7 @@ import {ArrowRight} from 'lucide-react';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import type {Locale} from 'next-intl';
 import {Link} from '@/i18n/navigation';
-import {SocialNetworks} from '../components/SocialNertworks';
+import {SocialNetworks} from '../components/SocialNetworks';
 
 const navItems = [
   {href: '/about', key: 'about'},

@@ -4,7 +4,7 @@ import type React from 'react';
 
 import {useState} from 'react';
 import {useTranslations} from 'next-intl';
-import {SocialNetworks} from '@/app/components/SocialNertworks';
+import {SocialNetworks} from '@/app/components/SocialNetworks';
 import {Mail, MapPin, Send} from 'lucide-react';
 
 export default function Contact() {
