@@ -1,10 +1,63 @@
 import Link from 'next/link';
-import {ExternalLink, Folder, Github} from 'lucide-react';
+import {ExternalLink, Folder, FolderGit2, Github} from 'lucide-react';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import type {Locale} from 'next-intl';
 import ProjectGallery from '@/app/components/ProjectGallery';
 import Reveal from '@/app/components/Reveal';
-import {projects} from '@/lib/projects';
+import {cn} from '@/lib/utils';
+import {projects, type Project} from '@/lib/projects';
+
+const linkClassName = (href?: string) =>
+  cn(
+    'text-muted-foreground transition-colors hover:text-primary',
+    (!href || href === '#') && 'pointer-events-none opacity-40'
+  );
+
+function ProjectLinks({
+  project,
+  size,
+  labels
+}: {
+  project: Project;
+  size: number;
+  labels: {code: string; live: string};
+}) {
+  if (!project.liveUrl) return null;
+
+  return (
+    <div className="flex gap-4">
+      <Link
+        href={project.githubUrl ?? '#'}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={linkClassName(project.githubUrl)}
+        aria-label={labels.code}
+      >
+        <Github size={size} />
+      </Link>
+      <Link
+        href={project.liveUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={linkClassName(project.liveUrl)}
+        aria-label={labels.live}
+      >
+        <ExternalLink size={size} />
+      </Link>
+    </div>
+  );
+}
+
+function SectionTitle({children}: {children: React.ReactNode}) {
+  return (
+    <div className="mb-12 flex items-center gap-4">
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+        {children}
+      </h2>
+      <span className="h-px flex-1 bg-border" />
+    </div>
+  );
+}
 
 export default async function Projects({
   params
@@ -17,93 +70,75 @@ export default async function Projects({
 
   const featuredProjects = projects.filter((p) => p.featured);
   const otherProjects = projects.filter((p) => !p.featured);
+  const linkLabels = {code: t('viewCode'), live: t('viewLive')};
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Header */}
-        <div className="mb-16 space-y-4 animate-fade-up">
-          <h1 className="text-4xl font-bold text-foreground">{t('title')}</h1>
-          <p className="text-muted-foreground">{t('intro')}</p>
-        </div>
+    <div className="min-h-screen pt-28 pb-20">
+      <div className="mx-auto max-w-6xl px-6">
+        <header className="mb-20 max-w-3xl space-y-5 animate-fade-up">
+          <p className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <FolderGit2 size={14} />
+            {t('eyebrow')}
+          </p>
+          <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-6xl">
+            {t('title')}
+          </h1>
+          <p className="text-lg leading-relaxed text-muted-foreground">
+            {t('intro')}
+          </p>
+        </header>
 
-        {/* Featured Projects */}
-        <section className="mb-20">
-          <h2 className="text-sm font-semibold text-muted-foreground tracking-wider uppercase mb-8">
-            {t('featured')}
-          </h2>
+        <section className="mb-28">
+          <SectionTitle>{t('featured')}</SectionTitle>
 
-          <div className="space-y-24">
+          <div className="space-y-24 lg:space-y-32">
             {featuredProjects.map((project, index) => {
               const hasImages = Boolean(project.images?.length);
-              // Alternate image/text sides only when there is an image column.
-              const isReversed = hasImages && index % 2 === 1;
+              // Alternate image and text sides on large screens.
+              const isReversed = index % 2 === 1;
               const title = t(`items.${project.slug}.title`);
 
               return (
                 <Reveal
                   key={project.slug}
-                  className={`grid gap-8 items-center ${hasImages ? 'lg:grid-cols-2' : ''}`}
+                  className={cn(
+                    'grid items-center gap-8 lg:gap-12',
+                    hasImages && 'lg:grid-cols-[1.15fr_1fr]'
+                  )}
                 >
-                  {/* Image */}
                   {hasImages && (
-                    <div className={isReversed ? 'lg:order-2' : ''}>
+                    <div className={cn(isReversed && 'lg:order-2')}>
                       <ProjectGallery images={project.images!} title={title} />
                     </div>
                   )}
 
-                  {/* Content */}
-                  <div
-                    className={`space-y-4 ${isReversed ? 'lg:order-1 lg:text-right' : ''}`}
-                  >
-                    <h3 className="text-2xl font-bold text-foreground">
+                  <div className={cn('space-y-5', isReversed && 'lg:order-1')}>
+                    <p className="font-mono text-sm text-primary">
+                      {String(index + 1).padStart(2, '0')}
+                    </p>
+                    <h3 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
                       {title}
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed text-justify">
+                    <p className="leading-relaxed text-muted-foreground">
                       {t(`items.${project.slug}.description`)}
                     </p>
 
-                    <div
-                      className={`flex flex-wrap gap-2 ${isReversed ? 'lg:justify-end' : ''}`}
-                    >
+                    <ul className="flex flex-wrap gap-2">
                       {project.techs.map((tech) => (
-                        <span
+                        <li
                           key={tech}
-                          className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary"
+                          className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
                         >
                           {tech}
-                        </span>
+                        </li>
                       ))}
-                    </div>
-                    {project.liveUrl && (
-                      <div
-                        className={`flex gap-4 pt-2 ${isReversed ? 'lg:justify-end' : ''}`}
-                      >
-                        <Link
-                          href={project.githubUrl ?? '#'}
-                          className={`text-muted-foreground hover:text-primary transition-colors ${
-                            !project.githubUrl || project.githubUrl === '#'
-                              ? 'pointer-events-none opacity-40'
-                              : ''
-                          }`}
-                          aria-label={t('viewCode')}
-                        >
-                          <Github size={20} />
-                        </Link>
+                    </ul>
 
-                        <Link
-                          href={project.liveUrl}
-                          className={`text-muted-foreground hover:text-primary transition-colors ${
-                            project.liveUrl === '#'
-                              ? 'pointer-events-none opacity-40'
-                              : ''
-                          }`}
-                          aria-label={t('viewLive')}
-                        >
-                          <ExternalLink size={20} />
-                        </Link>
-                      </div>
-                    )}
+                    <ProjectLinks
+                      project={project}
+                      size={20}
+                      labels={linkLabels}
+                    />
                   </div>
                 </Reveal>
               );
@@ -111,69 +146,36 @@ export default async function Projects({
           </div>
         </section>
 
-        {/* Other Projects */}
         <section>
-          <h2 className="text-sm font-semibold text-muted-foreground tracking-wider uppercase mb-8">
-            {t('other')}
-          </h2>
+          <SectionTitle>{t('other')}</SectionTitle>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {otherProjects.map((project, index) => (
               <Reveal key={project.slug} delay={index * 100}>
-                <div className="group h-full p-6 rounded-lg border border-border hover:border-primary/50 hover:bg-card transition-all">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Folder size={18} className="text-primary" />
+                <div className="group flex h-full flex-col rounded-xl border border-border bg-card/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_20px_50px_-25px_var(--primary)]">
+                  <div className="mb-5 flex items-start justify-between">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10">
+                      <Folder size={20} className="text-primary" />
                     </div>
-
-                    {project.liveUrl && (
-                      <div className="flex gap-3">
-                        <Link
-                          href={project.githubUrl ?? '#'}
-                          className={`text-muted-foreground hover:text-primary transition-colors ${
-                            !project.githubUrl || project.githubUrl === '#'
-                              ? 'pointer-events-none opacity-40'
-                              : ''
-                          }`}
-                          target="_blank"
-                          aria-label={t('viewCode')}
-                        >
-                          <Github size={18} />
-                        </Link>
-                        <Link
-                          href={project.liveUrl}
-                          className={`text-muted-foreground hover:text-primary transition-colors ${
-                            project.liveUrl === '#'
-                              ? 'pointer-events-none opacity-40'
-                              : ''
-                          }`}
-                          target="_blank"
-                          aria-label={t('viewLive')}
-                        >
-                          <ExternalLink size={18} />
-                        </Link>
-                      </div>
-                    )}
+                    <ProjectLinks
+                      project={project}
+                      size={18}
+                      labels={linkLabels}
+                    />
                   </div>
 
-                  <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors mb-2">
+                  <h3 className="mb-2 font-semibold text-foreground transition-colors group-hover:text-primary">
                     {t(`items.${project.slug}.title`)}
                   </h3>
-
-                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                  <p className="mb-5 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
                     {t(`items.${project.slug}.description`)}
                   </p>
 
-                  <div className="flex flex-wrap gap-2">
-                    {project.techs.slice(0, 3).map((tech) => (
-                      <span
-                        key={tech}
-                        className="text-xs text-muted-foreground"
-                      >
-                        {tech}
-                      </span>
+                  <ul className="mt-auto flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-muted-foreground">
+                    {project.techs.map((tech) => (
+                      <li key={tech}>{tech}</li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               </Reveal>
             ))}
