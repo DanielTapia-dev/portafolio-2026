@@ -1,33 +1,47 @@
 'use client';
 
-import Link from 'next/link';
 import {cn} from '@/lib/utils';
-import {usePathname} from 'next/navigation';
-import {useState} from 'react';
-import {Menu, X} from 'lucide-react';
+import {useState, useTransition} from 'react';
+import {Languages, Menu, X} from 'lucide-react';
+import {useLocale, useTranslations} from 'next-intl';
+import {Link, usePathname, useRouter} from '@/i18n/navigation';
+
+const routes = [
+  {href: '/', key: 'home'},
+  {href: '/about', key: 'about'},
+  {href: '/projects', key: 'projects'},
+  {href: '/contact', key: 'contact'}
+] as const;
 
 export default function Header() {
+  const t = useTranslations('Header');
+  const locale = useLocale();
+  const router = useRouter();
+  // Pathname without the locale prefix, e.g. "/projects" for "/es/projects".
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSwitching, startTransition] = useTransition();
 
-  const routes = [
-    {
-      href: '/',
-      label: 'Home'
-    },
-    {
-      href: '/about',
-      label: 'About'
-    },
-    {
-      href: '/projects',
-      label: 'Projects'
-    },
-    {
-      href: '/contact',
-      label: 'Contact'
-    }
-  ];
+  const switchLanguage = () => {
+    const nextLocale = locale === 'en' ? 'es' : 'en';
+    startTransition(() => {
+      router.replace(pathname, {locale: nextLocale});
+    });
+  };
+
+  const languageButton = (
+    <button
+      type="button"
+      onClick={switchLanguage}
+      disabled={isSwitching}
+      aria-label={t('switchLanguage')}
+      title={t('switchLanguage')}
+      className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-primary transition-colors disabled:opacity-50"
+    >
+      <Languages size={16} />
+      {t('otherLanguage')}
+    </button>
+  );
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -51,22 +65,26 @@ export default function Header() {
                       : 'text-muted-foreground'
                   )}
                 >
-                  {item.label}
+                  {t(item.key)}
                   {pathname === item.href && (
                     <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
                   )}
                 </Link>
               </li>
             ))}
+            <li>{languageButton}</li>
           </ul>
 
-          <button
-            className="md:hidden text-foreground"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="md:hidden flex items-center gap-4">
+            {languageButton}
+            <button
+              className="text-foreground"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={t('toggleMenu')}
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {isMenuOpen && (
@@ -83,7 +101,7 @@ export default function Header() {
                       : 'text-muted-foreground'
                   )}
                 >
-                  {item.label}
+                  {t(item.key)}
                 </Link>
               </li>
             ))}

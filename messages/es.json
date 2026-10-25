@@ -1,0 +1,196 @@
+{
+  "Metadata": {
+    "title": "Daniel Tapia | Desarrollador Full Stack",
+    "description": "Portafolio y CV de Daniel Tapia, desarrollador Full Stack especializado en crear experiencias digitales excepcionales."
+  },
+  "Header": {
+    "home": "Inicio",
+    "about": "Sobre mí",
+    "projects": "Proyectos",
+    "contact": "Contacto",
+    "toggleMenu": "Abrir o cerrar el menú",
+    "switchLanguage": "View in English",
+    "otherLanguage": "EN"
+  },
+  "Home": {
+    "greeting": "Hola, soy",
+    "role": "Desarrollador Full Stack",
+    "intro": "Construyo soluciones digitales que combinan un diseño elegante con sólidas habilidades de ingeniería para crear proyectos robustos y productos escalables.",
+    "viewProjects": "Ver proyectos",
+    "contactMe": "Contáctame",
+    "nav": {
+      "about": {
+        "label": "SOBRE MÍ",
+        "description": "Conoce más sobre mí"
+      },
+      "projects": {
+        "label": "PROYECTOS",
+        "description": "Mi trabajo destacado"
+      },
+      "contact": {
+        "label": "CONTACTO",
+        "description": "Hablemos"
+      }
+    }
+  },
+  "About": {
+    "title": "Sobre mí",
+    "subtitle": "Un resumen rápido de mi trayectoria",
+    "avatarAlt": "Daniel Tapia - Desarrollador Full Stack Senior",
+    "sections": {
+      "bio": "Biografía",
+      "experience": "Experiencia",
+      "skills": "Habilidades",
+      "certifications": "Certificaciones"
+    },
+    "bio": {
+      "intro": "Soy desarrollador full stack senior con un fuerte enfoque en frontend. Construyo aplicaciones web escalables y de alto rendimiento con React/Next.js y Angular, y me importan mucho la arquitectura limpia, el código mantenible y entregar interfaces fieles al diseño que funcionen de forma confiable en producción.",
+      "current": "Actualmente trabajo en <highlight>Falabella</highlight> (Seller Center · Promociones), construyendo experiencias promocionales basadas en configuración y dashboards de alto tráfico en varios países. Colaboro de cerca con los equipos de producto, diseño y backend para entregar soluciones alineadas con los requisitos de cada región, equilibrando velocidad, calidad y mantenibilidad a largo plazo.",
+      "cloud": "Tengo una orientación cloud y disfruto llevar buenas prácticas de ingeniería al trabajo diario: CI/CD pragmático, optimización de rendimiento, revisiones de código rigurosas y mejora continua de la experiencia de desarrollo."
+    },
+    "experience": {
+      "falabella": {
+        "period": "Ene 2026 — Actualidad",
+        "title": "Desarrollador Full Stack Senior",
+        "description": "Construyo y mantengo aplicaciones a escala empresarial para Falabella Seller Center (equipo de Promociones), dando soporte a una plataforma de retail multinacional en Chile, Colombia y México. Me enfoco en arquitectura de UI escalable, componentes reutilizables y dashboards de alto tráfico para vendedores, trabajando de cerca con los equipos de producto, diseño y backend en un entorno ágil."
+      },
+      "stafi": {
+        "period": "Oct 2025 — Ene 2026",
+        "title": "Desarrollador Full Stack Semi Senior",
+        "description": "Contribuí al diseño e implementación de servicios backend escalables con NestJS y PostgreSQL para una plataforma en producción. Entregué módulos principales como Escalamientos y Reuniones, asegurando integridad de datos, rendimiento y confiabilidad. Construí y mantuve modelos de base de datos, migraciones y consultas optimizadas con TypeORM, colaborando con equipos multidisciplinarios para convertir requisitos de negocio en soluciones técnicas robustas y mantenibles, alineadas con buenas prácticas de ingeniería."
+      },
+      "software-architect": {
+        "period": "Mar 2025 — Oct 2025",
+        "title": "Arquitecto de Software",
+        "description": "Entregué de punta a punta soluciones de automatización y sitios web de alto tráfico: flujos en n8n que integran CRMs, la API de WhatsApp, Google Sheets y WordPress; configuraciones de AWS S3 + CloudFront; CI/CD con GitHub Actions y WP-CLI; y mejoras de rendimiento y seguridad (índices, caché, SSL/WAF/control de acceso)."
+      },
+      "axle": {
+        "period": "Mar 2023 — Mar 2025",
+        "title": "Desarrollador Full Stack Senior (Angular)",
+        "description": "Trabajé en sistemas de alto impacto usados en entornos científicos y académicos de EE. UU.: optimicé la plataforma HITS de los NIH y contribuí a Smart-IRB (usada por universidades de primer nivel). Construí interfaces con microfrontends en Angular y servicios en NestJS con PostgreSQL/MongoDB, y participé en la modernización de WordPress con bloques reutilizables de Gutenberg y mejoras de SEO."
+      },
+      "zeyo": {
+        "period": "Jul 2022 — Mar 2023",
+        "title": "Desarrollador Full Stack Semi Senior",
+        "description": "Entregué funcionalidades para plataformas gubernamentales e industriales: CERTERO (trazabilidad de votos con el Consejo Nacional Electoral de Ecuador) y Safetrack (etiquetado y trazabilidad con códigos QR). También optimicé pipelines de ingesta para procesar más de 800 mil registros en menos de 6 horas con Python y JavaScript."
+      },
+      "kengisoft": {
+        "period": "Ago 2021 — Jun 2022",
+        "title": "Desarrollador Junior",
+        "description": "Contribuí a una plataforma educativa y construí un sistema de facturación electrónica con Node.js y Angular, mejorando la integración de pagos. También entregué un sistema de packing list (React + Spring Boot) y un sitio de marketing en WordPress con plugins a medida y dashboards de analítica."
+      },
+      "freelance-web": {
+        "period": "Ene 2020 — Ago 2021",
+        "title": "Desarrollador Web Freelance",
+        "description": "Construí y desplegué varias soluciones web para instituciones y empresas ecuatorianas, entre ellas una plataforma de gestión de pagos que ayudó a recuperar más de USD 500 mil en cuentas vencidas, y sistemas de trazabilidad (Spring Boot + Angular + Oracle) que mejoraron la visibilidad de incidentes y la respuesta operativa."
+      }
+    },
+    "skillsTitle": "Habilidades y herramientas",
+    "skillCategories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "databases": "Bases de datos",
+      "cloud": "Cloud y DevOps",
+      "tools": "Herramientas y producto"
+    },
+    "inProgress": "En curso"
+  },
+  "Projects": {
+    "title": "Proyectos",
+    "intro": "Una selección de proyectos reales en los que he participado, desde plataformas empresariales y microfrontends hasta sistemas de automatización y desarrollos full stack de punta a punta.",
+    "featured": "Proyectos destacados",
+    "other": "Otros proyectos",
+    "viewCode": "Ver el código en GitHub",
+    "viewLive": "Ver el proyecto en vivo",
+    "items": {
+      "armada-reserve": {
+        "title": "Armada Reserve - Mesa de operaciones de reportos (FinTech)",
+        "description": "Trabajo full stack en Armada Reserve, una plataforma para mesas de operaciones de reportos (repo) que gestiona el ciclo completo de cada operación, desde el registro y el control de cumplimiento previo hasta la liquidación. Entrego funcionalidades en la mesa y el portal de clientes en Next.js y en la API en NestJS, entre ellas autenticación MFA y step-up con Auth0, flujos de liquidación y wallets con custodia de activos digitales según cada proveedor, y registros contables. También refuerzo la infraestructura en Kubernetes bajo controles SOC 2."
+      },
+      "falabella-seller-center": {
+        "title": "Falabella Seller Center - Promociones (Empresarial)",
+        "description": "Experiencias de promociones a escala empresarial para Falabella Seller Center en Chile, Colombia y Perú. Construí componentes reutilizables en React + TypeScript para flujos promocionales basados en configuración y dashboards de alto tráfico para vendedores, colaborando de cerca con los equipos de producto, diseño y backend en un entorno ágil."
+      },
+      "eeasa-operations-logbook": {
+        "title": "EEASA - Bitácora de operaciones de la empresa eléctrica",
+        "description": "Bitácora de operaciones de la Empresa Eléctrica Ambato (EEASA), distribuidora eléctrica del centro del Ecuador. El personal del centro de control y del call center registra fallas, incidentes y novedades operativas, gestiona órdenes de trabajo y documenta con fotos el trabajo de las cuadrillas. Trabajé en el frontend en Angular y en la API en Spring Boot, con control de acceso por roles, dashboards operativos y reportes en Excel/PDF, incluidos los informes para el operador nacional de electricidad (CENACE)."
+      },
+      "nih-hits": {
+        "title": "NIH - Plataforma HITS (EE. UU.)",
+        "description": "Desarrollé y optimicé el sistema HITS para los Institutos Nacionales de Salud de EE. UU. (NIH), mejorando la eficiencia y la escalabilidad de los flujos de investigación científica."
+      },
+      "smart-irb": {
+        "title": "Smart-IRB - Nueva versión (universidades líderes de EE. UU.)",
+        "description": "Contribuí a la nueva versión de Smart-IRB, usada por universidades de primer nivel en EE. UU. (entre ellas Harvard). Desarrollé el frontend en una arquitectura de microfrontends con Angular y servicios backend con NestJS y bases de datos SQL y NoSQL."
+      },
+      "certero": {
+        "title": "CERTERO - Emisión y verificación de certificados (Blockchain)",
+        "description": "En Zeyo contribuí a CERTERO, una plataforma basada en blockchain para emitir y verificar certificados de forma segura. Construí y mejoré flujos de usuario e integraciones que aumentaron la transparencia y la confianza en todo el ciclo de certificación, colaborando con equipos multidisciplinarios para entregar funcionalidades mantenibles y listas para producción."
+      },
+      "safetrack": {
+        "title": "Safetrack - Etiquetado QR y trazabilidad",
+        "description": "En Zeyo trabajé en Safetrack, una solución de trazabilidad para el etiquetado de productos y la verificación de autenticidad mediante flujos con códigos QR y registros respaldados en blockchain. Entregué módulos clave como la gestión de órdenes de compra y las funciones de trazabilidad y reportes, mejorando el control operativo y la transparencia en cadenas de suministro fragmentadas."
+      },
+      "factupro-v2": {
+        "title": "FactuPro v2 - Plataforma de facturación en la nube (Web, móvil y AWS)",
+        "description": "Segunda generación de FactuPro, una plataforma de facturación electrónica para empresas en Ecuador que desarrollo y opero de punta a punta. Un nuevo cliente web en Next.js y una app móvil en React Native (Expo) comparten la API en Express y suman módulos como la gestión de mesas y pedidos de restaurante. También migré la plataforma de Heroku a AWS con Terraform: contenedores Docker en una instancia EC2 ARM64, migraciones de base de datos en cada despliegue, pipelines con GitHub OIDC y certificados de firma guardados cifrados con una clave en AWS SSM."
+      },
+      "factupro-v1": {
+        "title": "FactuPro v1 - Sistema de facturación electrónica (SRI Ecuador)",
+        "description": "Primera versión de FactuPro, en producción desde 2020 para varias empresas. Un frontend en Angular y una API en Node.js/Express generan las facturas electrónicas, las firman con XAdES-BES y las envían al SRI, y luego generan el PDF de la factura y lo envían por correo al cliente. También incluye integración de pagos, reportes de ventas y exportaciones a Excel/PDF."
+      },
+      "weather-app": {
+        "title": "Weather App - Pronóstico del clima en tiempo real",
+        "description": "Proyecto de ejemplo en Angular que muestra cómo usar las APIs de OpenWeather y VisualCrossing para crear un panel de administración y una visualización diaria del clima."
+      },
+      "portfolio-v2": {
+        "title": "Portafolio personal - 2026 (Versión 2)",
+        "description": "Segunda versión de mi portafolio personal, construida con Next.js y herramientas modernas de frontend. Enfocada en una interfaz limpia, rendimiento, SEO y una presentación clara de mi experiencia profesional y de proyectos reales."
+      },
+      "portfolio-v1": {
+        "title": "Portafolio personal - 2020 (Versión 1)",
+        "description": "Primera versión de mi portafolio personal, desarrollada al inicio de mi carrera. Muestra mis primeros trabajos en desarrollo frontend y marca el punto de partida de mi crecimiento profesional como desarrollador de software."
+      },
+      "clinical-records-backend": {
+        "title": "Backend de historias clínicas - Centro de salud municipal (Proyecto de tesis)",
+        "description": "Sistema backend para gestionar historias clínicas, desarrollado como mi tesis universitaria para el Patronato Municipal de Latacunga. Diseñado para manejar registros de pacientes, consultas médicas y acceso seguro a los datos por parte del personal de salud."
+      }
+    }
+  },
+  "Gallery": {
+    "label": "Galería del proyecto",
+    "open": "Abrir la galería de {title}",
+    "photoCount": "{count, plural, one {# foto} other {# fotos}}",
+    "dialogLabel": "Galería de {title}",
+    "close": "Cerrar galería",
+    "previous": "Imagen anterior",
+    "next": "Imagen siguiente",
+    "screenshotAlt": "{title} — captura {index} de {total}",
+    "showScreenshot": "Ver la captura {index} de {title}"
+  },
+  "Contact": {
+    "title": "Contacto",
+    "intro": "¿Quieres colaborar o conversar sobre una oportunidad laboral? Siempre estoy abierto a oportunidades relacionadas con <highlight>React/Next.js</highlight>, <highlight>Angular</highlight>, <highlight>Node.js/NestJS</highlight> y <highlight>AWS</highlight>. Si estás construyendo un producto web moderno o mejorando una plataforma empresarial, me encantaría saber en qué estás trabajando.",
+    "emailLabel": "Correo",
+    "locationLabel": "Ubicación",
+    "location": "Ecuador · Disponible para trabajo remoto",
+    "findMe": "También puedes encontrarme aquí",
+    "success": {
+      "title": "¡Mensaje enviado!",
+      "body": "Gracias por escribirme. Te responderé lo antes posible.",
+      "sendAnother": "Enviar otro mensaje"
+    },
+    "form": {
+      "name": "Nombre",
+      "namePlaceholder": "Tu nombre",
+      "email": "Correo",
+      "emailPlaceholder": "tu@correo.com",
+      "message": "Mensaje",
+      "messagePlaceholder": "¿En qué puedo ayudarte?",
+      "sending": "Enviando...",
+      "submit": "Enviar mensaje",
+      "error": "No se pudo enviar el mensaje. Inténtalo de nuevo o escríbeme directamente por correo."
+    },
+    "emailButtonLabel": "Envíame un correo"
+  }
+}

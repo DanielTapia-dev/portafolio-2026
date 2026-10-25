@@ -111,3 +111,8 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Keep the page from scrolling behind an open modal (gallery lightbox). */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
