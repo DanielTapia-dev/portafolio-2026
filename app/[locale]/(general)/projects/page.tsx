@@ -3,6 +3,7 @@ import {ExternalLink, Folder, Github} from 'lucide-react';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import type {Locale} from 'next-intl';
 import ProjectGallery from '@/app/components/ProjectGallery';
+import Reveal from '@/app/components/Reveal';
 import {projects} from '@/lib/projects';
 
 export default async function Projects({
@@ -21,7 +22,7 @@ export default async function Projects({
     <div className="min-h-screen pt-24 pb-16">
       <div className="max-w-6xl mx-auto px-6">
         {/* Header */}
-        <div className="mb-16 space-y-4">
+        <div className="mb-16 space-y-4 animate-fade-up">
           <h1 className="text-4xl font-bold text-foreground">{t('title')}</h1>
           <p className="text-muted-foreground">{t('intro')}</p>
         </div>
@@ -40,7 +41,7 @@ export default async function Projects({
               const title = t(`items.${project.slug}.title`);
 
               return (
-                <div
+                <Reveal
                   key={project.slug}
                   className={`grid gap-8 items-center ${hasImages ? 'lg:grid-cols-2' : ''}`}
                 >
@@ -104,7 +105,7 @@ export default async function Projects({
                       </div>
                     )}
                   </div>
-                </div>
+                </Reveal>
               );
             })}
           </div>
@@ -117,62 +118,64 @@ export default async function Projects({
           </h2>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {otherProjects.map((project) => (
-              <div
-                key={project.slug}
-                className="group p-6 rounded-lg border border-border hover:border-primary/50 hover:bg-card transition-all"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Folder size={18} className="text-primary" />
+            {otherProjects.map((project, index) => (
+              <Reveal key={project.slug} delay={index * 100}>
+                <div className="group h-full p-6 rounded-lg border border-border hover:border-primary/50 hover:bg-card transition-all">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Folder size={18} className="text-primary" />
+                    </div>
+
+                    {project.liveUrl && (
+                      <div className="flex gap-3">
+                        <Link
+                          href={project.githubUrl ?? '#'}
+                          className={`text-muted-foreground hover:text-primary transition-colors ${
+                            !project.githubUrl || project.githubUrl === '#'
+                              ? 'pointer-events-none opacity-40'
+                              : ''
+                          }`}
+                          target="_blank"
+                          aria-label={t('viewCode')}
+                        >
+                          <Github size={18} />
+                        </Link>
+                        <Link
+                          href={project.liveUrl}
+                          className={`text-muted-foreground hover:text-primary transition-colors ${
+                            project.liveUrl === '#'
+                              ? 'pointer-events-none opacity-40'
+                              : ''
+                          }`}
+                          target="_blank"
+                          aria-label={t('viewLive')}
+                        >
+                          <ExternalLink size={18} />
+                        </Link>
+                      </div>
+                    )}
                   </div>
 
-                  {project.liveUrl && (
-                    <div className="flex gap-3">
-                      <Link
-                        href={project.githubUrl ?? '#'}
-                        className={`text-muted-foreground hover:text-primary transition-colors ${
-                          !project.githubUrl || project.githubUrl === '#'
-                            ? 'pointer-events-none opacity-40'
-                            : ''
-                        }`}
-                        target="_blank"
-                        aria-label={t('viewCode')}
+                  <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors mb-2">
+                    {t(`items.${project.slug}.title`)}
+                  </h3>
+
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                    {t(`items.${project.slug}.description`)}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+                    {project.techs.slice(0, 3).map((tech) => (
+                      <span
+                        key={tech}
+                        className="text-xs text-muted-foreground"
                       >
-                        <Github size={18} />
-                      </Link>
-                      <Link
-                        href={project.liveUrl}
-                        className={`text-muted-foreground hover:text-primary transition-colors ${
-                          project.liveUrl === '#'
-                            ? 'pointer-events-none opacity-40'
-                            : ''
-                        }`}
-                        target="_blank"
-                        aria-label={t('viewLive')}
-                      >
-                        <ExternalLink size={18} />
-                      </Link>
-                    </div>
-                  )}
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-
-                <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors mb-2">
-                  {t(`items.${project.slug}.title`)}
-                </h3>
-
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                  {t(`items.${project.slug}.description`)}
-                </p>
-
-                <div className="flex flex-wrap gap-2">
-                  {project.techs.slice(0, 3).map((tech) => (
-                    <span key={tech} className="text-xs text-muted-foreground">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </section>

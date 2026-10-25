@@ -50,7 +50,7 @@ export default function Contact() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16">
           {/* Left Column - Info */}
-          <div className="space-y-8">
+          <div className="space-y-8 animate-fade-up">
             <div>
               <h1 className="text-4xl font-bold text-foreground mb-4">
                 {t('title')}
@@ -104,7 +104,10 @@ export default function Contact() {
           </div>
 
           {/* Right Column - Form */}
-          <div className="p-8 rounded-2xl border border-border bg-card">
+          <div
+            className="p-8 rounded-2xl border border-border bg-card animate-fade-up"
+            style={{animationDelay: '150ms'}}
+          >
             {submitted ? (
               <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">

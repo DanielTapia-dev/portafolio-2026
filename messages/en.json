@@ -13,8 +13,13 @@
     "otherLanguage": "ES"
   },
   "Home": {
+    "availability": "Open to new opportunities",
     "greeting": "Hello, I'm",
-    "role": "Full Stack Developer",
+    "roles": {
+      "fullstack": "Full Stack Developer",
+      "frontend": "Frontend Specialist · React & Angular",
+      "cloud": "AWS Certified Cloud Practitioner"
+    },
     "intro": "I build digital solutions that combine elegant design with advanced professional engineering skills to create strong projects and scalable products.",
     "viewProjects": "View projects",
     "contactMe": "Contact me",
