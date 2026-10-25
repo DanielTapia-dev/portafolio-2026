@@ -13,9 +13,21 @@ export type Project = {
   featured: boolean;
 };
 
+// Screenshots live in public/projects/<slug>/; list the cover first.
+const screenshots = (slug: ProjectSlug, files: string[]) =>
+  files.map((file) => `/projects/${slug}/${file}`);
+
 export const projects: Project[] = [
   {
     slug: 'armada-reserve',
+    images: screenshots('armada-reserve', [
+      'cover.png',
+      'trading-desk.png',
+      'command-centre.png',
+      'rfqs.png',
+      'admin-dashboard.png',
+      'mfa-settings.png'
+    ]),
     techs: [
       'Next.js',
       'NestJS',
@@ -30,24 +42,31 @@ export const projects: Project[] = [
   },
   {
     slug: 'falabella-seller-center',
-    images: ['/projects/falabella-seller-center/cover.png'],
+    images: screenshots('falabella-seller-center', ['cover.png']),
     techs: ['React', 'TypeScript', 'Microfrontends', 'i18n', 'Design Systems'],
     featured: true
   },
   {
     slug: 'eeasa-operations-logbook',
+    images: screenshots('eeasa-operations-logbook', [
+      'cover.png',
+      'incidents-inbox.png',
+      'incident-history.png',
+      'incident-detail.png',
+      'group-assignment.png'
+    ]),
     techs: ['Angular', 'Spring Boot', 'Oracle', 'PrimeNG', 'ECharts', 'JWT'],
     featured: true
   },
   {
     slug: 'nih-hits',
-    images: [
-      '/projects/nih-hits/cover.png',
-      '/projects/nih-hits/hits-explorer-filters.png',
-      '/projects/nih-hits/hits-explorer-search.png',
-      '/projects/nih-hits/filter-rule-popover.png',
-      '/projects/nih-hits/drug-synergy-matrix.png'
-    ],
+    images: screenshots('nih-hits', [
+      'cover.png',
+      'hits-explorer-filters.png',
+      'hits-explorer-search.png',
+      'filter-rule-popover.png',
+      'drug-synergy-matrix.png'
+    ]),
     techs: [
       'Angular',
       'NestJS',
@@ -59,24 +78,32 @@ export const projects: Project[] = [
   },
   {
     slug: 'smart-irb',
-    images: ['/projects/smart-irb/cover.png'],
+    images: screenshots('smart-irb', ['cover.png']),
     techs: ['Angular', 'PrimeNG', 'NestJS', 'PostgreSQL', 'MongoDB'],
     featured: true
   },
   {
     slug: 'certero',
-    images: ['/projects/certero/cover.png'],
+    images: screenshots('certero', ['cover.png']),
     techs: ['React', 'Node.js', 'REST APIs', 'Blockchain', 'Security'],
     featured: true
   },
   {
     slug: 'safetrack',
-    images: ['/projects/safetrack/cover.png'],
+    images: screenshots('safetrack', ['cover.png']),
     techs: ['React', 'Node.js', 'Python', 'AWS S3', 'QR', 'Traceability'],
     featured: true
   },
   {
     slug: 'factupro-v2',
+    images: screenshots('factupro-v2', [
+      'cover.png',
+      'home.png',
+      'new-invoice.png',
+      'restaurant-tables.png',
+      'issued-invoices.png',
+      'company-settings.png'
+    ]),
     techs: [
       'Next.js',
       'React Native',
@@ -92,7 +119,12 @@ export const projects: Project[] = [
   },
   {
     slug: 'factupro-v1',
-    images: ['/projects/factupro-v1/cover.png'],
+    images: screenshots('factupro-v1', [
+      'cover.png',
+      'monthly-dashboard.png',
+      'invoice-form.png',
+      'issued-invoices.png'
+    ]),
     techs: ['Angular', 'Node.js', 'Express', 'PostgreSQL', 'XAdES', 'Heroku'],
     featured: true
   },

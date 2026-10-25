@@ -67,8 +67,10 @@ proxy.ts               Locale detection and redirects
 
 ## Adding a project
 
-1. Put its screenshots in `public/projects/<slug>/`. The first image listed is the cover.
-2. Add an entry to `lib/projects.ts` with the slug, images, tech stack and links.
+1. Put its screenshots in `public/projects/<slug>/`, with descriptive file names.
+2. Add an entry to `lib/projects.ts` with the slug, `images: screenshots('<slug>', [...])`, tech stack and links. The first image is the cover; it fills a 2:1 frame from the top, so any shape works. Inside the gallery, every image keeps its own proportions.
 3. Add its title and description under `Projects.items.<slug>` in both `messages/en.json` and `messages/es.json`.
 
 TypeScript checks that every slug has a translation, because message keys are typed from `messages/en.json`.
+
+> This repository is public. Before committing a screenshot, blur any personal or client data: names, ID numbers, emails, phone numbers, addresses, account numbers and access keys.

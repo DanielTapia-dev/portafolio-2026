@@ -1,12 +1,26 @@
+import {
+  BadgeCheck,
+  Cloud,
+  Database,
+  LayoutTemplate,
+  MapPin,
+  Server,
+  UserRound,
+  Wrench
+} from 'lucide-react';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import type {Locale} from 'next-intl';
 import ProfileAvatar from '@/app/components/ProfileAvatar';
 import Reveal from '@/app/components/Reveal';
+import SectionNav from '@/app/components/SectionNav';
 import {SocialNetworks} from '@/app/components/SocialNetworks';
+import {projects} from '@/lib/projects';
+import {cn} from '@/lib/utils';
 
 const skills = [
   {
     category: 'frontend',
+    icon: LayoutTemplate,
     items: [
       'React',
       'Next.js',
@@ -22,6 +36,7 @@ const skills = [
   },
   {
     category: 'backend',
+    icon: Server,
     items: [
       'Node.js',
       'NestJS',
@@ -34,10 +49,12 @@ const skills = [
   },
   {
     category: 'databases',
+    icon: Database,
     items: ['PostgreSQL', 'MySQL', 'MongoDB', 'Oracle', 'SQL Server', 'Redis']
   },
   {
     category: 'cloud',
+    icon: Cloud,
     items: [
       'AWS (EC2, S3, IAM, RDS, Lambda)',
       'CloudFront',
@@ -51,6 +68,7 @@ const skills = [
   },
   {
     category: 'tools',
+    icon: Wrench,
     items: [
       'Git',
       'GitHub',
@@ -77,6 +95,7 @@ const certifications: {title: string; issuer: string; year: string | null}[] = [
 const experience = [
   {
     id: 'falabella',
+    isCurrent: true,
     company: 'SmartJob · Falabella',
     techs: ['React', 'Fastify', 'Microfrontends', 'Design Systems', 'i18n']
   },
@@ -144,6 +163,19 @@ const experience = [
 
 const sections = ['bio', 'experience', 'skills', 'certifications'] as const;
 
+const featuredCount = projects.filter((project) => project.featured).length;
+
+function SectionTitle({children}: {children: React.ReactNode}) {
+  return (
+    <div className="mb-8 flex items-center gap-4">
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+        {children}
+      </h2>
+      <span className="h-px flex-1 bg-border" />
+    </div>
+  );
+}
+
 export default async function AboutPage({
   params
 }: {
@@ -153,122 +185,174 @@ export default async function AboutPage({
   setRequestLocale(locale as Locale);
   const t = await getTranslations('About');
 
+  const stats = [
+    {value: t('stats.experience.value'), label: t('stats.experience.label')},
+    {value: String(featuredCount), label: t('stats.projects.label')},
+    {value: t('stats.certified.value'), label: t('stats.certified.label')}
+  ];
+
   return (
-    <div className="min-h-screen pt-24 pb-16 scroll-smooth">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
-          {/* Sidebar */}
-          <aside className="lg:sticky lg:top-24 lg:h-fit space-y-8 animate-fade-up">
-            <div>
-              <h1 className="text-4xl font-bold text-foreground mb-2">
-                {t('title')}
-              </h1>
-              <p className="text-muted-foreground">{t('subtitle')}</p>
+    <div className="min-h-screen pt-28 pb-20">
+      <div className="mx-auto max-w-6xl px-6">
+        <header className="mb-16 max-w-3xl space-y-5 animate-fade-up">
+          <p className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <UserRound size={14} />
+            {t('eyebrow')}
+          </p>
+          <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-6xl">
+            {t('title')}
+          </h1>
+          <p className="text-lg leading-relaxed text-muted-foreground">
+            {t('subtitle')}
+          </p>
+        </header>
+
+        <div className="grid gap-12 lg:grid-cols-[280px_1fr] lg:gap-20">
+          <aside
+            className="space-y-8 animate-fade-up lg:sticky lg:top-28 lg:h-fit"
+            style={{animationDelay: '150ms'}}
+          >
+            <div className="rounded-2xl border border-border bg-card/60 p-6 text-center">
+              <ProfileAvatar src="/Profile.jpg" alt={t('avatarAlt')} />
+              <p className="mt-5 text-xl font-bold text-foreground">
+                Daniel Tapia
+              </p>
+              <p className="mt-1 text-sm text-primary">{t('headline')}</p>
+              <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                <MapPin size={13} />
+                {t('location')}
+              </p>
+              <div className="mt-5 flex justify-center border-t border-border pt-5">
+                <SocialNetworks />
+              </div>
             </div>
 
-            <ProfileAvatar src="/Profile.jpg" alt={t('avatarAlt')} />
-
-            <nav className="flex flex-row lg:flex-col gap-4">
-              {sections.map((id) => (
-                <a
-                  key={id}
-                  href={`#${id}`}
-                  className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <span className="w-8 h-px bg-muted-foreground" />
-                  {t(`sections.${id}`)}
-                </a>
-              ))}
-            </nav>
-
-            <div className="hidden lg:block">
-              <SocialNetworks />
-            </div>
+            <SectionNav
+              label={t('navLabel')}
+              sections={sections.map((id) => ({
+                id,
+                label: t(`sections.${id}`)
+              }))}
+            />
           </aside>
 
-          {/* Main Content */}
-          <div className="space-y-16">
-            {/* Bio Section */}
-            <section id="bio" className="space-y-6 scroll-mt-28">
-              <div className="space-y-4">
-                <p className="text-lg text-foreground leading-relaxed">
+          <div className="space-y-24">
+            <section id="bio" className="scroll-mt-28">
+              <div className="space-y-5">
+                <p className="text-lg leading-relaxed text-foreground">
                   {t('bio.intro')}
                 </p>
-                <p className="text-muted-foreground leading-relaxed text-justify">
+                <p className="leading-relaxed text-muted-foreground">
                   {t.rich('bio.current', {
                     highlight: (chunks) => (
-                      <span className="text-foreground font-medium">
+                      <span className="font-medium text-foreground">
                         {chunks}
                       </span>
                     )
                   })}
                 </p>
-                <p className="text-muted-foreground leading-relaxed text-justify">
+                <p className="leading-relaxed text-muted-foreground">
                   {t('bio.leadership')}
                 </p>
-                <p className="text-muted-foreground leading-relaxed text-justify">
+                <p className="leading-relaxed text-muted-foreground">
                   {t('bio.cloud')}
                 </p>
               </div>
-            </section>
 
-            {/* Experience Section */}
-            <section id="experience" className="space-y-8 scroll-mt-28">
-              <h2 className="text-sm font-semibold text-muted-foreground tracking-wider uppercase">
-                {t('sections.experience')}
-              </h2>
-              <div className="space-y-8">
-                {experience.map((exp) => (
-                  <Reveal key={exp.id}>
-                    <div className="group grid md:grid-cols-[160px_1fr] gap-4 p-4 -mx-4 rounded-lg hover:bg-card transition-colors">
-                      <span className="text-sm text-muted-foreground">
-                        {t(`experience.${exp.id}.period`)}
-                      </span>
-                      <div className="space-y-2">
-                        <h3 className="font-medium text-foreground group-hover:text-primary transition-colors">
-                          {t(`experience.${exp.id}.title`)} ·{' '}
-                          <span className="text-primary">{exp.company}</span>
-                        </h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed text-justify">
-                          {t(`experience.${exp.id}.description`)}
-                        </p>
-                        <div className="flex flex-wrap gap-2 pt-2">
-                          {exp.techs.map((tech) => (
-                            <span
-                              key={tech}
-                              className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+              <dl className="mt-10 grid gap-4 sm:grid-cols-3">
+                {stats.map((stat, index) => (
+                  <Reveal
+                    key={stat.label}
+                    delay={index * 100}
+                    className="flex flex-col rounded-xl border border-border bg-card/60 p-5"
+                  >
+                    <dt className="text-sm text-muted-foreground">
+                      {stat.label}
+                    </dt>
+                    <dd className="order-first text-3xl font-bold tracking-tight text-primary">
+                      {stat.value}
+                    </dd>
                   </Reveal>
                 ))}
-              </div>
+              </dl>
             </section>
 
-            {/* Skills Section */}
-            <section id="skills" className="space-y-8 scroll-mt-28">
-              <h2 className="text-sm font-semibold text-muted-foreground tracking-wider uppercase">
-                {t('skillsTitle')}
-              </h2>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {skills.map((skillGroup, index) => (
+            <section id="experience" className="scroll-mt-28">
+              <SectionTitle>{t('sections.experience')}</SectionTitle>
+              <ol className="relative space-y-6 border-l border-border pl-8">
+                {experience.map((exp) => {
+                  const isCurrent = 'isCurrent' in exp && exp.isCurrent;
+
+                  return (
+                    <li key={exp.id} className="relative">
+                      <span
+                        aria-hidden
+                        className={cn(
+                          'absolute -left-[38.5px] top-6 h-3 w-3 rounded-full border-2',
+                          isCurrent
+                            ? 'border-primary bg-primary shadow-[0_0_12px_var(--primary)]'
+                            : 'border-muted-foreground bg-background'
+                        )}
+                      />
+                      <Reveal>
+                        <div className="group rounded-xl border border-transparent p-5 transition-colors hover:border-border hover:bg-card/60">
+                          <div className="flex flex-wrap items-center gap-3">
+                            <p className="font-mono text-xs text-primary">
+                              {t(`experience.${exp.id}.period`)}
+                            </p>
+                            {isCurrent && (
+                              <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+                                {t('current')}
+                              </span>
+                            )}
+                          </div>
+                          <h3 className="mt-2 font-semibold text-foreground transition-colors group-hover:text-primary">
+                            {t(`experience.${exp.id}.title`)}{' '}
+                            <span className="text-muted-foreground">
+                              · {exp.company}
+                            </span>
+                          </h3>
+                          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                            {t(`experience.${exp.id}.description`)}
+                          </p>
+                          <ul className="mt-4 flex flex-wrap gap-2">
+                            {exp.techs.map((tech) => (
+                              <li
+                                key={tech}
+                                className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
+                              >
+                                {tech}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </Reveal>
+                    </li>
+                  );
+                })}
+              </ol>
+            </section>
+
+            <section id="skills" className="scroll-mt-28">
+              <SectionTitle>{t('skillsTitle')}</SectionTitle>
+              <div className="grid gap-5 sm:grid-cols-2">
+                {skills.map(({category, icon: Icon, items}, index) => (
                   <Reveal
-                    key={skillGroup.category}
-                    delay={index * 100}
-                    className="space-y-4"
+                    key={category}
+                    delay={(index % 2) * 100}
+                    className="rounded-xl border border-border bg-card/60 p-5 transition-colors hover:border-primary/40"
                   >
-                    <h3 className="font-medium text-foreground">
-                      {t(`skillCategories.${skillGroup.category}`)}
+                    <h3 className="mb-4 flex items-center gap-3 font-semibold text-foreground">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                        <Icon size={18} className="text-primary" />
+                      </span>
+                      {t(`skillCategories.${category}`)}
                     </h3>
-                    <ul className="space-y-2">
-                      {skillGroup.items.map((skill) => (
+                    <ul className="flex flex-wrap gap-2">
+                      {items.map((skill) => (
                         <li
                           key={skill}
-                          className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                          className="rounded-md border border-border bg-background/60 px-2.5 py-1 text-xs text-muted-foreground"
                         >
                           {skill}
                         </li>
@@ -279,37 +363,34 @@ export default async function AboutPage({
               </div>
             </section>
 
-            {/* Certifications Section */}
-            <section id="certifications" className="space-y-8 scroll-mt-28">
-              <h2 className="text-sm font-semibold text-muted-foreground tracking-wider uppercase">
-                {t('sections.certifications')}
-              </h2>
-              <div className="space-y-4">
-                {certifications.map((c) => (
-                  <Reveal key={c.title}>
-                    <div className="flex items-start justify-between gap-4 p-4 -mx-4 rounded-lg hover:bg-card transition-colors">
-                      <div className="space-y-1">
-                        <h3 className="font-medium text-foreground">
-                          {c.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          {c.issuer}
-                        </p>
-                      </div>
-                      <span className="text-sm text-muted-foreground whitespace-nowrap">
-                        {c.year ?? t('inProgress')}
-                      </span>
+            <section id="certifications" className="scroll-mt-28">
+              <SectionTitle>{t('sections.certifications')}</SectionTitle>
+              <div className="grid gap-5 sm:grid-cols-2">
+                {certifications.map((c, index) => (
+                  <Reveal
+                    key={c.title}
+                    delay={index * 100}
+                    className={cn(
+                      'flex items-start gap-4 rounded-xl border border-border bg-card/60 p-5',
+                      !c.year && 'border-dashed'
+                    )}
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                      <BadgeCheck size={20} className="text-primary" />
+                    </span>
+                    <div className="space-y-1">
+                      <h3 className="font-semibold text-foreground">
+                        {c.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {c.issuer} · {c.year ?? t('inProgress')}
+                      </p>
                     </div>
                   </Reveal>
                 ))}
               </div>
             </section>
           </div>
-        </div>
-
-        {/* Mobile Social */}
-        <div className="mt-12 lg:hidden">
-          <SocialNetworks />
         </div>
       </div>
     </div>

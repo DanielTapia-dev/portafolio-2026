@@ -41,7 +41,25 @@
     }
   },
   "About": {
-    "title": "Sobre mí",
+    "eyebrow": "Sobre mí",
+    "title": "De la nube a la interfaz",
+    "headline": "Ingeniero de Software Senior · Cloud Engineer",
+    "location": "Ecuador · Disponible para trabajo remoto",
+    "navLabel": "Secciones de la página",
+    "current": "Actual",
+    "stats": {
+      "experience": {
+        "value": "6+",
+        "label": "Años construyendo software"
+      },
+      "projects": {
+        "label": "Proyectos destacados"
+      },
+      "certified": {
+        "value": "AWS",
+        "label": "Certified Cloud Practitioner"
+      }
+    },
     "subtitle": "Un resumen rápido de mi trayectoria",
     "avatarAlt": "Daniel Tapia - Ingeniero de Software Senior y Cloud Engineer",
     "sections": {
@@ -104,6 +122,7 @@
     "inProgress": "En curso"
   },
   "Projects": {
+    "eyebrow": "Portafolio",
     "title": "Proyectos",
     "intro": "Una selección de proyectos reales en los que he participado, desde plataformas empresariales y microfrontends hasta sistemas de automatización y desarrollos full stack de punta a punta.",
     "featured": "Proyectos destacados",
@@ -174,7 +193,8 @@
     "previous": "Imagen anterior",
     "next": "Imagen siguiente",
     "screenshotAlt": "{title} — captura {index} de {total}",
-    "showScreenshot": "Ver la captura {index} de {title}"
+    "showScreenshot": "Ver la captura {index} de {title}",
+    "viewGallery": "Ver galería"
   },
   "Contact": {
     "eyebrow": "Contacto",

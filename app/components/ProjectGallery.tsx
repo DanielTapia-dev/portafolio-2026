@@ -3,7 +3,7 @@
 import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
 import {useTranslations} from 'next-intl';
-import {ChevronLeft, ChevronRight, Images, X} from 'lucide-react';
+import {ChevronLeft, ChevronRight, Images, Maximize2, X} from 'lucide-react';
 
 const FADE_DURATION_MS = 180;
 
@@ -60,23 +60,37 @@ export default function ProjectGallery({images, title}: ProjectGalleryProps) {
         type="button"
         onClick={open}
         aria-label={t('open', {title})}
-        className="relative group block w-full aspect-[16/10] overflow-hidden rounded-lg border border-border bg-card cursor-zoom-in"
+        className="group block w-full cursor-zoom-in overflow-hidden rounded-xl border border-border bg-card text-left shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_30px_80px_-30px_var(--primary)]"
       >
-        {/* Contain, not cover: screenshots vary in shape and should never be cropped. */}
-        <Image
-          src={images[0]}
-          alt={altFor(0)}
-          fill
-          sizes="(min-width: 1024px) 560px, 100vw"
-          className="object-contain transition-transform duration-500 group-hover:scale-105"
-        />
-        <span className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-        {hasMany && (
-          <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/40 px-3 py-1 text-xs font-medium text-slate-100 backdrop-blur">
-            <Images size={14} />
-            {t('photoCount', {count: images.length})}
+        {/* Browser chrome: frames screenshots of any shape consistently. */}
+        <span className="flex items-center gap-1.5 border-b border-border bg-secondary/60 px-4 py-2.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
+          <span className="h-2.5 w-2.5 rounded-full bg-amber-400/70" />
+          <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/70" />
+          {hasMany && (
+            <span className="ml-auto inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Images size={13} />
+              {t('photoCount', {count: images.length})}
+            </span>
+          )}
+        </span>
+
+        {/* Cover fills the frame from the top, like a page scrolled to its start. */}
+        <span className="relative block aspect-[2/1] overflow-hidden">
+          <Image
+            src={images[0]}
+            alt={altFor(0)}
+            fill
+            sizes="(min-width: 1024px) 560px, 100vw"
+            className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+          />
+          <span className="absolute inset-0 flex items-center justify-center bg-background/0 transition-colors duration-300 group-hover:bg-background/40">
+            <span className="inline-flex translate-y-2 items-center gap-2 rounded-full border border-primary/40 bg-background/90 px-4 py-2 text-sm font-medium text-foreground opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+              <Maximize2 size={15} className="text-primary" />
+              {t('viewGallery')}
+            </span>
           </span>
-        )}
+        </span>
       </button>
 
       <dialog
@@ -114,21 +128,20 @@ export default function ProjectGallery({images, title}: ProjectGalleryProps) {
             </h3>
           </div>
 
-          <div className="relative z-10">
-            <div className="relative h-[50vh] md:h-[62vh] overflow-hidden rounded-xl bg-slate-950/40">
-              <Image
-                src={images[active]}
-                alt={altFor(active)}
-                fill
-                sizes="(min-width: 1152px) 1104px, 95vw"
-                className={`object-contain transition-opacity duration-200 ${
-                  isFading ? 'opacity-0' : 'opacity-100'
-                }`}
-              />
-            </div>
-            <div className="pointer-events-none absolute inset-0 rounded-xl border border-white/10" />
+          {/* The image keeps its own proportions, so there are no letterbox bars. */}
+          <div className="relative z-10 flex min-h-[30vh] items-center justify-center">
+            <Image
+              src={images[active]}
+              alt={altFor(active)}
+              width={0}
+              height={0}
+              sizes="(min-width: 1152px) 1104px, 95vw"
+              className={`h-auto max-h-[62vh] w-auto max-w-full rounded-xl border border-white/10 shadow-2xl transition-opacity duration-200 ${
+                isFading ? 'opacity-0' : 'opacity-100'
+              }`}
+            />
 
-            <div className="absolute bottom-3 right-3 rounded-full border border-white/20 bg-black/35 px-3 py-1 text-xs font-medium text-slate-100 backdrop-blur">
+            <div className="absolute bottom-3 right-3 rounded-full border border-white/20 bg-black/50 px-3 py-1 text-xs font-medium text-slate-100 backdrop-blur">
               {active + 1} / {images.length}
             </div>
 
@@ -137,7 +150,7 @@ export default function ProjectGallery({images, title}: ProjectGalleryProps) {
                 <button
                   type="button"
                   onClick={() => step(-1)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-black/35 p-2 text-slate-100 backdrop-blur hover:bg-black/50"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-black/50 p-2 text-slate-100 backdrop-blur hover:bg-black/70"
                   aria-label={t('previous')}
                   disabled={isFading}
                 >
@@ -146,7 +159,7 @@ export default function ProjectGallery({images, title}: ProjectGalleryProps) {
                 <button
                   type="button"
                   onClick={() => step(1)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-black/35 p-2 text-slate-100 backdrop-blur hover:bg-black/50"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-black/50 p-2 text-slate-100 backdrop-blur hover:bg-black/70"
                   aria-label={t('next')}
                   disabled={isFading}
                 >
@@ -164,7 +177,7 @@ export default function ProjectGallery({images, title}: ProjectGalleryProps) {
                     key={thumb}
                     type="button"
                     onClick={() => changeImage(index)}
-                    className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-lg border transition-all ${
+                    className={`relative h-14 w-24 shrink-0 overflow-hidden rounded-lg border transition-all ${
                       active === index
                         ? 'border-sky-300 shadow-[0_0_0_1px_rgba(125,211,252,0.45)]'
                         : 'border-white/15 opacity-70 hover:opacity-100 hover:border-white/40'
@@ -177,7 +190,7 @@ export default function ProjectGallery({images, title}: ProjectGalleryProps) {
                       src={thumb}
                       alt=""
                       fill
-                      sizes="80px"
+                      sizes="96px"
                       className="object-cover object-top"
                     />
                   </button>
