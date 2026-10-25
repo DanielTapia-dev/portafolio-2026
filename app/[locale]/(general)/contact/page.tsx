@@ -3,10 +3,12 @@
 import type React from 'react';
 
 import {useState} from 'react';
-import {SocialNetworks} from '@/app/components/SocialNertworks';
+import {useTranslations} from 'next-intl';
+import {SocialNetworks} from '@/app/components/SocialNetworks';
 import {Mail, MapPin, Send} from 'lucide-react';
 
 export default function Contact() {
+  const t = useTranslations('Contact');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -35,7 +37,9 @@ export default function Contact() {
       setSubmitted(true);
       setFormData({name: '', email: '', message: ''});
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to send message.');
+      // The API answers in English; show a translated message instead.
+      console.error(err);
+      alert(t('form.error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -49,21 +53,16 @@ export default function Contact() {
           <div className="space-y-8">
             <div>
               <h1 className="text-4xl font-bold text-foreground mb-4">
-                Contact
+                {t('title')}
               </h1>
               <p className="text-muted-foreground leading-relaxed text-justify">
-                Want to collaborate or talk about a role? I’m always open to
-                opportunities related to{' '}
-                <span className="text-foreground font-medium">
-                  React/Next.js
-                </span>
-                , <span className="text-foreground font-medium">Angular</span>,{' '}
-                <span className="text-foreground font-medium">
-                  Node.js/NestJS
-                </span>
-                , and <span className="text-foreground font-medium">AWS</span>.
-                If you’re building a modern web product or improving an
-                enterprise platform, I’d love to hear what you’re working on.
+                {t.rich('intro', {
+                  highlight: (chunks) => (
+                    <span className="text-foreground font-medium">
+                      {chunks}
+                    </span>
+                  )
+                })}
               </p>
             </div>
 
@@ -76,9 +75,9 @@ export default function Contact() {
                   <a
                     href="mailto:d.tapialopez1@gmail.com"
                     className="inline-flex w-40 items-center justify-center rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:border-primary/60 hover:text-primary transition-colors"
-                    aria-label="Send me an email"
+                    aria-label={t('emailButtonLabel')}
                   >
-                    Email
+                    {t('emailLabel')}
                   </a>
                 </div>
               </div>
@@ -88,15 +87,17 @@ export default function Contact() {
                   <MapPin className="text-primary" size={20} />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Location</p>
-                  <p className="text-foreground">Ecuador · Remote-friendly</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('locationLabel')}
+                  </p>
+                  <p className="text-foreground">{t('location')}</p>
                 </div>
               </div>
             </div>
 
             <div className="pt-4">
               <p className="text-sm text-muted-foreground mb-4">
-                You can also find me here
+                {t('findMe')}
               </p>
               <SocialNetworks />
             </div>
@@ -110,17 +111,14 @@ export default function Contact() {
                   <Send className="text-primary" size={24} />
                 </div>
                 <h3 className="text-xl font-semibold text-foreground">
-                  Message sent!
+                  {t('success.title')}
                 </h3>
-                <p className="text-muted-foreground">
-                  Thanks for reaching out. I’ll get back to you as soon as
-                  possible.
-                </p>
+                <p className="text-muted-foreground">{t('success.body')}</p>
                 <button
                   onClick={() => setSubmitted(false)}
                   className="text-primary hover:underline text-sm"
                 >
-                  Send another message
+                  {t('success.sendAnother')}
                 </button>
               </div>
             ) : (
@@ -130,7 +128,7 @@ export default function Contact() {
                     htmlFor="name"
                     className="block text-sm font-medium text-foreground mb-2"
                   >
-                    Name
+                    {t('form.name')}
                   </label>
                   <input
                     type="text"
@@ -141,7 +139,7 @@ export default function Contact() {
                       setFormData({...formData, name: e.target.value})
                     }
                     className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-foreground placeholder:text-muted-foreground"
-                    placeholder="Your name"
+                    placeholder={t('form.namePlaceholder')}
                   />
                 </div>
 
@@ -150,7 +148,7 @@ export default function Contact() {
                     htmlFor="email"
                     className="block text-sm font-medium text-foreground mb-2"
                   >
-                    Email
+                    {t('form.email')}
                   </label>
                   <input
                     type="email"
@@ -161,7 +159,7 @@ export default function Contact() {
                       setFormData({...formData, email: e.target.value})
                     }
                     className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-foreground placeholder:text-muted-foreground"
-                    placeholder="you@email.com"
+                    placeholder={t('form.emailPlaceholder')}
                   />
                 </div>
 
@@ -170,7 +168,7 @@ export default function Contact() {
                     htmlFor="message"
                     className="block text-sm font-medium text-foreground mb-2"
                   >
-                    Message
+                    {t('form.message')}
                   </label>
                   <textarea
                     id="message"
@@ -181,7 +179,7 @@ export default function Contact() {
                       setFormData({...formData, message: e.target.value})
                     }
                     className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-foreground placeholder:text-muted-foreground resize-none"
-                    placeholder="How can I help?"
+                    placeholder={t('form.messagePlaceholder')}
                   />
                 </div>
 
@@ -191,10 +189,10 @@ export default function Contact() {
                   className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? (
-                    'Sending...'
+                    t('form.sending')
                   ) : (
                     <>
-                      Send message
+                      {t('form.submit')}
                       <Send size={18} />
                     </>
                   )}

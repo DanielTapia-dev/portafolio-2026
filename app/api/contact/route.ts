@@ -1,12 +1,9 @@
 import {NextRequest, NextResponse} from 'next/server';
 import {Resend} from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: NextRequest) {
   try {
     const {name, email, message} = await req.json();
-    console.log('HAS_RESEND_KEY:', Boolean(process.env.RESEND_API_KEY));
     if (!name || !email || !message) {
       return NextResponse.json(
         {ok: false, error: 'Missing fields'},
@@ -14,10 +11,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const apiKey = process.env.RESEND_API_KEY;
     const to = process.env.CONTACT_TO_EMAIL;
     const from = process.env.CONTACT_FROM_EMAIL;
 
-    if (!process.env.RESEND_API_KEY || !to || !from) {
+    if (!apiKey || !to || !from) {
       return NextResponse.json(
         {
           ok: false,
@@ -28,6 +26,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Created per request so builds and other routes don't need the API key.
+    const resend = new Resend(apiKey);
     const {data, error} = await resend.emails.send({
       from,
       to,
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
           ok: false,
           error:
             process.env.NODE_ENV === 'development'
-              ? ((error as any).message ?? String(error))
+              ? error.message
               : 'Email provider error'
         },
         {status: 502}

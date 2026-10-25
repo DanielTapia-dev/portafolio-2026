@@ -1,4 +1,4 @@
-import {Github, Linkedin, Twitter, Mail, X} from 'lucide-react';
+import {Github, Linkedin, Mail, X} from 'lucide-react';
 import Link from 'next/link';
 
 const socials = [
