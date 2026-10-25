@@ -7,6 +7,7 @@ import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {routing} from '@/i18n/routing';
 import '../globals.css';
 import Header from '../components/Header';
+import Spotlight from '../components/Spotlight';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -55,6 +56,7 @@ export default async function LocaleLayout({
       <body
         className={`${inter.variable} ${geistMono.variable} font-sans antialiased`}
       >
+        <Spotlight />
         <NextIntlClientProvider>
           <Header />
           <main className="min-h-screen">{children}</main>

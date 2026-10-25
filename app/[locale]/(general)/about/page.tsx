@@ -1,6 +1,7 @@
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import type {Locale} from 'next-intl';
 import ProfileAvatar from '@/app/components/ProfileAvatar';
+import Reveal from '@/app/components/Reveal';
 import {SocialNetworks} from '@/app/components/SocialNetworks';
 
 const skills = [
@@ -40,7 +41,9 @@ const skills = [
     items: [
       'AWS (EC2, S3, IAM, RDS, Lambda)',
       'CloudFront',
+      'Terraform',
       'Docker',
+      'Kubernetes',
       'GitHub Actions',
       'CI/CD',
       'Vercel'
@@ -155,7 +158,7 @@ export default async function AboutPage({
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid lg:grid-cols-[280px_1fr] gap-12 lg:gap-20">
           {/* Sidebar */}
-          <aside className="lg:sticky lg:top-24 lg:h-fit space-y-8">
+          <aside className="lg:sticky lg:top-24 lg:h-fit space-y-8 animate-fade-up">
             <div>
               <h1 className="text-4xl font-bold text-foreground mb-2">
                 {t('title')}
@@ -187,13 +190,10 @@ export default async function AboutPage({
           <div className="space-y-16">
             {/* Bio Section */}
             <section id="bio" className="space-y-6 scroll-mt-28">
-              <div className="prose prose-invert max-w-none">
+              <div className="space-y-4">
                 <p className="text-lg text-foreground leading-relaxed">
                   {t('bio.intro')}
                 </p>
-
-                <br />
-
                 <p className="text-muted-foreground leading-relaxed text-justify">
                   {t.rich('bio.current', {
                     highlight: (chunks) => (
@@ -202,6 +202,9 @@ export default async function AboutPage({
                       </span>
                     )
                   })}
+                </p>
+                <p className="text-muted-foreground leading-relaxed text-justify">
+                  {t('bio.leadership')}
                 </p>
                 <p className="text-muted-foreground leading-relaxed text-justify">
                   {t('bio.cloud')}
@@ -216,33 +219,32 @@ export default async function AboutPage({
               </h2>
               <div className="space-y-8">
                 {experience.map((exp) => (
-                  <div
-                    key={exp.id}
-                    className="group grid md:grid-cols-[160px_1fr] gap-4 p-4 -mx-4 rounded-lg hover:bg-card transition-colors"
-                  >
-                    <span className="text-sm text-muted-foreground">
-                      {t(`experience.${exp.id}.period`)}
-                    </span>
-                    <div className="space-y-2">
-                      <h3 className="font-medium text-foreground group-hover:text-primary transition-colors">
-                        {t(`experience.${exp.id}.title`)} ·{' '}
-                        <span className="text-primary">{exp.company}</span>
-                      </h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed text-justify">
-                        {t(`experience.${exp.id}.description`)}
-                      </p>
-                      <div className="flex flex-wrap gap-2 pt-2">
-                        {exp.techs.map((tech) => (
-                          <span
-                            key={tech}
-                            className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary"
-                          >
-                            {tech}
-                          </span>
-                        ))}
+                  <Reveal key={exp.id}>
+                    <div className="group grid md:grid-cols-[160px_1fr] gap-4 p-4 -mx-4 rounded-lg hover:bg-card transition-colors">
+                      <span className="text-sm text-muted-foreground">
+                        {t(`experience.${exp.id}.period`)}
+                      </span>
+                      <div className="space-y-2">
+                        <h3 className="font-medium text-foreground group-hover:text-primary transition-colors">
+                          {t(`experience.${exp.id}.title`)} ·{' '}
+                          <span className="text-primary">{exp.company}</span>
+                        </h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed text-justify">
+                          {t(`experience.${exp.id}.description`)}
+                        </p>
+                        <div className="flex flex-wrap gap-2 pt-2">
+                          {exp.techs.map((tech) => (
+                            <span
+                              key={tech}
+                              className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Reveal>
                 ))}
               </div>
             </section>
@@ -253,8 +255,12 @@ export default async function AboutPage({
                 {t('skillsTitle')}
               </h2>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {skills.map((skillGroup) => (
-                  <div key={skillGroup.category} className="space-y-4">
+                {skills.map((skillGroup, index) => (
+                  <Reveal
+                    key={skillGroup.category}
+                    delay={index * 100}
+                    className="space-y-4"
+                  >
                     <h3 className="font-medium text-foreground">
                       {t(`skillCategories.${skillGroup.category}`)}
                     </h3>
@@ -268,7 +274,7 @@ export default async function AboutPage({
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </Reveal>
                 ))}
               </div>
             </section>
@@ -280,20 +286,21 @@ export default async function AboutPage({
               </h2>
               <div className="space-y-4">
                 {certifications.map((c) => (
-                  <div
-                    key={c.title}
-                    className="flex items-start justify-between gap-4 p-4 -mx-4 rounded-lg hover:bg-card transition-colors"
-                  >
-                    <div className="space-y-1">
-                      <h3 className="font-medium text-foreground">{c.title}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {c.issuer}
-                      </p>
+                  <Reveal key={c.title}>
+                    <div className="flex items-start justify-between gap-4 p-4 -mx-4 rounded-lg hover:bg-card transition-colors">
+                      <div className="space-y-1">
+                        <h3 className="font-medium text-foreground">
+                          {c.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {c.issuer}
+                        </p>
+                      </div>
+                      <span className="text-sm text-muted-foreground whitespace-nowrap">
+                        {c.year ?? t('inProgress')}
+                      </span>
                     </div>
-                    <span className="text-sm text-muted-foreground whitespace-nowrap">
-                      {c.year ?? t('inProgress')}
-                    </span>
-                  </div>
+                  </Reveal>
                 ))}
               </div>
             </section>
