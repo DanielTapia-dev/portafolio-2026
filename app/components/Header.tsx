@@ -1,7 +1,7 @@
 'use client';
 
 import {cn} from '@/lib/utils';
-import {useEffect, useState, useTransition} from 'react';
+import {useState, useTransition} from 'react';
 import {Languages, Menu, X} from 'lucide-react';
 import {useLocale, useTranslations} from 'next-intl';
 import {Link, usePathname, useRouter} from '@/i18n/navigation';
@@ -13,9 +13,6 @@ const routes = [
   {href: '/contact', key: 'contact'}
 ] as const;
 
-// Scroll distance after which the header gets its blurred background.
-const SCROLLED_OFFSET = 16;
-
 type Highlight = {left: number; width: number; isVisible: boolean};
 
 export default function Header() {
@@ -25,7 +22,6 @@ export default function Header() {
   // Pathname without the locale prefix, e.g. "/projects" for "/es/projects".
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isSwitching, startTransition] = useTransition();
   // Pill that slides behind the hovered nav link.
   const [highlight, setHighlight] = useState<Highlight>({
@@ -33,12 +29,6 @@ export default function Header() {
     width: 0,
     isVisible: false
   });
-
-  useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > SCROLLED_OFFSET);
-    window.addEventListener('scroll', onScroll, {passive: true});
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   const switchLanguage = () => {
     const nextLocale = locale === 'en' ? 'es' : 'en';
@@ -70,34 +60,27 @@ export default function Header() {
   );
 
   return (
-    <header
-      className={cn(
-        'fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 animate-fade-down',
-        isScrolled || isMenuOpen
-          ? 'border-border bg-background/80 backdrop-blur-md'
-          : 'border-transparent bg-transparent'
-      )}
-    >
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md animate-fade-down">
       <nav className="mx-auto max-w-6xl px-6 py-3.5">
         <div className="flex items-center justify-between">
           <Link
             href="/"
             aria-label={`Daniel Tapia, ${t('home')}`}
-            className="group flex items-center gap-3"
+            className="group inline-flex items-baseline py-1 font-mono text-lg font-bold text-foreground"
           >
-            {/* Monogram with the same gradient ring as the profile avatar. */}
-            <span className="relative">
-              <span className="absolute -inset-1.5 rounded-xl bg-primary/30 opacity-0 blur-md transition-opacity duration-500 group-hover:opacity-100" />
-              <span className="relative block rounded-xl bg-gradient-to-br from-primary via-sky-500/60 to-border p-px transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-rotate-6 group-hover:scale-110">
-                <span className="flex h-9 w-9 items-baseline justify-center rounded-[11px] bg-background pt-2 text-sm font-bold tracking-tight text-foreground">
-                  DT
-                  {/* The brand dot: glows and hops on hover. */}
-                  <span className="ml-px h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--primary)] transition-transform duration-300 group-hover:-translate-y-1" />
-                </span>
-              </span>
+            {/* Terminal prompt logo: "> dt_" with a blinking cursor. */}
+            <span
+              aria-hidden
+              className="mr-2 text-primary transition-transform duration-300 group-hover:translate-x-1"
+            >
+              &gt;
             </span>
-            <span className="hidden max-w-0 overflow-hidden whitespace-nowrap text-sm font-semibold text-foreground opacity-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:max-w-32 group-hover:opacity-100 sm:block">
-              Daniel Tapia
+            <span aria-hidden>dt</span>
+            <span
+              aria-hidden
+              className="ml-0.5 text-primary animate-caret transition-[text-shadow] duration-300 group-hover:[text-shadow:0_0_12px_var(--primary)]"
+            >
+              _
             </span>
           </Link>
 
