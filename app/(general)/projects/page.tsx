@@ -17,16 +17,34 @@ type Project = {
 
 const projects: Project[] = [
   {
+    title: 'Armada Reserve - Repo Trading Desk (FinTech)',
+    description:
+      'Full-stack work on Armada Reserve, a platform for repurchase agreement (repo) trading desks that manages the full trade lifecycle, from entry and pre-trade compliance to settlement. I deliver features across the Next.js desk and client portal and the NestJS API, including Auth0 MFA and step-up authentication, provider-aware settlement and wallet flows with digital-asset custody, and accounting records, and I harden the Kubernetes infrastructure behind SOC 2 controls.',
+    techs: [
+      'Next.js',
+      'NestJS',
+      'TypeScript',
+      'PostgreSQL',
+      'Kafka',
+      'Auth0',
+      'Kubernetes',
+      'Terraform'
+    ],
+    featured: true
+  },
+  {
     title: 'Falabella Seller Center - Promotions (Enterprise)',
     description:
       'Enterprise-scale promotions experiences for Falabella Seller Center across Chile, Colombia, and Peru. Built reusable React + TypeScript components for configuration-driven promotional flows and high-traffic seller dashboards, collaborating closely with product, design, and backend teams in an Agile environment.',
-    images: [
-      '/Falabella.png',
-      '/Falabella.png',
-      '/Falabella.png',
-      '/Falabella.png'
-    ],
+    images: ['/projects/falabella-seller-center/cover.png'],
     techs: ['React', 'TypeScript', 'Microfrontends', 'i18n', 'Design Systems'],
+    featured: true
+  },
+  {
+    title: 'EEASA - Electric Utility Operations Logbook',
+    description:
+      'Operations logbook for Empresa Eléctrica Ambato (EEASA), an electric utility in central Ecuador. Control center and call center staff record faults, incidents, and operational events, manage work orders, and document field crew work with photos. Worked across the Angular frontend and the Spring Boot API, with role-based access, operational dashboards, and Excel/PDF reports, including reports for the national grid operator (CENACE).',
+    techs: ['Angular', 'Spring Boot', 'Oracle', 'PrimeNG', 'ECharts', 'JWT'],
     featured: true
   },
   {
@@ -34,10 +52,11 @@ const projects: Project[] = [
     description:
       'Developed and optimized the HITS system for the U.S. National Institutes of Health, improving efficiency and scalability for scientific research workflows.',
     images: [
-      '/NIH_Axle.png',
-      '/NIH_Axle.png',
-      '/NIH_Axle.png',
-      '/NIH_Axle.png'
+      '/projects/nih-hits/cover.png',
+      '/projects/nih-hits/hits-explorer-filters.png',
+      '/projects/nih-hits/hits-explorer-search.png',
+      '/projects/nih-hits/filter-rule-popover.png',
+      '/projects/nih-hits/drug-synergy-matrix.png'
     ],
     techs: [
       'Angular',
@@ -52,12 +71,7 @@ const projects: Project[] = [
     title: 'Smart-IRB - New Version (Top U.S. Universities)',
     description:
       'Contributed to the new version of Smart-IRB, used by top-tier universities in the U.S. (including Harvard). Delivered frontend in an Angular microfrontend architecture and backend services with NestJS and SQL/NoSQL data stores.',
-    images: [
-      '/Smart_IRB.png',
-      '/Smart_IRB.png',
-      '/Smart_IRB.png',
-      '/Smart_IRB.png'
-    ],
+    images: ['/projects/smart-irb/cover.png'],
     techs: ['Angular', 'PrimeNG', 'NestJS', 'PostgreSQL', 'MongoDB'],
     featured: true
   },
@@ -65,7 +79,7 @@ const projects: Project[] = [
     title: 'CERTERO - Certificate Issuance & Verification (Blockchain)',
     description:
       'At Zeyo, I contributed to CERTERO, a blockchain-based platform focused on secure certificate issuance and verification. I worked on building and refining user-facing flows and integrations that improved transparency and trust in the certification lifecycle, collaborating with cross-functional teams to deliver maintainable, production-ready features.',
-    images: ['/Certero.png', '/Certero.png', '/Certero.png', '/Certero.png'],
+    images: ['/projects/certero/cover.png'],
     techs: ['React', 'Node.js', 'REST APIs', 'Blockchain', 'Security'],
     featured: true
   },
@@ -73,26 +87,33 @@ const projects: Project[] = [
     title: 'Safetrack - QR Labeling & Traceability',
     description:
       'At Zeyo, I worked on Safetrack, a traceability solution for product labeling and authenticity verification using QR-based flows and blockchain-backed records. I delivered key modules such as purchase order management and traceability/reporting features, improving operational control and transparency across fragmented supply chains.',
-    images: [
-      '/Safetrack.png',
-      '/Safetrack.png',
-      '/Safetrack.png',
-      '/Safetrack.png'
-    ],
+    images: ['/projects/safetrack/cover.png'],
     techs: ['React', 'Node.js', 'Python', 'AWS S3', 'QR', 'Traceability'],
     featured: true
   },
   {
-    title: 'Electronic Invoicing System',
+    title: 'FactuPro v2 - Cloud Invoicing Platform (Web, Mobile & AWS)',
     description:
-      'Built an electronic invoicing platform with Node.js and Angular, improving payment integration and streamlining invoice management.',
-    images: [
-      '/FactuPro.png',
-      '/FactuPro.png',
-      '/FactuPro.png',
-      '/FactuPro.png'
+      'Second generation of FactuPro, an electronic invoicing platform for businesses in Ecuador that I build and operate end to end. A new Next.js web client and a React Native (Expo) mobile app share the Express API and add modules such as restaurant table and order management. I also moved the platform from Heroku to AWS with Terraform: Docker containers on an ARM64 EC2 instance, database migrations on every deploy, GitHub OIDC pipelines, and signing certificates stored encrypted with a key held in AWS SSM.',
+    techs: [
+      'Next.js',
+      'React Native',
+      'TypeScript',
+      'Tailwind CSS',
+      'Node.js',
+      'PostgreSQL',
+      'AWS',
+      'Terraform',
+      'Docker'
     ],
-    techs: ['Angular', 'Node.js', 'Payments', 'Postgres'],
+    featured: true
+  },
+  {
+    title: 'FactuPro v1 - Electronic Invoicing System (Ecuador SRI)',
+    description:
+      'First version of FactuPro, in production since 2020 for several companies. An Angular frontend and a Node.js/Express API generate electronic invoices, sign them with XAdES-BES, and send them to Ecuador’s tax authority (SRI), then build the PDF invoice and email it to the customer. Also covers payment integration, sales reports, and Excel/PDF exports.',
+    images: ['/projects/factupro-v1/cover.png'],
+    techs: ['Angular', 'Node.js', 'Express', 'PostgreSQL', 'XAdES', 'Heroku'],
     featured: true
   },
 
@@ -129,18 +150,16 @@ const projects: Project[] = [
       'Clinical Records Backend - Municipal Health Center (Thesis Project)',
     description:
       'Backend system for managing clinical histories, developed as my university thesis for the Municipal Patronage of Latacunga. Designed to handle patient records, medical consultations, and secure data access for healthcare personnel.',
-    images: [
-      '/projects/clinical-records-backend.png',
-      '/projects/clinical-records-backend.png',
-      '/projects/clinical-records-backend.png',
-      '/projects/clinical-records-backend.png'
-    ],
     techs: ['Angular', 'Nodejs', 'REST APIs', 'MySQL', 'Security'],
     liveUrl: '#',
     githubUrl: 'https://github.com/DanielTapia-dev/Tesis',
     featured: false
   }
 ];
+
+// Alternate image/text sides only for projects that have an image column.
+const isReversed = (project: Project, index: number) =>
+  Boolean(project.images?.length) && index % 2 === 1;
 
 export default function Projects() {
   const featuredProjects = projects.filter((p) => p.featured);
@@ -186,31 +205,32 @@ export default function Projects() {
             {featuredProjects.map((project, index) => (
               <div
                 key={project.title}
-                className={`grid lg:grid-cols-2 gap-8 items-center ${index % 2 === 1 ? 'lg:direction-rtl' : ''}`}
+                className={`grid gap-8 items-center ${project.images?.length ? 'lg:grid-cols-2' : ''}`}
               >
-                <div
-                  className={`relative group ${index % 2 === 1 ? 'lg:order-2' : ''}`}
-                >
-                  <button
-                    type="button"
-                    className="w-full text-left"
-                    onClick={() => openGallery(index)}
-                    aria-label={`Open gallery for ${project.title}`}
-                    disabled={!project.images?.length}
+                {project.images?.length ? (
+                  <div
+                    className={`relative group ${isReversed(project, index) ? 'lg:order-2' : ''}`}
                   >
-                    <div className="overflow-hidden rounded-lg border border-border">
-                      <img
-                        src={project.images?.[0] || '/placeholder.svg'}
-                        alt={project.title}
-                        className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
-                  </button>
-                </div>
+                    <button
+                      type="button"
+                      className="w-full text-left"
+                      onClick={() => openGallery(index)}
+                      aria-label={`Open gallery for ${project.title}`}
+                    >
+                      <div className="overflow-hidden rounded-lg border border-border">
+                        <img
+                          src={project.images[0]}
+                          alt={project.title}
+                          className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+                      <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
+                    </button>
+                  </div>
+                ) : null}
 
                 <div
-                  className={`space-y-4 ${index % 2 === 1 ? 'lg:order-1 lg:text-right' : ''}`}
+                  className={`space-y-4 ${isReversed(project, index) ? 'lg:order-1 lg:text-right' : ''}`}
                 >
                   <h3 className="text-2xl font-bold text-foreground">
                     {project.title}
@@ -220,7 +240,7 @@ export default function Projects() {
                   </p>
 
                   <div
-                    className={`flex flex-wrap gap-2 ${index % 2 === 1 ? 'lg:justify-end' : ''}`}
+                    className={`flex flex-wrap gap-2 ${isReversed(project, index) ? 'lg:justify-end' : ''}`}
                   >
                     {project.techs.map((tech) => (
                       <span
@@ -233,7 +253,7 @@ export default function Projects() {
                   </div>
                   {project.liveUrl && (
                     <div
-                      className={`flex gap-4 pt-2 ${index % 2 === 1 ? 'lg:justify-end' : ''}`}
+                      className={`flex gap-4 pt-2 ${isReversed(project, index) ? 'lg:justify-end' : ''}`}
                     >
                       <Link
                         href={project.githubUrl || '#'}
