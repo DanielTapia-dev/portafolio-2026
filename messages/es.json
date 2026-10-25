@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "title": "Daniel Tapia | Desarrollador Full Stack",
-    "description": "Portafolio y CV de Daniel Tapia, desarrollador Full Stack especializado en crear experiencias digitales excepcionales."
+    "title": "Daniel Tapia | Ingeniero de Software Senior y Cloud",
+    "description": "Daniel Tapia es Cloud Engineer, Ingeniero de Software Senior y Desarrollador Full Stack: construye sobre AWS con Terraform, desarrolla productos con IA y lidera equipos como Tech Lead."
   },
   "Header": {
     "home": "Inicio",
@@ -16,11 +16,13 @@
     "availability": "Disponible para nuevas oportunidades",
     "greeting": "Hola, soy",
     "roles": {
+      "senior": "Ingeniero de Software Senior",
+      "cloud": "Cloud Engineer · AWS y Terraform",
       "fullstack": "Desarrollador Full Stack",
-      "frontend": "Especialista Frontend · React y Angular",
-      "cloud": "AWS Certified Cloud Practitioner"
+      "ai": "Ingeniero de IA",
+      "lead": "Tech Lead"
     },
-    "intro": "Construyo soluciones digitales que combinan un diseño elegante con sólidas habilidades de ingeniería para crear proyectos robustos y productos escalables.",
+    "intro": "Diseño y entrego productos cloud de punta a punta, desde la infraestructura en AWS con Terraform y funcionalidades con IA hasta aplicaciones web pulidas, y lidero equipos como Tech Lead para llevarlos a producción.",
     "viewProjects": "Ver proyectos",
     "contactMe": "Contáctame",
     "nav": {
@@ -41,7 +43,7 @@
   "About": {
     "title": "Sobre mí",
     "subtitle": "Un resumen rápido de mi trayectoria",
-    "avatarAlt": "Daniel Tapia - Desarrollador Full Stack Senior",
+    "avatarAlt": "Daniel Tapia - Ingeniero de Software Senior y Cloud Engineer",
     "sections": {
       "bio": "Biografía",
       "experience": "Experiencia",
@@ -49,8 +51,9 @@
       "certifications": "Certificaciones"
     },
     "bio": {
-      "intro": "Soy desarrollador full stack senior con un fuerte enfoque en frontend. Construyo aplicaciones web escalables y de alto rendimiento con React/Next.js y Angular, y me importan mucho la arquitectura limpia, el código mantenible y entregar interfaces fieles al diseño que funcionen de forma confiable en producción.",
+      "intro": "Soy Cloud Engineer e Ingeniero de Software Senior, con base full stack y un fuerte enfoque en frontend. Construyo aplicaciones web escalables y de alto rendimiento con React/Next.js y Angular, las despliego en AWS con infraestructura como código en Terraform e integro IA en productos reales. Me importan mucho la arquitectura limpia, el código mantenible y entregar interfaces fieles al diseño que funcionen de forma confiable en producción.",
       "current": "Actualmente trabajo en <highlight>Falabella</highlight> (Seller Center · Promociones), construyendo experiencias promocionales basadas en configuración y dashboards de alto tráfico en varios países. Colaboro de cerca con los equipos de producto, diseño y backend para entregar soluciones alineadas con los requisitos de cada región, equilibrando velocidad, calidad y mantenibilidad a largo plazo.",
+      "leadership": "También lidero equipos como Tech Lead: defino la arquitectura, divido el trabajo en entregables claros, establezco revisiones de código y estándares de calidad, y acompaño a los desarrolladores para que todo el equipo entregue con confianza.",
       "cloud": "Tengo una orientación cloud y disfruto llevar buenas prácticas de ingeniería al trabajo diario: CI/CD pragmático, optimización de rendimiento, revisiones de código rigurosas y mejora continua de la experiencia de desarrollo."
     },
     "experience": {
@@ -174,18 +177,44 @@
     "showScreenshot": "Ver la captura {index} de {title}"
   },
   "Contact": {
-    "title": "Contacto",
-    "intro": "¿Quieres colaborar o conversar sobre una oportunidad laboral? Siempre estoy abierto a oportunidades relacionadas con <highlight>React/Next.js</highlight>, <highlight>Angular</highlight>, <highlight>Node.js/NestJS</highlight> y <highlight>AWS</highlight>. Si estás construyendo un producto web moderno o mejorando una plataforma empresarial, me encantaría saber en qué estás trabajando.",
+    "eyebrow": "Contacto",
+    "title": "Construyamos algo grande juntos",
+    "intro": "¿Buscas un Ingeniero de Software Senior, un Cloud Engineer o un Tech Lead para tu equipo? Estoy abierto a roles y proyectos con <highlight>AWS y Terraform</highlight>, <highlight>React/Next.js</highlight>, <highlight>Angular</highlight>, <highlight>Node.js/NestJS</highlight> e <highlight>IA</highlight>. Cuéntame qué estás construyendo y te responderé.",
+    "directTitle": "Contáctame directamente",
     "emailLabel": "Correo",
+    "emailButtonLabel": "Envíame un correo",
+    "copyEmail": "Copiar dirección de correo",
+    "copied": "Dirección de correo copiada",
     "locationLabel": "Ubicación",
-    "location": "Ecuador · Disponible para trabajo remoto",
+    "location": "Ecuador (GMT-5) · Disponible para trabajo remoto",
     "findMe": "También puedes encontrarme aquí",
+    "helpTitle": "En qué puedo ayudarte",
+    "help": {
+      "cloud": {
+        "title": "Cloud e infraestructura",
+        "description": "Arquitecturas en AWS gestionadas con Terraform, pipelines de CI/CD y despliegues seguros."
+      },
+      "fullstack": {
+        "title": "Productos full stack",
+        "description": "De la idea a producción con React/Next.js, Angular y Node.js."
+      },
+      "ai": {
+        "title": "Funcionalidades con IA",
+        "description": "Integración de IA en productos reales y flujos de trabajo diarios."
+      },
+      "leadership": {
+        "title": "Liderazgo técnico",
+        "description": "Liderazgo de equipos como Tech Lead: arquitectura, revisiones de código y mentoría."
+      }
+    },
     "success": {
       "title": "¡Mensaje enviado!",
       "body": "Gracias por escribirme. Te responderé lo antes posible.",
       "sendAnother": "Enviar otro mensaje"
     },
     "form": {
+      "title": "Envíame un mensaje",
+      "subtitle": "Cuéntame sobre el rol o el proyecto, y cómo prefieres que te contacte.",
       "name": "Nombre",
       "namePlaceholder": "Tu nombre",
       "email": "Correo",
@@ -195,7 +224,6 @@
       "sending": "Enviando...",
       "submit": "Enviar mensaje",
       "error": "No se pudo enviar el mensaje. Inténtalo de nuevo o escríbeme directamente por correo."
-    },
-    "emailButtonLabel": "Envíame un correo"
+    }
   }
 }

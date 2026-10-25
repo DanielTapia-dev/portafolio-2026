@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "title": "Daniel Tapia | Full Stack Developer",
-    "description": "Portfolio and résumé of Daniel Tapia, a Full Stack Developer who builds exceptional digital experiences."
+    "title": "Daniel Tapia | Senior Software Engineer & Cloud Engineer",
+    "description": "Daniel Tapia is a Cloud Engineer, Senior Software Engineer and Full Stack Developer who builds on AWS with Terraform, ships AI-powered products, and leads teams as a Tech Lead."
   },
   "Header": {
     "home": "Home",
@@ -16,11 +16,13 @@
     "availability": "Open to new opportunities",
     "greeting": "Hello, I'm",
     "roles": {
+      "senior": "Senior Software Engineer",
+      "cloud": "Cloud Engineer · AWS & Terraform",
       "fullstack": "Full Stack Developer",
-      "frontend": "Frontend Specialist · React & Angular",
-      "cloud": "AWS Certified Cloud Practitioner"
+      "ai": "AI Engineer",
+      "lead": "Tech Lead"
     },
-    "intro": "I build digital solutions that combine elegant design with advanced professional engineering skills to create strong projects and scalable products.",
+    "intro": "I design and ship cloud-native products end to end, from AWS infrastructure in Terraform and AI-powered features to polished web apps, and I lead teams as a Tech Lead to get them to production.",
     "viewProjects": "View projects",
     "contactMe": "Contact me",
     "nav": {
@@ -41,7 +43,7 @@
   "About": {
     "title": "About",
     "subtitle": "A quick snapshot of my background",
-    "avatarAlt": "Daniel Tapia - Senior Full Stack Developer",
+    "avatarAlt": "Daniel Tapia - Senior Software Engineer and Cloud Engineer",
     "sections": {
       "bio": "Bio",
       "experience": "Experience",
@@ -49,8 +51,9 @@
       "certifications": "Certifications"
     },
     "bio": {
-      "intro": "I’m a senior full-stack developer with a strong frontend focus. I build scalable, high-performance web applications with React/Next.js and Angular, and I care a lot about clean architecture, maintainable code, and shipping pixel-accurate UIs that work reliably in real production environments.",
+      "intro": "I’m a Cloud Engineer and Senior Software Engineer with a full-stack background and a strong frontend focus. I build scalable, high-performance web applications with React/Next.js and Angular, run them on AWS with infrastructure as code in Terraform, and bring AI into real products. I care a lot about clean architecture, maintainable code, and shipping pixel-accurate UIs that work reliably in production.",
       "current": "I currently work at <highlight>Falabella</highlight> (Seller Center · Promotions), building configuration-driven promotional experiences and high-traffic dashboards across multiple countries. I collaborate closely with product, design, and backend teams to deliver solutions aligned with regional requirements—balancing speed, quality, and long-term maintainability.",
+      "leadership": "I also lead teams as a Tech Lead: shaping the architecture, breaking work into clear deliverables, setting up code review and quality standards, and mentoring developers so the whole team ships with confidence.",
       "cloud": "I’m cloud-oriented and enjoy bringing solid engineering practices into day-to-day delivery: pragmatic CI/CD, performance optimization, strong code reviews, and continuously improving the developer experience."
     },
     "experience": {
@@ -174,18 +177,44 @@
     "showScreenshot": "Show screenshot {index} of {title}"
   },
   "Contact": {
-    "title": "Contact",
-    "intro": "Want to collaborate or talk about a role? I’m always open to opportunities related to <highlight>React/Next.js</highlight>, <highlight>Angular</highlight>, <highlight>Node.js/NestJS</highlight>, and <highlight>AWS</highlight>. If you’re building a modern web product or improving an enterprise platform, I’d love to hear what you’re working on.",
+    "eyebrow": "Contact",
+    "title": "Let’s build something great together",
+    "intro": "Looking for a Senior Software Engineer, a Cloud Engineer or a Tech Lead for your team? I’m open to roles and projects involving <highlight>AWS and Terraform</highlight>, <highlight>React/Next.js</highlight>, <highlight>Angular</highlight>, <highlight>Node.js/NestJS</highlight> and <highlight>AI</highlight>. Tell me what you’re building and I’ll get back to you.",
+    "directTitle": "Reach me directly",
     "emailLabel": "Email",
+    "emailButtonLabel": "Send me an email",
+    "copyEmail": "Copy email address",
+    "copied": "Email address copied",
     "locationLabel": "Location",
-    "location": "Ecuador · Remote-friendly",
+    "location": "Ecuador (GMT-5) · Open to remote work",
     "findMe": "You can also find me here",
+    "helpTitle": "How I can help",
+    "help": {
+      "cloud": {
+        "title": "Cloud & infrastructure",
+        "description": "AWS architectures managed with Terraform, CI/CD pipelines and secure deployments."
+      },
+      "fullstack": {
+        "title": "Full-stack products",
+        "description": "From idea to production with React/Next.js, Angular and Node.js."
+      },
+      "ai": {
+        "title": "AI features",
+        "description": "Bringing AI into real products and day-to-day workflows."
+      },
+      "leadership": {
+        "title": "Technical leadership",
+        "description": "Leading teams as a Tech Lead: architecture, code reviews and mentoring."
+      }
+    },
     "success": {
       "title": "Message sent!",
       "body": "Thanks for reaching out. I’ll get back to you as soon as possible.",
       "sendAnother": "Send another message"
     },
     "form": {
+      "title": "Send me a message",
+      "subtitle": "Tell me about the role or project, and the best way to reach you.",
       "name": "Name",
       "namePlaceholder": "Your name",
       "email": "Email",
@@ -195,7 +224,6 @@
       "sending": "Sending...",
       "submit": "Send message",
       "error": "Failed to send message. Please try again or email me directly."
-    },
-    "emailButtonLabel": "Send me an email"
+    }
   }
 }

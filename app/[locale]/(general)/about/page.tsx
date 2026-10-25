@@ -41,7 +41,9 @@ const skills = [
     items: [
       'AWS (EC2, S3, IAM, RDS, Lambda)',
       'CloudFront',
+      'Terraform',
       'Docker',
+      'Kubernetes',
       'GitHub Actions',
       'CI/CD',
       'Vercel'
@@ -188,13 +190,10 @@ export default async function AboutPage({
           <div className="space-y-16">
             {/* Bio Section */}
             <section id="bio" className="space-y-6 scroll-mt-28">
-              <div className="prose prose-invert max-w-none">
+              <div className="space-y-4">
                 <p className="text-lg text-foreground leading-relaxed">
                   {t('bio.intro')}
                 </p>
-
-                <br />
-
                 <p className="text-muted-foreground leading-relaxed text-justify">
                   {t.rich('bio.current', {
                     highlight: (chunks) => (
@@ -203,6 +202,9 @@ export default async function AboutPage({
                       </span>
                     )
                   })}
+                </p>
+                <p className="text-muted-foreground leading-relaxed text-justify">
+                  {t('bio.leadership')}
                 </p>
                 <p className="text-muted-foreground leading-relaxed text-justify">
                   {t('bio.cloud')}

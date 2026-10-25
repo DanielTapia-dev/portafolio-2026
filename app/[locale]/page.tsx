@@ -12,7 +12,7 @@ const navItems = [
   {href: '/contact', key: 'contact'}
 ] as const;
 
-const roleKeys = ['fullstack', 'frontend', 'cloud'] as const;
+const roleKeys = ['senior', 'cloud', 'fullstack', 'ai', 'lead'] as const;
 
 // Milliseconds after page load at which each hero element starts animating.
 const LETTER_STAGGER_MS = 45;
