@@ -19,6 +19,12 @@ const screenshots = (slug: ProjectSlug, files: string[]) =>
 
 export const projects: Project[] = [
   {
+    slug: 'falabella-seller-center',
+    images: screenshots('falabella-seller-center', ['cover.png']),
+    techs: ['React', 'TypeScript', 'Microfrontends', 'i18n', 'Design Systems'],
+    featured: true
+  },
+  {
     slug: 'armada-reserve',
     images: screenshots('armada-reserve', [
       'cover.png',
@@ -38,12 +44,6 @@ export const projects: Project[] = [
       'Kubernetes',
       'Terraform'
     ],
-    featured: true
-  },
-  {
-    slug: 'falabella-seller-center',
-    images: screenshots('falabella-seller-center', ['cover.png']),
-    techs: ['React', 'TypeScript', 'Microfrontends', 'i18n', 'Design Systems'],
     featured: true
   },
   {
