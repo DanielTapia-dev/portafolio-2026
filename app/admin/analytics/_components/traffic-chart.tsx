@@ -10,8 +10,8 @@ import {CHART_CURRENT, CHART_PREVIOUS} from './chart-colors';
 type Metric = 'pageviews' | 'sessions';
 
 const METRICS: {id: Metric; label: string}[] = [
-  {id: 'pageviews', label: 'Page views'},
-  {id: 'sessions', label: 'Sessions'}
+  {id: 'sessions', label: 'Visits'},
+  {id: 'pageviews', label: 'Page views'}
 ];
 
 const HEIGHT = 260;
@@ -55,7 +55,7 @@ export default function TrafficChart({
   points: TrendPoint[];
   granularity: Granularity;
 }) {
-  const [metric, setMetric] = useState<Metric>('pageviews');
+  const [metric, setMetric] = useState<Metric>('sessions');
   const [active, setActive] = useState<number | null>(null);
   const [width, setWidth] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -343,10 +343,10 @@ export default function TrafficChart({
               <tr>
                 <th scope="col" className="px-3 py-2 font-medium">Period</th>
                 <th scope="col" className="px-3 py-2 text-right font-medium">Page views</th>
-                <th scope="col" className="px-3 py-2 text-right font-medium">Sessions</th>
+                <th scope="col" className="px-3 py-2 text-right font-medium">Visits</th>
                 <th scope="col" className="px-3 py-2 font-medium">Compared with</th>
                 <th scope="col" className="px-3 py-2 text-right font-medium">Page views</th>
-                <th scope="col" className="px-3 py-2 text-right font-medium">Sessions</th>
+                <th scope="col" className="px-3 py-2 text-right font-medium">Visits</th>
               </tr>
             </thead>
             <tbody className="tabular-nums">

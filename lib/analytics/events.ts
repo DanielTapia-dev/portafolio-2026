@@ -27,18 +27,6 @@ export const ANALYTICS_PROPERTY_KEYS = [
 export type AnalyticsPropertyKey = (typeof ANALYTICS_PROPERTY_KEYS)[number];
 export type AnalyticsProperties = Partial<Record<AnalyticsPropertyKey, string>>;
 
-// Dashboard labels for each event.
-export const ANALYTICS_EVENT_LABELS: Record<AnalyticsEvent, string> = {
-  contact_cta_clicked: 'Clicked “Contact me”',
-  contact_link_clicked: 'Clicked a contact link',
-  email_copied: 'Copied the email address',
-  contact_form_submitted: 'Sent the contact form',
-  project_gallery_opened: 'Opened a project gallery',
-  project_link_clicked: 'Opened a project’s code or live site',
-  featured_project_clicked: 'Opened a featured project from About',
-  certification_verified: 'Checked a certification on Credly'
-};
-
 // Browser event that client components dispatch for non-click interactions.
 export const ANALYTICS_DOM_EVENT = 'portfolio:analytics';
 
