@@ -4,11 +4,16 @@ import {
   Database,
   LayoutTemplate,
   MapPin,
+  Network,
   Server,
   UserRound,
-  Wrench
+  Users
 } from 'lucide-react';
-import {getTranslations, setRequestLocale} from 'next-intl/server';
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale
+} from 'next-intl/server';
 import type {Locale} from 'next-intl';
 import ProfileAvatar from '@/app/components/ProfileAvatar';
 import Reveal from '@/app/components/Reveal';
@@ -17,69 +22,24 @@ import {SocialNetworks} from '@/app/components/SocialNetworks';
 import {projects} from '@/lib/projects';
 import {cn} from '@/lib/utils';
 
-const skills = [
-  {
-    category: 'frontend',
-    icon: LayoutTemplate,
-    items: [
-      'React',
-      'Next.js',
-      'TypeScript',
-      'Angular',
-      'Microfrontends',
-      'SCSS Modules',
-      'Tailwind CSS',
-      'PrimeNG',
-      'Bootstrap',
-      'i18n'
-    ]
-  },
-  {
-    category: 'backend',
-    icon: Server,
-    items: [
-      'Node.js',
-      'NestJS',
-      'Fastify',
-      'Spring Boot',
-      'REST APIs',
-      'GraphQL',
-      'Python'
-    ]
-  },
-  {
-    category: 'databases',
-    icon: Database,
-    items: ['PostgreSQL', 'MySQL', 'MongoDB', 'Oracle', 'SQL Server', 'Redis']
-  },
-  {
-    category: 'cloud',
-    icon: Cloud,
-    items: [
-      'AWS (EC2, S3, IAM, RDS, Lambda)',
-      'CloudFront',
-      'Terraform',
-      'Docker',
-      'Kubernetes',
-      'GitHub Actions',
-      'CI/CD',
-      'Vercel'
-    ]
-  },
-  {
-    category: 'tools',
-    icon: Wrench,
-    items: [
-      'Git',
-      'GitHub',
-      'Azure DevOps',
-      'Bitbucket',
-      'Jira',
-      'Figma',
-      'Scrum',
-      'Kanban'
-    ]
-  }
+// Items live in messages under About.skills.<category>: `core` lists the skills
+// backed by the experience and projects on this site, `also` the rest.
+const skillCategories = [
+  {category: 'frontend', icon: LayoutTemplate},
+  {category: 'backend', icon: Server},
+  {category: 'architecture', icon: Network},
+  {category: 'data', icon: Database},
+  {category: 'cloud', icon: Cloud},
+  {category: 'practices', icon: Users}
+] as const;
+
+// Copy lives in messages under About.highlights.items.<id>.
+// TODO(Daniel): add an outcome to falabella and factupro once there is one to cite.
+const highlights = [
+  {id: 'falabella', hasOutcome: false},
+  {id: 'factupro', hasOutcome: false},
+  {id: 'ingestion', hasOutcome: true},
+  {id: 'recovery', hasOutcome: true}
 ] as const;
 
 // year: null means the certification is still in progress.
@@ -92,7 +52,10 @@ const certifications: {title: string; issuer: string; year: string | null}[] = [
   }
 ];
 
+// Periods, titles, summaries and highlights live in messages under About.experience.<id>.
 const experience = [
+  // TODO(Daniel): team size, one or two concrete architecture decisions and any
+  // documented outcome would make this entry stronger. Nothing is invented here.
   {
     id: 'falabella',
     isCurrent: true,
@@ -105,7 +68,7 @@ const experience = [
     techs: ['Next.js', 'Nest.js', 'Microservices', 'Vercel', 'Postgres']
   },
   {
-    id: 'software-architect',
+    id: 'freelance-fullstack',
     company: 'Freelance',
     techs: [
       'Node.js',
@@ -116,7 +79,11 @@ const experience = [
       'GitHub Actions',
       'Redis',
       'MySQL'
-    ]
+    ],
+    // A project delivered within this engagement, not a separate employer.
+    project: {
+      techs: ['Next.js', 'NestJS', 'Fireblocks', 'Coinbase']
+    }
   },
   {
     id: 'axle',
@@ -161,7 +128,16 @@ const experience = [
   }
 ] as const;
 
-const sections = ['bio', 'experience', 'skills', 'certifications'] as const;
+type ExperienceCopy = {summary?: string; highlights: string[]};
+type SkillCopy = {title: string; core: string[]; also: string[]};
+
+const sections = [
+  'bio',
+  'highlights',
+  'experience',
+  'skills',
+  'certifications'
+] as const;
 
 const featuredCount = projects.filter((project) => project.featured).length;
 
@@ -176,6 +152,21 @@ function SectionTitle({children}: {children: React.ReactNode}) {
   );
 }
 
+function BulletList({items}: {items: string[]}) {
+  return (
+    <ul className="space-y-2">
+      {items.map((item) => (
+        <li
+          key={item}
+          className="relative pl-4 text-sm leading-relaxed text-muted-foreground before:absolute before:left-0 before:top-[0.6em] before:h-1.5 before:w-1.5 before:rounded-full before:bg-primary/60"
+        >
+          {item}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default async function AboutPage({
   params
 }: {
@@ -184,6 +175,8 @@ export default async function AboutPage({
   const {locale} = await params;
   setRequestLocale(locale as Locale);
   const t = await getTranslations('About');
+  // Arrays and optional fields are read from the messages directly.
+  const messages = (await getMessages()).About;
 
   const stats = [
     {value: t('stats.experience.value'), label: t('stats.experience.label')},
@@ -236,7 +229,7 @@ export default async function AboutPage({
             />
           </aside>
 
-          <div className="space-y-24">
+          <div className="min-w-0 space-y-24">
             <section id="bio" className="scroll-mt-28">
               <div className="space-y-5">
                 <p className="text-lg leading-relaxed text-foreground">
@@ -252,10 +245,10 @@ export default async function AboutPage({
                   })}
                 </p>
                 <p className="leading-relaxed text-muted-foreground">
-                  {t('bio.leadership')}
+                  {t('bio.stack')}
                 </p>
                 <p className="leading-relaxed text-muted-foreground">
-                  {t('bio.cloud')}
+                  {t('bio.leadership')}
                 </p>
               </div>
 
@@ -277,11 +270,60 @@ export default async function AboutPage({
               </dl>
             </section>
 
+            <section id="highlights" className="scroll-mt-28">
+              <SectionTitle>{t('sections.highlights')}</SectionTitle>
+              <div className="grid gap-5 md:grid-cols-2">
+                {highlights.map(({id, hasOutcome}, index) => (
+                  <Reveal
+                    key={id}
+                    delay={(index % 2) * 100}
+                    className="flex flex-col rounded-xl border border-border bg-card/60 p-5 transition-colors hover:border-primary/40"
+                  >
+                    <p className="font-mono text-xs text-primary">
+                      {t(`highlights.items.${id}.label`)}
+                    </p>
+                    <h3 className="mt-2 font-semibold leading-snug text-foreground">
+                      {t(`highlights.items.${id}.title`)}
+                    </h3>
+                    <dl className="mt-4 space-y-3 text-sm leading-relaxed">
+                      <div>
+                        <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
+                          {t('highlights.labels.context')}
+                        </dt>
+                        <dd className="mt-1 text-muted-foreground">
+                          {t(`highlights.items.${id}.context`)}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
+                          {t('highlights.labels.part')}
+                        </dt>
+                        <dd className="mt-1 text-foreground/90">
+                          {t(`highlights.items.${id}.part`)}
+                        </dd>
+                      </div>
+                      {hasOutcome && (
+                        <div>
+                          <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
+                            {t('highlights.labels.outcome')}
+                          </dt>
+                          <dd className="mt-1 text-foreground/90">
+                            {t(`highlights.items.${id}.outcome`)}
+                          </dd>
+                        </div>
+                      )}
+                    </dl>
+                  </Reveal>
+                ))}
+              </div>
+            </section>
+
             <section id="experience" className="scroll-mt-28">
               <SectionTitle>{t('sections.experience')}</SectionTitle>
               <ol className="relative space-y-6 border-l border-border pl-8">
                 {experience.map((exp) => {
                   const isCurrent = 'isCurrent' in exp && exp.isCurrent;
+                  const copy = messages.experience[exp.id] as ExperienceCopy;
 
                   return (
                     <li key={exp.id} className="relative">
@@ -312,9 +354,14 @@ export default async function AboutPage({
                               · {exp.company}
                             </span>
                           </h3>
-                          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                            {t(`experience.${exp.id}.description`)}
-                          </p>
+                          {copy.summary && (
+                            <p className="mt-2 text-sm leading-relaxed text-foreground/80">
+                              {copy.summary}
+                            </p>
+                          )}
+                          <div className="mt-3">
+                            <BulletList items={copy.highlights} />
+                          </div>
                           <ul className="mt-4 flex flex-wrap gap-2">
                             {exp.techs.map((tech) => (
                               <li
@@ -325,6 +372,32 @@ export default async function AboutPage({
                               </li>
                             ))}
                           </ul>
+                          {'project' in exp && (
+                            <div className="mt-5 rounded-lg border border-border bg-background/40 p-4">
+                              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                {t('keyProject')}
+                              </p>
+                              <p className="mt-1 font-medium text-foreground">
+                                {t(`experience.${exp.id}.project.name`)}
+                              </p>
+                              <p className="mt-0.5 text-xs text-muted-foreground">
+                                {t(`experience.${exp.id}.project.client`)}
+                              </p>
+                              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                                {t(`experience.${exp.id}.project.description`)}
+                              </p>
+                              <ul className="mt-3 flex flex-wrap gap-2">
+                                {exp.project.techs.map((tech) => (
+                                  <li
+                                    key={tech}
+                                    className="rounded-md border border-border bg-background/60 px-2.5 py-1 text-xs text-muted-foreground"
+                                  >
+                                    {tech}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                         </div>
                       </Reveal>
                     </li>
@@ -335,31 +408,46 @@ export default async function AboutPage({
 
             <section id="skills" className="scroll-mt-28">
               <SectionTitle>{t('skillsTitle')}</SectionTitle>
+              <p className="-mt-4 mb-8 text-sm text-muted-foreground">
+                {t('skillsIntro')}
+              </p>
               <div className="grid gap-5 sm:grid-cols-2">
-                {skills.map(({category, icon: Icon, items}, index) => (
-                  <Reveal
-                    key={category}
-                    delay={(index % 2) * 100}
-                    className="rounded-xl border border-border bg-card/60 p-5 transition-colors hover:border-primary/40"
-                  >
-                    <h3 className="mb-4 flex items-center gap-3 font-semibold text-foreground">
-                      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                        <Icon size={18} className="text-primary" />
-                      </span>
-                      {t(`skillCategories.${category}`)}
-                    </h3>
-                    <ul className="flex flex-wrap gap-2">
-                      {items.map((skill) => (
-                        <li
-                          key={skill}
-                          className="rounded-md border border-border bg-background/60 px-2.5 py-1 text-xs text-muted-foreground"
-                        >
-                          {skill}
-                        </li>
-                      ))}
-                    </ul>
-                  </Reveal>
-                ))}
+                {skillCategories.map(({category, icon: Icon}, index) => {
+                  const skill = messages.skills[category] as SkillCopy;
+
+                  return (
+                    <Reveal
+                      key={category}
+                      delay={(index % 2) * 100}
+                      className="rounded-xl border border-border bg-card/60 p-5 transition-colors hover:border-primary/40"
+                    >
+                      <h3 className="mb-4 flex items-center gap-3 font-semibold text-foreground">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                          <Icon size={18} className="text-primary" />
+                        </span>
+                        {skill.title}
+                      </h3>
+                      <ul className="flex flex-wrap gap-2">
+                        {skill.core.map((item) => (
+                          <li
+                            key={item}
+                            className="rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary"
+                          >
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                      {skill.also.length > 0 && (
+                        <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+                          <span className="font-medium text-foreground/80">
+                            {t('alsoUsed')}:
+                          </span>{' '}
+                          {skill.also.join(' · ')}
+                        </p>
+                      )}
+                    </Reveal>
+                  );
+                })}
               </div>
             </section>
 

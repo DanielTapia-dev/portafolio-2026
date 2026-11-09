@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "title": "Daniel Tapia | Senior Software Engineer & Cloud Engineer",
-    "description": "Daniel Tapia is a Cloud Engineer, Senior Software Engineer and Full Stack Developer who builds on AWS with Terraform, ships AI-powered products, and leads teams as a Tech Lead."
+    "title": "Daniel Tapia | Senior Full Stack Developer",
+    "description": "Daniel Tapia is a Senior Full Stack Developer who takes part in architecture decisions and leads a group of developers on Falabella Seller Center. React, Angular, Node.js/NestJS, PostgreSQL and AWS."
   },
   "Header": {
     "home": "Home",
@@ -16,23 +16,22 @@
     "availability": "Open to new opportunities",
     "greeting": "Hello, I'm",
     "roles": {
-      "senior": "Senior Software Engineer",
-      "cloud": "Cloud Engineer · AWS & Terraform",
-      "fullstack": "Full Stack Developer",
-      "ai": "AI Engineer",
-      "lead": "Tech Lead"
+      "fullstack": "Senior Full Stack Developer",
+      "frontend": "React · Angular · Microfrontends",
+      "backend": "Node.js · NestJS · PostgreSQL",
+      "cloud": "AWS · Terraform"
     },
-    "intro": "I design and ship cloud-native products end to end, from AWS infrastructure in Terraform and AI-powered features to polished web apps, and I lead teams as a Tech Lead to get them to production.",
+    "intro": "Senior Full Stack Developer working on Falabella Seller Center through SmartJob. I take part in architecture decisions, lead a group of developers on the Promotions team, and stay hands-on from the interface to the services behind it.",
     "viewProjects": "View projects",
     "contactMe": "Contact me",
     "nav": {
       "about": {
         "label": "ABOUT",
-        "description": "Learn more about me"
+        "description": "Role, experience and skills"
       },
       "projects": {
         "label": "PROJECTS",
-        "description": "My featured work"
+        "description": "Selected work and my role in it"
       },
       "contact": {
         "label": "CONTACT",
@@ -42,8 +41,8 @@
   },
   "About": {
     "eyebrow": "About me",
-    "title": "From the cloud to the interface",
-    "headline": "Senior Software Engineer · Cloud Engineer",
+    "title": "From architecture decisions to shipped code",
+    "headline": "Senior Full Stack Developer",
     "location": "Ecuador · Open to remote work",
     "navLabel": "Page sections",
     "current": "Current",
@@ -60,71 +59,234 @@
         "label": "Certified Cloud Practitioner"
       }
     },
-    "subtitle": "A quick snapshot of my background",
-    "avatarAlt": "Daniel Tapia - Senior Software Engineer and Cloud Engineer",
+    "subtitle": "Who I am, what I’m responsible for today, and the work that backs it up.",
+    "avatarAlt": "Daniel Tapia - Senior Full Stack Developer",
     "sections": {
       "bio": "Bio",
+      "highlights": "Highlights",
       "experience": "Experience",
       "skills": "Skills",
       "certifications": "Certifications"
     },
     "bio": {
-      "intro": "I’m a Cloud Engineer and Senior Software Engineer with a full-stack background and a strong frontend focus. I build scalable, high-performance web applications with React/Next.js and Angular, run them on AWS with infrastructure as code in Terraform, and bring AI into real products. I care a lot about clean architecture, maintainable code, and shipping pixel-accurate UIs that work reliably in production.",
-      "current": "I currently work at <highlight>Falabella</highlight> (Seller Center · Promotions), building configuration-driven promotional experiences and high-traffic dashboards across multiple countries. I collaborate closely with product, design, and backend teams to deliver solutions aligned with regional requirements—balancing speed, quality, and long-term maintainability.",
-      "leadership": "I also lead teams as a Tech Lead: shaping the architecture, breaking work into clear deliverables, setting up code review and quality standards, and mentoring developers so the whole team ships with confidence.",
-      "cloud": "I’m cloud-oriented and enjoy bringing solid engineering practices into day-to-day delivery: pragmatic CI/CD, performance optimization, strong code reviews, and continuously improving the developer experience."
+      "intro": "I’m a Senior Full Stack Developer with 6+ years building web products end to end, from the database and the API to the interface.",
+      "current": "I currently work at <highlight>SmartJob</highlight> for <highlight>Falabella Seller Center</highlight>, on the Promotions team. I take part in the team’s architecture decisions, lead a group of developers through the design and implementation of new features, and stay hands-on in the code. The promotions we build are used by sellers in Chile, Colombia and Peru.",
+      "stack": "My work covers the whole stack: React, Next.js and Angular on the client, including microfrontend architectures; Node.js with NestJS and Fastify, Spring Boot and Python on the server; and PostgreSQL, MongoDB, MySQL and Oracle for data. On FactuPro, an invoicing platform I build and operate, I also own the AWS infrastructure, defined in Terraform.",
+      "leadership": "On the leadership side, I decide with the team how features should be built, break initiatives into deliverables, review code and mentor developers."
+    },
+    "highlights": {
+      "labels": {
+        "context": "Context",
+        "part": "My part",
+        "outcome": "Outcome"
+      },
+      "items": {
+        "falabella": {
+          "label": "Falabella Seller Center · Current",
+          "title": "Technical leadership on the Promotions team",
+          "context": "Promotions for Falabella Seller Center, used by sellers in Chile, Colombia and Peru.",
+          "part": "I take part in architecture decisions, lead a group of developers through feature design and implementation, and keep writing code."
+        },
+        "factupro": {
+          "label": "FactuPro",
+          "title": "Moved an invoicing platform from Heroku to AWS",
+          "context": "FactuPro is an electronic invoicing platform for businesses in Ecuador that I build and operate end to end.",
+          "part": "Defined the AWS infrastructure in Terraform: Docker containers on an ARM64 EC2 instance, database migrations on every deploy, GitHub OIDC pipelines, and signing certificates encrypted with a key held in AWS SSM."
+        },
+        "ingestion": {
+          "label": "Zeyo · Business Blockchain",
+          "title": "Ingestion pipelines for 800k+ records",
+          "context": "Data ingestion pipelines at Zeyo.",
+          "part": "Optimized the ingestion pipelines in Python and JavaScript.",
+          "outcome": "800k+ records processed in under 6 hours."
+        },
+        "recovery": {
+          "label": "Freelance",
+          "title": "Enabled the recovery of a USD 500k+ overdue portfolio",
+          "context": "A payment management and collections platform whose supporting database was deprecated and needed cleanup and correction.",
+          "part": "Debugged and corrected that database.",
+          "outcome": "This made it possible to recover more than USD 500,000 in overdue accounts. The collections staff, such as cashiers, then collected those payments gradually over about a year."
+        }
+      }
     },
     "experience": {
       "falabella": {
         "period": "Jan 2026 — Present",
         "title": "Senior Full Stack Developer",
-        "description": "I build and maintain enterprise-scale applications for Falabella Seller Center (Promotions team), a multinational retail platform serving sellers across Chile, Colombia, and Peru. I lead my fellow developers on the team and define key parts of the architecture for our microfrontends and promotional flows: I set component patterns, plan deliverables, and review code, while staying hands-on on high-traffic seller dashboards alongside product, design, and backend teams in an Agile environment."
+        "summary": "Promotions team of Falabella Seller Center, used by sellers in Chile, Colombia and Peru.",
+        "highlights": [
+          "Take part in architecture decisions for the team’s microfrontends and promotional flows, and in how features are structured and evolve over time.",
+          "Lead a group of developers: define the technical approach for each feature, break it into deliverables, and guide its design and implementation.",
+          "Set the component patterns the team builds on and review code.",
+          "Build configuration-driven promotional experiences that follow each country’s requirements, hands-on with React microfrontends and Fastify, alongside product, design and backend teams."
+        ]
       },
       "stafi": {
         "period": "Oct 2025 — Jan 2026",
-        "title": "Semi Senior Full Stack Developer",
-        "description": "Contributed to the design and implementation of scalable backend services using NestJS and PostgreSQL for a production-grade platform. Delivered core backend modules such as Escalations and Meetings, ensuring data integrity, performance, and reliability. Built and maintained database models, migrations, and optimized queries with TypeORM, while collaborating closely with cross-functional teams to translate business requirements into robust, maintainable technical solutions aligned with engineering best practices."
+        "title": "Full Stack Developer",
+        "summary": "Production platform built on NestJS and PostgreSQL; my work centered on the backend.",
+        "highlights": [
+          "Delivered core backend modules, including Escalations and Meetings, from business requirements to NestJS services.",
+          "Built and maintained the database models and migrations with TypeORM, and optimized queries.",
+          "Took part in the design of the platform’s backend services."
+        ]
       },
-      "software-architect": {
-        "period": "Mar 2025 — Oct 2025",
-        "title": "Software Architect",
-        "description": "I delivered automation and high-traffic web solutions end-to-end: n8n workflows integrating CRMs, WhatsApp API, Google Sheets, and WordPress; AWS S3 + CloudFront setups; CI/CD with GitHub Actions and WP-CLI; and performance/security improvements (indexing, caching, SSL/WAF/access control)."
+      "freelance-fullstack": {
+        "period": "Mar 2025 — Nov 2025",
+        "title": "Full Stack Developer",
+        "summary": "Freelance automation and web work, delivered end to end.",
+        "highlights": [
+          "Built n8n workflows that integrate CRMs, the WhatsApp API, Google Sheets and WordPress.",
+          "Configured AWS S3 + CloudFront and set up CI/CD with GitHub Actions and WP-CLI.",
+          "Improved performance and security: database indexing, caching, SSL, WAF and access control."
+        ],
+        "project": {
+          "name": "Armada Reserve",
+          "client": "Client: Armada Global LLC · Engagement through Latam Hire",
+          "description": "Fintech repo-trading platform, supporting trade operations and the transaction lifecycle."
+        }
       },
       "axle": {
         "period": "Mar 2023 — Mar 2025",
         "title": "Senior Full Stack Developer (Angular)",
-        "description": "I worked on high-impact systems used in U.S. scientific and academic environments: optimizing NIH’s HITS platform and contributing to Smart-IRB (used by top-tier universities). I built Angular-based microfrontend UI and NestJS services with PostgreSQL/MongoDB, and contributed to WordPress modernization with reusable Gutenberg blocks and SEO improvements."
+        "summary": "Platforms for U.S. scientific and academic institutions, delivered for Axle Informatics.",
+        "highlights": [
+          "NIH HITS: developed and optimized features of the platform researchers use to explore compound screening data.",
+          "Smart-IRB (new version, used by leading U.S. universities): built Angular microfrontends with PrimeNG and NestJS services on PostgreSQL and MongoDB.",
+          "Contributed to WordPress modernization with reusable Gutenberg blocks and SEO improvements."
+        ]
       },
       "zeyo": {
         "period": "Jul 2022 — Mar 2023",
         "title": "Semi Senior Full-Stack Developer",
-        "description": "I delivered features for government and industry platforms: CERTERO (vote traceability with Ecuador’s National Electoral Council) and Safetrack (QR-based labeling/traceability). I also optimized ingestion pipelines to process 800k+ records in under 6 hours using Python and JavaScript."
+        "summary": "Traceability platforms for government and industry, backed by blockchain records.",
+        "highlights": [
+          "CERTERO: delivered features for vote traceability with Ecuador’s National Electoral Council.",
+          "Safetrack: delivered the purchase order management and traceability/reporting modules for QR-based product labeling.",
+          "Optimized data ingestion pipelines in Python and JavaScript to process 800k+ records in under 6 hours."
+        ]
       },
       "kengisoft": {
-        "period": "Aug 2021 — Jun 2022",
+        "period": "May 2021 — Aug 2022",
         "title": "Junior Developer",
-        "description": "I contributed to an educational platform and built an electronic invoicing system using Node.js and Angular, improving payment integration. I also shipped a packing list system (React + Spring Boot) and delivered a WordPress marketing site with custom plugins and analytics dashboards."
+        "highlights": [
+          "Built an electronic invoicing system with Node.js and Angular and improved its payment integration.",
+          "Shipped a packing list system with React and Spring Boot.",
+          "Contributed to an educational platform and delivered a WordPress marketing site with custom plugins and analytics dashboards."
+        ]
       },
       "freelance-web": {
-        "period": "Jan 2020 — Aug 2021",
+        "period": "Oct 2019 — May 2021",
         "title": "Freelance Web Developer",
-        "description": "I’ve built and deployed multiple web solutions for Ecuadorian institutions and businesses, including a payment management platform that helped recover $500k+ in overdue accounts and traceability systems (Spring Boot + Angular + Oracle) for incident visibility and operational response improvements."
+        "summary": "Web solutions for Ecuadorian institutions and businesses.",
+        "highlights": [
+          "Payment management and collections platform: debugged and corrected the deprecated database behind it. That work made it possible to recover a past-due portfolio of more than USD 500,000, which the collections staff, such as cashiers, then collected gradually over about a year.",
+          "Built traceability systems with Spring Boot, Angular and Oracle that gave teams visibility into incidents and improved operational response."
+        ]
       }
     },
-    "skillsTitle": "Skills & Tools",
-    "skillCategories": {
-      "frontend": "Frontend",
-      "backend": "Backend",
-      "databases": "Databases",
-      "cloud": "Cloud & DevOps",
-      "tools": "Tools & Product"
+    "keyProject": "Key project",
+    "skillsTitle": "Skills",
+    "skillsIntro": "Grouped by area. The highlighted items are the ones backed by the roles and projects on this site.",
+    "alsoUsed": "Also used",
+    "skills": {
+      "frontend": {
+        "title": "Frontend",
+        "core": [
+          "React",
+          "Next.js",
+          "TypeScript",
+          "Angular",
+          "PrimeNG",
+          "Tailwind CSS",
+          "i18n"
+        ],
+        "also": [
+          "SCSS Modules",
+          "Bootstrap"
+        ]
+      },
+      "backend": {
+        "title": "Backend",
+        "core": [
+          "Node.js",
+          "NestJS",
+          "Fastify",
+          "Spring Boot",
+          "REST APIs",
+          "Python"
+        ],
+        "also": [
+          "GraphQL"
+        ]
+      },
+      "architecture": {
+        "title": "Architecture & System Design",
+        "core": [
+          "Microfrontends",
+          "Microservices",
+          "Design Systems",
+          "Configuration-driven features",
+          "Data modeling & migrations",
+          "Infrastructure as code"
+        ],
+        "also": []
+      },
+      "data": {
+        "title": "Databases & Data Processing",
+        "core": [
+          "PostgreSQL",
+          "MongoDB",
+          "MySQL",
+          "Oracle",
+          "Redis",
+          "Data ingestion pipelines"
+        ],
+        "also": [
+          "SQL Server"
+        ]
+      },
+      "cloud": {
+        "title": "Cloud & DevOps",
+        "core": [
+          "AWS (EC2, S3, IAM, RDS, Lambda)",
+          "Terraform",
+          "Docker",
+          "Kubernetes",
+          "GitHub Actions",
+          "CI/CD",
+          "CloudFront",
+          "Vercel",
+          "Azure DevOps"
+        ],
+        "also": []
+      },
+      "practices": {
+        "title": "Engineering Practices & Leadership",
+        "core": [
+          "Technical leadership",
+          "Code review",
+          "Feature planning & delivery breakdown",
+          "Mentoring",
+          "Cross-functional collaboration"
+        ],
+        "also": [
+          "Scrum",
+          "Kanban",
+          "Jira",
+          "Figma",
+          "Git",
+          "GitHub",
+          "Bitbucket"
+        ]
+      }
     },
     "inProgress": "In progress"
   },
   "Projects": {
     "eyebrow": "Portfolio",
     "title": "Projects",
-    "intro": "A curated selection of real-world projects I have contributed to, from enterprise platforms and microfrontends to automation systems and end-to-end full-stack deliveries.",
+    "intro": "Selected projects, each with its context, my role and what I worked on. Client work is described without confidential details.",
     "featured": "Featured Projects",
     "other": "Other Projects",
     "viewCode": "View code on GitHub",
@@ -132,39 +294,86 @@
     "items": {
       "armada-reserve": {
         "title": "Armada Reserve - Repo Trading Desk (FinTech)",
-        "description": "Full-stack work on Armada Reserve, a platform for repurchase agreement (repo) trading desks that manages the full trade lifecycle, from entry and pre-trade compliance to settlement. I deliver features across the Next.js desk and client portal and the NestJS API, including Auth0 MFA and step-up authentication, provider-aware settlement and wallet flows with digital-asset custody, and accounting records, and I harden the Kubernetes infrastructure behind SOC 2 controls."
+        "role": "Freelance · Armada Global LLC, through Latam Hire",
+        "description": "A platform for repurchase agreement (repo) trading desks that manages the full trade lifecycle, from entry and pre-trade compliance to settlement.",
+        "highlights": [
+          "Delivered features across the Next.js trading desk and client portal and the NestJS API.",
+          "Those features included Auth0 MFA and step-up authentication, provider-aware settlement and wallet flows with digital-asset custody, and accounting records.",
+          "Hardened the Kubernetes infrastructure behind SOC 2 controls."
+        ]
       },
       "falabella-seller-center": {
-        "title": "Falabella Seller Center - Promotions (Enterprise)",
-        "description": "Enterprise-scale promotions platform for Falabella Seller Center, used by sellers across Chile, Colombia, and Peru. Beyond shipping features, I lead my fellow developers on the Promotions team: I define key parts of the architecture for our microfrontends and configuration-driven promotional flows, set the patterns for reusable React + TypeScript components, break initiatives into clear deliverables, and review code and mentor teammates so quality stays consistent as the team grows. I stay hands-on on high-traffic seller dashboards and work closely with product, design, and backend teams in an Agile environment."
+        "title": "Falabella Seller Center - Promotions",
+        "role": "SmartJob · Technical leadership and hands-on development",
+        "description": "The promotions area of Falabella Seller Center, used by sellers in Chile, Colombia and Peru, where promotional flows are configuration-driven to follow each country’s requirements.",
+        "highlights": [
+          "Take part in architecture decisions for the team’s microfrontends and configuration-driven promotional flows.",
+          "Lead a group of developers: define how each feature is built, break initiatives into deliverables, and review code.",
+          "Set the patterns for reusable React + TypeScript components and mentor teammates.",
+          "Stay hands-on in the code, working closely with product, design and backend teams."
+        ]
       },
       "eeasa-operations-logbook": {
         "title": "EEASA - Electric Utility Operations Logbook",
-        "description": "Operations logbook for Empresa Eléctrica Ambato (EEASA), an electric utility in central Ecuador. Control center and call center staff record faults, incidents, and operational events, manage work orders, and document field crew work with photos. Worked across the Angular frontend and the Spring Boot API, with role-based access, operational dashboards, and Excel/PDF reports, including reports for the national grid operator (CENACE)."
+        "role": "Full stack · Angular frontend and Spring Boot API",
+        "description": "Operations logbook for Empresa Eléctrica Ambato (EEASA), an electric utility in central Ecuador. Control center and call center staff record faults, incidents, and operational events, manage work orders, and document field crew work with photos.",
+        "highlights": [
+          "Worked on role-based access, operational dashboards, and Excel/PDF reports, including the reports for Ecuador’s national grid operator (CENACE)."
+        ]
       },
       "nih-hits": {
         "title": "NIH - HITS Platform (USA)",
-        "description": "Developed and optimized the HITS system for the U.S. National Institutes of Health, improving efficiency and scalability for scientific research workflows."
+        "role": "MushroomSoft · for Axle Informatics",
+        "description": "HITS is a platform at the U.S. National Institutes of Health (NIH) for exploring compound screening data, with table, gallery and plate views, keyword search, condition-based filters, and drug-combination synergy matrices.",
+        "highlights": [
+          "Developed and optimized features of the platform, working with Angular microfrontends, NestJS and PostgreSQL."
+        ]
       },
       "smart-irb": {
         "title": "Smart-IRB - New Version (Top U.S. Universities)",
-        "description": "Contributed to the new version of Smart-IRB, used by top-tier universities in the U.S. (including Harvard). Delivered frontend in an Angular microfrontend architecture and backend services with NestJS and SQL/NoSQL data stores."
+        "role": "MushroomSoft · for Axle Informatics",
+        "description": "New version of Smart-IRB, used by leading U.S. universities, including Harvard.",
+        "highlights": [
+          "Delivered frontend features in an Angular microfrontend architecture with PrimeNG.",
+          "Built backend services with NestJS on PostgreSQL and MongoDB."
+        ]
       },
       "certero": {
         "title": "CERTERO - Certificate Issuance & Verification (Blockchain)",
-        "description": "At Zeyo, I contributed to CERTERO, a blockchain-based platform focused on secure certificate issuance and verification. I worked on building and refining user-facing flows and integrations that improved transparency and trust in the certification lifecycle, collaborating with cross-functional teams to deliver maintainable, production-ready features."
+        "role": "Zeyo · Business Blockchain",
+        "description": "A blockchain-based platform for issuing and verifying certificates.",
+        "highlights": [
+          "Built and refined user-facing flows and integrations across the certification lifecycle, working with cross-functional teams."
+        ]
       },
       "safetrack": {
         "title": "Safetrack - QR Labeling & Traceability",
-        "description": "At Zeyo, I worked on Safetrack, a traceability solution for product labeling and authenticity verification using QR-based flows and blockchain-backed records. I delivered key modules such as purchase order management and traceability/reporting features, improving operational control and transparency across fragmented supply chains."
+        "role": "Zeyo · Business Blockchain",
+        "description": "A traceability solution for product labeling and authenticity verification, using QR codes and blockchain-backed records.",
+        "highlights": [
+          "Delivered the purchase order management module.",
+          "Delivered traceability and reporting features."
+        ]
       },
       "factupro-v2": {
         "title": "FactuPro v2 - Cloud Invoicing Platform (Web, Mobile & AWS)",
-        "description": "Second generation of FactuPro, an electronic invoicing platform for businesses in Ecuador that I build and operate end to end. A new Next.js web client and a React Native (Expo) mobile app share the Express API and add modules such as restaurant table and order management. I also moved the platform from Heroku to AWS with Terraform: Docker containers on an ARM64 EC2 instance, database migrations on every deploy, GitHub OIDC pipelines, and signing certificates stored encrypted with a key held in AWS SSM."
+        "role": "I build and operate it end to end",
+        "description": "Second generation of FactuPro, an electronic invoicing platform for businesses in Ecuador. A new Next.js web client and a React Native (Expo) mobile app share the Express API and add modules such as restaurant table and order management.",
+        "highlights": [
+          "Moved the platform from Heroku to AWS, with the infrastructure defined in Terraform.",
+          "Docker containers on an ARM64 EC2 instance, with database migrations on every deploy.",
+          "Deployment pipelines with GitHub OIDC.",
+          "Signing certificates stored encrypted, with the key held in AWS SSM."
+        ]
       },
       "factupro-v1": {
         "title": "FactuPro v1 - Electronic Invoicing System (Ecuador SRI)",
-        "description": "First version of FactuPro, in production since 2020 for several companies. An Angular frontend and a Node.js/Express API generate electronic invoices, sign them with XAdES-BES, and send them to Ecuador’s tax authority (SRI), then build the PDF invoice and email it to the customer. Also covers payment integration, sales reports, and Excel/PDF exports."
+        "description": "First version of FactuPro, in production since 2020 for several companies.",
+        "highlights": [
+          "Angular frontend and Node.js/Express API that generate electronic invoices, sign them with XAdES-BES, and send them to Ecuador’s tax authority (SRI).",
+          "Builds the PDF invoice and emails it to the customer.",
+          "Payment integration, sales reports, and Excel/PDF exports."
+        ]
       },
       "weather-app": {
         "title": "Weather App - Real-Time Forecast",
@@ -198,8 +407,8 @@
   },
   "Contact": {
     "eyebrow": "Contact",
-    "title": "Let’s build something great together",
-    "intro": "Looking for a Senior Software Engineer, a Cloud Engineer or a Tech Lead for your team? I’m open to roles and projects involving <highlight>AWS and Terraform</highlight>, <highlight>React/Next.js</highlight>, <highlight>Angular</highlight>, <highlight>Node.js/NestJS</highlight> and <highlight>AI</highlight>. Tell me what you’re building and I’ll get back to you.",
+    "title": "Let’s talk about your team or project",
+    "intro": "Looking for a Senior Full Stack Developer who can also lead feature design and take part in architecture decisions? I work with <highlight>React/Next.js</highlight>, <highlight>Angular</highlight>, <highlight>Node.js/NestJS</highlight>, <highlight>PostgreSQL</highlight> and <highlight>AWS with Terraform</highlight>. Tell me what you’re building and I’ll get back to you.",
     "directTitle": "Reach me directly",
     "emailLabel": "Email",
     "emailButtonLabel": "Send me an email",
@@ -210,21 +419,21 @@
     "findMe": "You can also find me here",
     "helpTitle": "How I can help",
     "help": {
-      "cloud": {
-        "title": "Cloud & infrastructure",
-        "description": "AWS architectures managed with Terraform, CI/CD pipelines and secure deployments."
-      },
       "fullstack": {
-        "title": "Full-stack products",
-        "description": "From idea to production with React/Next.js, Angular and Node.js."
+        "title": "Full-stack features",
+        "description": "Features delivered across the stack, from React/Next.js or Angular interfaces, including microfrontends, to the services behind them."
       },
-      "ai": {
-        "title": "AI features",
-        "description": "Bringing AI into real products and day-to-day workflows."
+      "backend": {
+        "title": "Backend & data",
+        "description": "NestJS, Fastify and Spring Boot services, data models and migrations, on PostgreSQL, MongoDB or Oracle."
       },
       "leadership": {
         "title": "Technical leadership",
-        "description": "Leading teams as a Tech Lead: architecture, code reviews and mentoring."
+        "description": "Deciding how features are built, breaking work into deliverables, reviewing code and guiding developers."
+      },
+      "cloud": {
+        "title": "Cloud & infrastructure",
+        "description": "AWS infrastructure defined in Terraform, Docker deployments and CI/CD with GitHub Actions."
       }
     },
     "success": {

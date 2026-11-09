@@ -3,12 +3,12 @@
 import {useState} from 'react';
 import {useTranslations} from 'next-intl';
 import {
-  Bot,
   Check,
   CheckCircle2,
   Cloud,
   Code2,
   Copy,
+  Database,
   Loader2,
   Mail,
   MapPin,
@@ -20,10 +20,10 @@ import {SocialNetworks} from '@/app/components/SocialNetworks';
 const EMAIL = 'd.tapialopez1@gmail.com';
 
 const helpItems = [
-  {key: 'cloud', icon: Cloud},
   {key: 'fullstack', icon: Code2},
-  {key: 'ai', icon: Bot},
-  {key: 'leadership', icon: Users}
+  {key: 'backend', icon: Database},
+  {key: 'leadership', icon: Users},
+  {key: 'cloud', icon: Cloud}
 ] as const;
 
 const emptyForm = {name: '', email: '', message: ''};
