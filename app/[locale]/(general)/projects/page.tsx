@@ -1,6 +1,10 @@
 import Link from 'next/link';
 import {ExternalLink, Folder, FolderGit2, Github} from 'lucide-react';
-import {getTranslations, setRequestLocale} from 'next-intl/server';
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale
+} from 'next-intl/server';
 import type {Locale} from 'next-intl';
 import ProjectGallery from '@/app/components/ProjectGallery';
 import Reveal from '@/app/components/Reveal';
@@ -48,6 +52,9 @@ function ProjectLinks({
   );
 }
 
+// role and highlights are optional; only some projects have them.
+type ProjectCopy = {role?: string; highlights?: string[]};
+
 function SectionTitle({children}: {children: React.ReactNode}) {
   return (
     <div className="mb-12 flex items-center gap-4">
@@ -67,6 +74,7 @@ export default async function Projects({
   const {locale} = await params;
   setRequestLocale(locale as Locale);
   const t = await getTranslations('Projects');
+  const items = (await getMessages()).Projects.items;
 
   const featuredProjects = projects.filter((p) => p.featured);
   const otherProjects = projects.filter((p) => !p.featured);
@@ -97,6 +105,7 @@ export default async function Projects({
               // Alternate image and text sides on large screens.
               const isReversed = index % 2 === 1;
               const title = t(`items.${project.slug}.title`);
+              const copy = items[project.slug] as ProjectCopy;
 
               return (
                 <Reveal
@@ -119,9 +128,27 @@ export default async function Projects({
                     <h3 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
                       {title}
                     </h3>
+                    {copy.role && (
+                      <p className="font-mono text-xs text-muted-foreground">
+                        {copy.role}
+                      </p>
+                    )}
                     <p className="leading-relaxed text-muted-foreground">
                       {t(`items.${project.slug}.description`)}
                     </p>
+
+                    {copy.highlights && (
+                      <ul className="space-y-2">
+                        {copy.highlights.map((item) => (
+                          <li
+                            key={item}
+                            className="relative pl-4 text-sm leading-relaxed text-foreground/85 before:absolute before:left-0 before:top-[0.6em] before:h-1.5 before:w-1.5 before:rounded-full before:bg-primary/60"
+                          >
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
 
                     <ul className="flex flex-wrap gap-2">
                       {project.techs.map((tech) => (

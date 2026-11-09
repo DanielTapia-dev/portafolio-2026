@@ -69,7 +69,7 @@ proxy.ts               Locale detection and redirects
 
 1. Put its screenshots in `public/projects/<slug>/`, with descriptive file names.
 2. Add an entry to `lib/projects.ts` with the slug, `images: screenshots('<slug>', [...])`, tech stack and links. The first image is the cover; it fills a 2:1 frame from the top, so any shape works. Inside the gallery, every image keeps its own proportions.
-3. Add its title and description under `Projects.items.<slug>` in both `messages/en.json` and `messages/es.json`.
+3. Add its title and description under `Projects.items.<slug>` in both `messages/en.json` and `messages/es.json`. Featured projects can also have a `role` line and a `highlights` list of what you worked on.
 
 TypeScript checks that every slug has a translation, because message keys are typed from `messages/en.json`.
 
