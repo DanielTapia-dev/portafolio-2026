@@ -10,7 +10,7 @@ Personal portfolio of Daniel Tapia, Full Stack Developer. It presents my experie
 - **Project galleries.** Each featured project opens a modal gallery of its screenshots, with keyboard navigation (Esc, ← and →).
 - **Contact form.** Messages are emailed through [Resend](https://resend.com).
 - **Static rendering.** Every page is prerendered for both languages.
-- **Private analytics dashboard.** `/admin/analytics`, behind a sign-in, shows traffic, sources, pages and key actions from [PostHog](https://posthog.com). See [Analytics](#analytics).
+- **Private analytics dashboard.** `/admin/analytics`, behind a sign-in, shows visits, countries and regions, and the most visited pages from [PostHog](https://posthog.com). See [Analytics](#analytics).
 
 ## Tech stack
 
@@ -97,7 +97,7 @@ Visits are recorded with [PostHog](https://posthog.com) and read back on a priva
 ### What is recorded
 
 - **Page views** on first load and on every client-side navigation, plus a **page leave**, which gives time on page and session duration.
-- **Key actions:** the home "Contact me" button, contact links (GitHub, LinkedIn, X, email), copying the email, sending the contact form (never its contents), opening a project gallery, opening a project's code or live site, opening a featured project card on About, and checking a certification on Credly. The catalog is in `lib/analytics/events.ts`; to track a click, spread `analyticsAttributes('<event>', {...})` on the element.
+- **Key actions:** the home "Contact me" button, contact links (GitHub, LinkedIn, X, email), copying the email, sending the contact form (never its contents), opening a project gallery, opening a project's code or live site, opening a featured project card on About, and checking a certification on Credly. The catalog is in `lib/analytics/events.ts`; to track a click, spread `analyticsAttributes('<event>', {...})` on the element. The dashboard does not show these actions; explore them in PostHog itself.
 - **Context from PostHog:** approximate country, referring domain, UTM parameters, device, browser and OS.
 
 ### Privacy choices
@@ -128,5 +128,5 @@ Data starts on the day the token is deployed. PostHog cannot recover visits from
 ### Limits
 
 - **PostHog free plan:** 1 million events a month, with data kept for 1 year. Check the [pricing page](https://posthog.com/pricing) for current terms.
-- **Query API:** at most 3 queries run at the same time per project, and there is an hourly limit. One dashboard load runs 12 small queries, three at a time.
+- **Query API:** at most 3 queries run at the same time per project, and there is an hourly limit. The dashboard runs 3 queries at once (visits and trend, location, top pages) and caches each result for 5 minutes.
 - **Ad blockers:** some block PostHog's domain, so those visits are missing. To recover most of them, PostHog suggests [proxying requests through your own domain](https://posthog.com/docs/advanced/proxy/nextjs). That was left out here because proxied requests could report the server's location instead of the visitor's, which would need testing first.
