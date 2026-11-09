@@ -16,6 +16,7 @@ import {
   Users
 } from 'lucide-react';
 import {SocialNetworks} from '@/app/components/SocialNetworks';
+import {analyticsAttributes, trackEvent} from '@/lib/analytics/events';
 
 const EMAIL = 'd.tapialopez1@gmail.com';
 
@@ -69,6 +70,8 @@ export default function Contact() {
       }
 
       setSubmitted(true);
+      // Records that a message was sent, never its contents.
+      trackEvent('contact_form_submitted');
       setFormData(emptyForm);
     } catch (err) {
       // The API answers in English; show a translated message instead.
@@ -115,6 +118,10 @@ export default function Contact() {
                 </div>
                 <a
                   href={`mailto:${EMAIL}`}
+                  {...analyticsAttributes('contact_link_clicked', {
+                    channel: 'email',
+                    placement: 'contact_card'
+                  })}
                   className="flex-1 font-medium text-foreground transition-colors hover:text-primary"
                   aria-label={t('emailButtonLabel')}
                 >
@@ -123,6 +130,7 @@ export default function Contact() {
                 <button
                   type="button"
                   onClick={copyEmail}
+                  {...analyticsAttributes('email_copied')}
                   aria-label={t('copyEmail')}
                   title={t('copyEmail')}
                   className="rounded-lg border border-border p-2 text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"

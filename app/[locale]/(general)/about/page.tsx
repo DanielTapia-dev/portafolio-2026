@@ -1,7 +1,12 @@
+import {existsSync} from 'node:fs';
+import path from 'node:path';
+import Image from 'next/image';
 import {
+  ArrowRight,
   BadgeCheck,
   Cloud,
   Database,
+  ExternalLink,
   LayoutTemplate,
   MapPin,
   Network,
@@ -19,7 +24,9 @@ import ProfileAvatar from '@/app/components/ProfileAvatar';
 import Reveal from '@/app/components/Reveal';
 import SectionNav from '@/app/components/SectionNav';
 import {SocialNetworks} from '@/app/components/SocialNetworks';
-import {projects} from '@/lib/projects';
+import {Link} from '@/i18n/navigation';
+import {analyticsAttributes} from '@/lib/analytics/events';
+import {projects, type ProjectSlug} from '@/lib/projects';
 import {cn} from '@/lib/utils';
 
 // Items live in messages under About.skills.<category>: `core` lists the skills
@@ -33,24 +40,63 @@ const skillCategories = [
   {category: 'practices', icon: Users}
 ] as const;
 
-// Copy lives in messages under About.highlights.items.<id>.
-// TODO(Daniel): add an outcome to falabella and factupro once there is one to cite.
-const highlights = [
-  {id: 'falabella', hasOutcome: false},
-  {id: 'factupro', hasOutcome: false},
-  {id: 'ingestion', hasOutcome: true},
-  {id: 'recovery', hasOutcome: true}
-] as const;
+// Each card links to its project on /projects (the entry's id is its slug).
+// Copy lives in messages under About.featured.items.<id>; the cover and the
+// stack come from lib/projects.ts. FactuPro covers v1 and v2 in one card.
+const featuredCards: {
+  id: 'falabella' | 'armada' | 'hits' | 'factupro';
+  slug: ProjectSlug;
+  alsoFrom?: ProjectSlug;
+}[] = [
+  {id: 'falabella', slug: 'falabella-seller-center'},
+  {id: 'armada', slug: 'armada-reserve'},
+  {id: 'hits', slug: 'nih-hits'},
+  {id: 'factupro', slug: 'factupro-v2', alsoFrom: 'factupro-v1'}
+];
 
-// year: null means the certification is still in progress.
-const certifications: {title: string; issuer: string; year: string | null}[] = [
-  {title: 'AWS Certified Cloud Practitioner', issuer: 'AWS', year: '2025'},
+const MAX_CARD_TECHS = 6;
+
+function cardDetails(slug: ProjectSlug, alsoFrom?: ProjectSlug) {
+  const project = projects.find((p) => p.slug === slug);
+  const extra = projects.find((p) => p.slug === alsoFrom);
+  const techs = [...new Set([...(project?.techs ?? []), ...(extra?.techs ?? [])])];
+  return {cover: project?.images?.[0], techs: techs.slice(0, MAX_CARD_TECHS)};
+}
+
+// Badge images are optional: drop the PNG exported from Credly at `badge`
+// (under public/) and it replaces the generic icon at the next build.
+const certifications: {
+  title: string;
+  issuer: string;
+  code: string;
+  year: string;
+  credlyUrl: string;
+  badge: string;
+  trackingId: string;
+}[] = [
   {
-    title: 'AWS Solutions Architect (Associate)',
+    title: 'AWS Certified Solutions Architect – Associate',
     issuer: 'AWS',
-    year: null
+    code: 'SAA-C03',
+    year: '2026',
+    credlyUrl: 'https://www.credly.com/badges/90f04c41-bef3-4dca-8b81-6c9f546b2d93',
+    badge: '/certifications/aws-solutions-architect-associate.png',
+    trackingId: 'aws-solutions-architect-associate'
+  },
+  {
+    title: 'AWS Certified Cloud Practitioner',
+    issuer: 'AWS',
+    code: 'CLF-C02',
+    year: '2025',
+    credlyUrl: 'https://www.credly.com/badges/37db155a-683c-4195-babe-e6b773d740c9',
+    badge: '/certifications/aws-cloud-practitioner.png',
+    trackingId: 'aws-cloud-practitioner'
   }
 ];
+
+// The About page is prerendered, so this runs at build time.
+const hasBadgeImage = (badge: string) =>
+  existsSync(path.join(process.cwd(), 'public', badge));
 
 // Periods, titles, summaries and highlights live in messages under About.experience.<id>.
 const experience = [
@@ -60,12 +106,28 @@ const experience = [
     id: 'falabella',
     isCurrent: true,
     company: 'SmartJob · Falabella',
-    techs: ['React', 'Fastify', 'Microfrontends', 'Design Systems', 'i18n']
+    techs: [
+      'React',
+      'TypeScript',
+      'Fastify',
+      'BFF',
+      'Microfrontends',
+      'Design Systems',
+      'i18n'
+    ]
   },
   {
     id: 'stafi',
     company: 'Stafi 🇺🇸',
-    techs: ['Next.js', 'Nest.js', 'Microservices', 'Vercel', 'Postgres']
+    techs: [
+      'Next.js',
+      'TypeScript',
+      'NestJS',
+      'Clerk',
+      'PostgreSQL',
+      'Vercel',
+      'Microservices'
+    ]
   },
   {
     id: 'freelance-fullstack',
@@ -82,7 +144,18 @@ const experience = [
     ],
     // A project delivered within this engagement, not a separate employer.
     project: {
-      techs: ['Next.js', 'NestJS', 'Fireblocks', 'Coinbase']
+      techs: [
+        'Next.js',
+        'NestJS',
+        'TypeScript',
+        'PostgreSQL',
+        'Kafka',
+        'Auth0',
+        'Kubernetes',
+        'Terraform',
+        'Fireblocks',
+        'Coinbase'
+      ]
     }
   },
   {
@@ -90,21 +163,25 @@ const experience = [
     company: 'MushroomSoft · Axle Informatics 🇺🇸',
     techs: [
       'Angular',
-      'Microfrontends',
       'PrimeNG',
-      'NestJS',
+      'Microfrontends',
+      '.NET 8',
       'PostgreSQL',
       'MongoDB',
-      'Azure DevOps'
+      'Azure DevOps',
+      'GitHub'
     ]
   },
   {
     id: 'zeyo',
     company: 'Zeyo · Business Blockchain',
     techs: [
+      'Python',
+      'JavaScript',
+      'Angular',
       'React',
       'Node.js',
-      'Python',
+      'Blockchain',
       'AWS S3',
       'GitHub Actions',
       'Data Processing'
@@ -113,12 +190,13 @@ const experience = [
   {
     id: 'kengisoft',
     company: 'Kengisoft',
-    techs: ['Angular', 'Node.js', 'React', 'Spring Boot', 'WordPress', 'SQL']
+    techs: ['Angular', 'Node.js', 'Spring Boot', 'WordPress', 'SQL']
   },
   {
     id: 'freelance-web',
     company: 'Freelance',
     techs: [
+      'Java',
       'Spring Boot',
       'Angular',
       'Oracle',
@@ -133,13 +211,11 @@ type SkillCopy = {title: string; core: string[]; also: string[]};
 
 const sections = [
   'bio',
-  'highlights',
+  'featured',
   'experience',
   'skills',
   'certifications'
 ] as const;
-
-const featuredCount = projects.filter((project) => project.featured).length;
 
 function SectionTitle({children}: {children: React.ReactNode}) {
   return (
@@ -180,7 +256,7 @@ export default async function AboutPage({
 
   const stats = [
     {value: t('stats.experience.value'), label: t('stats.experience.label')},
-    {value: String(featuredCount), label: t('stats.projects.label')},
+    {value: String(projects.length), label: t('stats.projects.label')},
     {value: t('stats.certified.value'), label: t('stats.certified.label')}
   ];
 
@@ -270,51 +346,65 @@ export default async function AboutPage({
               </dl>
             </section>
 
-            <section id="highlights" className="scroll-mt-28">
-              <SectionTitle>{t('sections.highlights')}</SectionTitle>
+            <section id="featured" className="scroll-mt-28">
+              <SectionTitle>{t('sections.featured')}</SectionTitle>
               <div className="grid gap-5 md:grid-cols-2">
-                {highlights.map(({id, hasOutcome}, index) => (
-                  <Reveal
-                    key={id}
-                    delay={(index % 2) * 100}
-                    className="flex flex-col rounded-xl border border-border bg-card/60 p-5 transition-colors hover:border-primary/40"
-                  >
-                    <p className="font-mono text-xs text-primary">
-                      {t(`highlights.items.${id}.label`)}
-                    </p>
-                    <h3 className="mt-2 font-semibold leading-snug text-foreground">
-                      {t(`highlights.items.${id}.title`)}
-                    </h3>
-                    <dl className="mt-4 space-y-3 text-sm leading-relaxed">
-                      <div>
-                        <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
-                          {t('highlights.labels.context')}
-                        </dt>
-                        <dd className="mt-1 text-muted-foreground">
-                          {t(`highlights.items.${id}.context`)}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
-                          {t('highlights.labels.part')}
-                        </dt>
-                        <dd className="mt-1 text-foreground/90">
-                          {t(`highlights.items.${id}.part`)}
-                        </dd>
-                      </div>
-                      {hasOutcome && (
-                        <div>
-                          <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
-                            {t('highlights.labels.outcome')}
-                          </dt>
-                          <dd className="mt-1 text-foreground/90">
-                            {t(`highlights.items.${id}.outcome`)}
-                          </dd>
-                        </div>
-                      )}
-                    </dl>
-                  </Reveal>
-                ))}
+                {featuredCards.map(({id, slug, alsoFrom}, index) => {
+                  const {cover, techs} = cardDetails(slug, alsoFrom);
+
+                  return (
+                    <Reveal key={id} delay={(index % 2) * 100}>
+                      <Link
+                        href={`/projects#${slug}`}
+                        {...analyticsAttributes('featured_project_clicked', {
+                          project: slug
+                        })}
+                        className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card/60 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_20px_50px_-25px_var(--primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      >
+                        {cover && (
+                          <span className="relative block aspect-2/1 overflow-hidden border-b border-border bg-secondary">
+                            <Image
+                              src={cover}
+                              alt=""
+                              fill
+                              sizes="(min-width: 1024px) 380px, (min-width: 768px) 45vw, 100vw"
+                              className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+                            />
+                          </span>
+                        )}
+                        <span className="flex flex-1 flex-col p-5">
+                          <span className="font-mono text-xs text-primary">
+                            {t(`featured.items.${id}.label`)}
+                          </span>
+                          <span className="mt-2 font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
+                            {t(`featured.items.${id}.title`)}
+                          </span>
+                          <span className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                            {t(`featured.items.${id}.summary`)}
+                          </span>
+                          <span className="mt-4 flex flex-wrap gap-1.5">
+                            {techs.map((tech) => (
+                              <span
+                                key={tech}
+                                className="rounded-md border border-border bg-background/60 px-2 py-0.5 text-xs text-muted-foreground"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </span>
+                          <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-medium text-primary">
+                            {t('featured.viewProject')}
+                            <ArrowRight
+                              size={16}
+                              aria-hidden
+                              className="transition-transform group-hover:translate-x-1"
+                            />
+                          </span>
+                        </span>
+                      </Link>
+                    </Reveal>
+                  );
+                })}
               </div>
             </section>
 
@@ -458,21 +548,41 @@ export default async function AboutPage({
                   <Reveal
                     key={c.title}
                     delay={index * 100}
-                    className={cn(
-                      'flex items-start gap-4 rounded-xl border border-border bg-card/60 p-5',
-                      !c.year && 'border-dashed'
-                    )}
+                    className="flex items-start gap-4 rounded-xl border border-border bg-card/60 p-5"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                      <BadgeCheck size={20} className="text-primary" />
-                    </span>
+                    {hasBadgeImage(c.badge) ? (
+                      <Image
+                        src={c.badge}
+                        alt=""
+                        width={72}
+                        height={72}
+                        className="h-18 w-18 shrink-0"
+                      />
+                    ) : (
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                        <BadgeCheck size={20} className="text-primary" />
+                      </span>
+                    )}
                     <div className="space-y-1">
                       <h3 className="font-semibold text-foreground">
                         {c.title}
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        {c.issuer} · {c.year ?? t('inProgress')}
+                        {c.issuer} · {c.code} · {c.year}
                       </p>
+                      <a
+                        href={c.credlyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={t('verifyLabel', {title: c.title})}
+                        className="inline-flex items-center gap-1.5 pt-1 text-sm font-medium text-primary transition-colors hover:text-primary/80"
+                        {...analyticsAttributes('certification_verified', {
+                          link: c.trackingId
+                        })}
+                      >
+                        {t('verify')}
+                        <ExternalLink size={14} aria-hidden />
+                      </a>
                     </div>
                   </Reveal>
                 ))}

@@ -48,64 +48,54 @@
     "current": "Actual",
     "stats": {
       "experience": {
-        "value": "6+",
+        "value": "7+",
         "label": "Años construyendo software"
       },
       "projects": {
-        "label": "Proyectos destacados"
+        "label": "Proyectos"
       },
       "certified": {
         "value": "AWS",
-        "label": "Certified Cloud Practitioner"
+        "label": "Certified Solutions Architect – Associate"
       }
     },
     "subtitle": "Quién soy, de qué soy responsable hoy y el trabajo que lo respalda.",
     "avatarAlt": "Daniel Tapia - Desarrollador Full Stack Senior",
     "sections": {
       "bio": "Biografía",
-      "highlights": "Destacados",
+      "featured": "Proyectos destacados",
       "experience": "Experiencia",
       "skills": "Habilidades",
       "certifications": "Certificaciones"
     },
     "bio": {
-      "intro": "Soy Desarrollador Full Stack Senior, con más de 6 años construyendo productos web de punta a punta, desde la base de datos y la API hasta la interfaz.",
+      "intro": "Soy Desarrollador Full Stack Senior, con más de 7 años construyendo productos web de punta a punta, desde la base de datos y la API hasta la interfaz.",
       "current": "Actualmente trabajo en <highlight>SmartJob</highlight> para <highlight>Falabella Seller Center</highlight>, en el equipo de Promociones. Participo en las decisiones de arquitectura del equipo, lidero a un grupo de desarrolladores en el diseño y la implementación de nuevas funcionalidades y sigo trabajando directamente en el código. Las promociones que construimos las usan vendedores en Chile, Colombia y Perú.",
-      "stack": "Mi trabajo abarca todo el stack: React, Next.js y Angular en el cliente, incluidas arquitecturas de microfrontends; Node.js con NestJS y Fastify, Spring Boot y Python en el servidor; y PostgreSQL, MongoDB, MySQL y Oracle para los datos. En FactuPro, una plataforma de facturación que desarrollo y opero, también me encargo de la infraestructura en AWS, definida con Terraform.",
+      "stack": "Mi trabajo abarca todo el stack: React, Next.js y Angular en el cliente, incluidas arquitecturas de microfrontends; Node.js con NestJS y Fastify, .NET 8, Java con Spring Boot y Python en el servidor; y PostgreSQL, MongoDB, MySQL y Oracle para los datos. En FactuPro, una plataforma de facturación que desarrollo y opero, también me encargo de la infraestructura en AWS, definida con Terraform.",
       "leadership": "En el liderazgo, decido con el equipo cómo deben construirse las funcionalidades, divido las iniciativas en entregables, reviso código y acompaño a los desarrolladores."
     },
-    "highlights": {
-      "labels": {
-        "context": "Contexto",
-        "part": "Mi aporte",
-        "outcome": "Resultado"
-      },
+    "featured": {
+      "viewProject": "Ver proyecto",
       "items": {
         "falabella": {
-          "label": "Falabella Seller Center · Actual",
-          "title": "Liderazgo técnico en el equipo de Promociones",
-          "context": "Promociones de Falabella Seller Center, usadas por vendedores en Chile, Colombia y Perú.",
-          "part": "Participo en las decisiones de arquitectura, lidero a un grupo de desarrolladores en el diseño y la implementación de funcionalidades y sigo escribiendo código."
+          "label": "SmartJob · Falabella",
+          "title": "Falabella Seller Center – Promociones",
+          "summary": "Promociones usadas por vendedores en Chile, Colombia y Perú. Participo en las decisiones de arquitectura, lidero a un grupo de desarrolladores y sigo trabajando directamente en el código."
+        },
+        "armada": {
+          "label": "Freelance · Armada Global LLC",
+          "title": "Armada Reserve",
+          "summary": "Plataforma fintech para mesas de operaciones de reportos (repo) que gestiona el ciclo de cada operación, desde el registro y el cumplimiento previo hasta la liquidación."
+        },
+        "hits": {
+          "label": "MushroomSoft · Axle Informatics",
+          "title": "NIH – Plataforma HITS",
+          "summary": "Plataforma de los Institutos Nacionales de Salud de EE. UU. para explorar datos de cribado de compuestos. Desarrollé y optimicé funcionalidades de ella."
         },
         "factupro": {
-          "label": "FactuPro",
-          "title": "Migración de una plataforma de facturación de Heroku a AWS",
-          "context": "FactuPro es una plataforma de facturación electrónica para empresas en Ecuador que desarrollo y opero de punta a punta.",
-          "part": "Definí la infraestructura en AWS con Terraform: contenedores Docker en una instancia EC2 ARM64, migraciones de base de datos en cada despliegue, pipelines con GitHub OIDC y certificados de firma cifrados con una clave guardada en AWS SSM."
-        },
-        "ingestion": {
-          "label": "Zeyo · Business Blockchain",
-          "title": "Pipelines de ingesta para más de 800 mil registros",
-          "context": "Pipelines de ingesta de datos en Zeyo.",
-          "part": "Optimicé los pipelines de ingesta en Python y JavaScript.",
-          "outcome": "Más de 800 mil registros procesados en menos de 6 horas."
-        },
-        "recovery": {
-          "label": "Freelance",
-          "title": "Habilité la recuperación de una cartera vencida de más de USD 500.000",
-          "context": "Una plataforma de gestión de pagos y recuperación de cartera cuya base de datos estaba deprecada y necesitaba depuración y corrección.",
-          "part": "Depuré y corregí esa base de datos.",
-          "outcome": "Eso hizo posible recuperar más de USD 500.000 en cuentas vencidas. El personal de recaudación, como los cajeros, fue cobrando esos pagos de forma gradual durante aproximadamente un año."
+          "label": "Producto propio · v1 y v2",
+          "title": "FactuPro",
+          "summary": "Plataforma de facturación electrónica para empresas en Ecuador que desarrollo y opero: v1 en Angular y Node.js desde 2020, v2 en Next.js y React Native sobre AWS con Terraform."
         }
       }
     },
@@ -113,32 +103,34 @@
       "falabella": {
         "period": "Ene 2026 — Actualidad",
         "title": "Desarrollador Full Stack Senior",
-        "summary": "Equipo de Promociones de Falabella Seller Center, usado por vendedores en Chile, Colombia y Perú.",
+        "summary": "Dominio de Promociones de Falabella Seller Center, usado por vendedores del marketplace en Chile, Colombia y Perú.",
         "highlights": [
-          "Participo en las decisiones de arquitectura de los microfrontends y flujos promocionales del equipo, y en cómo se estructuran y evolucionan las funcionalidades.",
-          "Lidero a un grupo de desarrolladores: defino el enfoque técnico de cada funcionalidad, la divido en entregables y guío su diseño e implementación.",
-          "Establezco los patrones de componentes sobre los que trabaja el equipo y reviso código.",
-          "Construyo experiencias promocionales basadas en configuración que responden a los requisitos de cada país, trabajando directamente con microfrontends en React y Fastify, junto a los equipos de producto, diseño y backend."
+          "Participo en las decisiones de arquitectura de los microfrontends y flujos promocionales del equipo, y lidero a un grupo de desarrolladores en el diseño e implementación de nuevas funcionalidades.",
+          "Construyo componentes reutilizables en React + TypeScript para flujos promocionales basados en configuración y dashboards para vendedores.",
+          "Desarrollo y mantengo servicios backend-for-frontend (BFF) con Fastify que conectan los flujos en React con servicios REST, métricas de promociones y autenticación, con manejo de errores resiliente.",
+          "Trabajo con los equipos de producto, diseño, QA y backend en un entorno ágil, participando en revisiones de código, validación de releases y decisiones técnicas."
         ]
       },
       "stafi": {
         "period": "Oct 2025 — Ene 2026",
         "title": "Desarrollador Full Stack",
-        "summary": "Plataforma en producción construida con NestJS y PostgreSQL; mi trabajo se centró en el backend.",
+        "summary": "Plataforma principal de Stafi, en el frontend con Next.js y el backend con NestJS.",
         "highlights": [
-          "Entregué módulos principales del backend, entre ellos Escalamientos y Reuniones, desde los requisitos de negocio hasta los servicios en NestJS.",
-          "Construí y mantuve los modelos de datos y las migraciones con TypeORM, y optimicé consultas.",
-          "Participé en el diseño de los servicios backend de la plataforma."
+          "Desarrollé funcionalidades principales para los módulos de gestión de tareas del personal y los flujos de documentación de punta a punta.",
+          "Construí funcionalidades de frontend con Next.js y TypeScript, cuidando la mantenibilidad y la experiencia de usuario.",
+          "Implementé APIs y lógica de negocio con NestJS, con autenticación y control de acceso mediante Clerk.",
+          "Construí y mantuve modelos de datos y migraciones con TypeORM sobre PostgreSQL para módulos como Escalamientos y Reuniones.",
+          "Desplegué funcionalidades en producción con Vercel dentro de un equipo ágil y multidisciplinario."
         ]
       },
       "freelance-fullstack": {
         "period": "Mar 2025 — Nov 2025",
-        "title": "Desarrollador Full Stack",
-        "summary": "Trabajo freelance de automatización y web, entregado de punta a punta.",
+        "title": "Arquitecto de Software",
+        "summary": "Trabajo freelance de arquitectura y full stack: la plataforma fintech Armada Reserve, automatización y plataformas web en producción.",
         "highlights": [
-          "Construí flujos en n8n que integran CRMs, la API de WhatsApp, Google Sheets y WordPress.",
-          "Configuré AWS S3 + CloudFront y CI/CD con GitHub Actions y WP-CLI.",
-          "Mejoré el rendimiento y la seguridad: índices de base de datos, caché, SSL, WAF y control de acceso."
+          "Contribuí a Armada Reserve, una plataforma fintech de operaciones de reporto (repo) para Armada Global LLC, con Next.js, NestJS, TypeScript, PostgreSQL, Kafka, Auth0, Kubernetes y Terraform.",
+          "Construí flujos de automatización en n8n que integran servicios en Node.js, CRMs, la API de WhatsApp y Google Sheets para agilizar la gestión de leads y la comunicación con clientes.",
+          "Configuré AWS S3 y CloudFront, CI/CD con GitHub Actions, índices en MySQL, caché con Redis, SSL, WAF y control de acceso para plataformas web en producción."
         ],
         "project": {
           "name": "Armada Reserve",
@@ -148,40 +140,42 @@
       },
       "axle": {
         "period": "Mar 2023 — Mar 2025",
-        "title": "Desarrollador Full Stack Senior (Angular)",
-        "summary": "Plataformas para instituciones científicas y académicas de EE. UU., desarrolladas para Axle Informatics.",
+        "title": "Desarrollador Full Stack Senior",
+        "summary": "Plataformas para instituciones de investigación de EE. UU., desarrolladas a través de MushroomSoft para Axle Informatics.",
         "highlights": [
-          "NIH HITS: desarrollé y optimicé funcionalidades de la plataforma con la que los investigadores exploran datos de cribado de compuestos.",
-          "Smart-IRB (nueva versión, usada por universidades líderes de EE. UU.): construí microfrontends en Angular con PrimeNG y servicios en NestJS sobre PostgreSQL y MongoDB.",
-          "Participé en la modernización de WordPress con bloques reutilizables de Gutenberg y mejoras de SEO."
+          "NIH HITS: desarrollé y optimicé el sistema para los Institutos Nacionales de Salud de EE. UU., que da soporte a flujos de investigación científica.",
+          "Smart IRB: construí la nueva versión de la plataforma, usada por instituciones de investigación líderes de EE. UU., entre ellas la Universidad de Harvard.",
+          "Entregué microfrontends en Angular y PrimeNG y servicios backend en .NET 8 sobre PostgreSQL y MongoDB.",
+          "Trabajé en un equipo Scrum con Azure DevOps y GitHub."
         ]
       },
       "zeyo": {
         "period": "Jul 2022 — Mar 2023",
         "title": "Desarrollador Full Stack Semi Senior",
-        "summary": "Plataformas de trazabilidad para gobierno e industria, respaldadas por registros en blockchain.",
+        "summary": "Sistemas de trazabilidad respaldados en blockchain para gobierno e industria.",
         "highlights": [
-          "CERTERO: entregué funcionalidades de trazabilidad de votos con el Consejo Nacional Electoral de Ecuador.",
-          "Safetrack: entregué los módulos de gestión de órdenes de compra y de trazabilidad y reportes para el etiquetado de productos con códigos QR.",
-          "Optimicé pipelines de ingesta en Python y JavaScript para procesar más de 800 mil registros en menos de 6 horas."
+          "CERTERO: desarrollé nuevas funcionalidades junto al Consejo Nacional Electoral de Ecuador, dando soporte a la trazabilidad de votos mediante una implementación en blockchain.",
+          "Optimicé procesos de ingesta de datos en Python y JavaScript para procesar más de 800 mil registros en menos de 6 horas.",
+          "Construí y mantuve el sitio institucional de la empresa en Angular, con AWS S3 para los archivos multimedia y despliegues automatizados con GitHub Actions y WP-CLI.",
+          "Safetrack: entregué los módulos de gestión de órdenes de compra y de trazabilidad y reportes para el etiquetado de productos con códigos QR."
         ]
       },
       "kengisoft": {
         "period": "May 2021 — Ago 2022",
         "title": "Desarrollador Junior",
         "highlights": [
-          "Construí un sistema de facturación electrónica con Node.js y Angular y mejoré su integración de pagos.",
-          "Entregué un sistema de packing list con React y Spring Boot.",
+          "Desarrollé un sistema de facturación electrónica con Node.js y Angular, incluidas mejoras en su integración de pagos.",
+          "Construí un sistema de packing list con Angular y Spring Boot para agilizar la logística e integrarse con los sistemas de inventario.",
           "Contribuí a una plataforma educativa y entregué un sitio de marketing en WordPress con plugins a medida y dashboards de analítica."
         ]
       },
       "freelance-web": {
         "period": "Oct 2019 — May 2021",
-        "title": "Desarrollador Web Freelance",
-        "summary": "Soluciones web para instituciones y empresas ecuatorianas.",
+        "title": "Desarrollador Web",
+        "summary": "Sistemas web para instituciones y empresas ecuatorianas.",
         "highlights": [
-          "Plataforma de gestión de pagos y recuperación de cartera: depuré y corregí la base de datos deprecada que la soportaba. Ese trabajo hizo posible recuperar una cartera vencida de más de USD 500.000, que el personal de recaudación, como los cajeros, fue cobrando de forma gradual durante aproximadamente un año.",
-          "Construí sistemas de trazabilidad con Spring Boot, Angular y Oracle que dieron visibilidad sobre los incidentes y mejoraron la respuesta operativa."
+          "Cuerpo de Bomberos de Latacunga: diseñé e implementé un sistema de gestión de pagos y depuré la base de datos deprecada de la institución. Esa depuración hizo posible recuperar más de USD 500.000 en cuentas vencidas, que el personal de recaudación, como los cajeros, fue cobrando de forma gradual durante aproximadamente un año.",
+          "Empresa Eléctrica Ambato (EEASA): construí sistemas de trazabilidad con Java Spring Boot, Angular y Oracle que mejoraron la visibilidad de los incidentes y los tiempos de respuesta."
         ]
       }
     },
@@ -212,6 +206,7 @@
           "Node.js",
           "NestJS",
           "Fastify",
+          ".NET 8",
           "Spring Boot",
           "REST APIs",
           "Python"
@@ -281,7 +276,8 @@
         ]
       }
     },
-    "inProgress": "En curso"
+    "verify": "Verificar en Credly",
+    "verifyLabel": "Verificar {title} en Credly (se abre en una pestaña nueva)"
   },
   "Projects": {
     "eyebrow": "Portafolio",
@@ -307,15 +303,15 @@
         "role": "SmartJob · Liderazgo técnico y desarrollo directo",
         "description": "El área de promociones de Falabella Seller Center, usada por vendedores en Chile, Colombia y Perú, donde los flujos promocionales se basan en configuración para responder a los requisitos de cada país.",
         "highlights": [
-          "Participo en las decisiones de arquitectura de los microfrontends del equipo y de los flujos promocionales basados en configuración.",
-          "Lidero a un grupo de desarrolladores: defino cómo se construye cada funcionalidad, divido las iniciativas en entregables y reviso código.",
-          "Establezco los patrones de componentes reutilizables en React + TypeScript y acompaño al equipo.",
-          "Sigo trabajando directamente en el código, en estrecha colaboración con los equipos de producto, diseño y backend."
+          "Participo en las decisiones de arquitectura de los microfrontends del equipo y de los flujos promocionales basados en configuración, y lidero a un grupo de desarrolladores.",
+          "Construyo componentes reutilizables en React + TypeScript para flujos promocionales y dashboards para vendedores.",
+          "Desarrollo y mantengo servicios backend-for-frontend (BFF) con Fastify que conectan esos flujos con servicios REST, métricas de promociones y autenticación.",
+          "Trabajo con los equipos de producto, diseño, QA y backend: revisiones de código, validación de releases y decisiones técnicas."
         ]
       },
       "eeasa-operations-logbook": {
         "title": "EEASA - Bitácora de operaciones de la empresa eléctrica",
-        "role": "Full stack · Frontend en Angular y API en Spring Boot",
+        "role": "Freelance · Frontend en Angular y API en Spring Boot",
         "description": "Bitácora de operaciones de la Empresa Eléctrica Ambato (EEASA), distribuidora eléctrica del centro del Ecuador. El personal del centro de control y del call center registra fallas, incidentes y novedades operativas, gestiona órdenes de trabajo y documenta con fotos el trabajo de las cuadrillas.",
         "highlights": [
           "Trabajé en el control de acceso por roles, los dashboards operativos y los reportes en Excel/PDF, incluidos los informes para el operador nacional de electricidad (CENACE)."
@@ -326,24 +322,24 @@
         "role": "MushroomSoft · para Axle Informatics",
         "description": "HITS es una plataforma de los Institutos Nacionales de Salud de EE. UU. (NIH) para explorar datos de cribado de compuestos, con vistas de tabla, galería y placas, búsqueda por palabra clave, filtros por condiciones y matrices de sinergia entre fármacos.",
         "highlights": [
-          "Desarrollé y optimicé funcionalidades de la plataforma, trabajando con microfrontends en Angular, NestJS y PostgreSQL."
+          "Desarrollé y optimicé el sistema, trabajando con microfrontends en Angular y servicios en .NET 8 sobre PostgreSQL."
         ]
       },
       "smart-irb": {
         "title": "Smart-IRB - Nueva versión (universidades líderes de EE. UU.)",
         "role": "MushroomSoft · para Axle Informatics",
-        "description": "Nueva versión de Smart-IRB, usada por universidades líderes de EE. UU., entre ellas Harvard.",
+        "description": "Nueva versión de Smart IRB, usada por instituciones de investigación líderes de EE. UU., entre ellas la Universidad de Harvard.",
         "highlights": [
-          "Desarrollé funcionalidades de frontend en una arquitectura de microfrontends con Angular y PrimeNG.",
-          "Construí servicios backend con NestJS sobre PostgreSQL y MongoDB."
+          "Construí la nueva versión con microfrontends en Angular y PrimeNG.",
+          "Entregué servicios backend en .NET 8 sobre PostgreSQL y MongoDB."
         ]
       },
       "certero": {
-        "title": "CERTERO - Emisión y verificación de certificados (Blockchain)",
+        "title": "CERTERO - Trazabilidad de votos (Blockchain)",
         "role": "Zeyo · Business Blockchain",
-        "description": "Plataforma basada en blockchain para emitir y verificar certificados.",
+        "description": "Sistema basado en blockchain desarrollado junto al Consejo Nacional Electoral de Ecuador (CNE) para dar soporte a la trazabilidad de votos.",
         "highlights": [
-          "Construí y mejoré flujos de usuario e integraciones en todo el ciclo de certificación, junto a equipos multidisciplinarios."
+          "Desarrollé nuevas funcionalidades del sistema en Zeyo, junto a equipos multidisciplinarios."
         ]
       },
       "safetrack": {
@@ -425,7 +421,7 @@
       },
       "backend": {
         "title": "Backend y datos",
-        "description": "Servicios en NestJS, Fastify y Spring Boot, modelos de datos y migraciones, sobre PostgreSQL, MongoDB u Oracle."
+        "description": "Servicios en NestJS, Fastify, .NET 8 y Spring Boot, modelos de datos y migraciones, sobre PostgreSQL, MongoDB u Oracle."
       },
       "leadership": {
         "title": "Liderazgo técnico",

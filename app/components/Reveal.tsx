@@ -5,6 +5,8 @@ import {useEffect, useRef} from 'react';
 type RevealProps = {
   children: React.ReactNode;
   className?: string;
+  // Anchor target, such as a project slug on /projects.
+  id?: string;
   // Stagger siblings by giving each a slightly larger delay.
   delay?: number;
 };
@@ -12,7 +14,12 @@ type RevealProps = {
 // Fades its content up the first time it scrolls into view. Content renders
 // visible on the server and is only hidden once JS knows it is below the fold,
 // so nothing disappears if scripts are slow or disabled. Styles: globals.css.
-export default function Reveal({children, className, delay = 0}: RevealProps) {
+export default function Reveal({
+  children,
+  className,
+  id,
+  delay = 0
+}: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,6 +44,7 @@ export default function Reveal({children, className, delay = 0}: RevealProps) {
   return (
     <div
       ref={ref}
+      id={id}
       data-reveal="shown"
       style={{transitionDelay: `${delay}ms`}}
       className={className}

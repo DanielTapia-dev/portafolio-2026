@@ -8,6 +8,7 @@ import {
 import type {Locale} from 'next-intl';
 import ProjectGallery from '@/app/components/ProjectGallery';
 import Reveal from '@/app/components/Reveal';
+import {analyticsAttributes} from '@/lib/analytics/events';
 import {cn} from '@/lib/utils';
 import {projects, type Project} from '@/lib/projects';
 
@@ -36,6 +37,10 @@ function ProjectLinks({
         rel="noopener noreferrer"
         className={linkClassName(project.githubUrl)}
         aria-label={labels.code}
+        {...analyticsAttributes('project_link_clicked', {
+          project: project.slug,
+          link: 'code'
+        })}
       >
         <Github size={size} />
       </Link>
@@ -45,6 +50,10 @@ function ProjectLinks({
         rel="noopener noreferrer"
         className={linkClassName(project.liveUrl)}
         aria-label={labels.live}
+        {...analyticsAttributes('project_link_clicked', {
+          project: project.slug,
+          link: 'live'
+        })}
       >
         <ExternalLink size={size} />
       </Link>
@@ -110,14 +119,19 @@ export default async function Projects({
               return (
                 <Reveal
                   key={project.slug}
+                  id={project.slug}
                   className={cn(
-                    'grid items-center gap-8 lg:gap-12',
+                    'grid scroll-mt-28 items-center gap-8 lg:gap-12',
                     hasImages && 'lg:grid-cols-[1.15fr_1fr]'
                   )}
                 >
                   {hasImages && (
                     <div className={cn(isReversed && 'lg:order-2')}>
-                      <ProjectGallery images={project.images!} title={title} />
+                      <ProjectGallery
+                        images={project.images!}
+                        title={title}
+                        slug={project.slug}
+                      />
                     </div>
                   )}
 
@@ -178,7 +192,12 @@ export default async function Projects({
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {otherProjects.map((project, index) => (
-              <Reveal key={project.slug} delay={index * 100}>
+              <Reveal
+                key={project.slug}
+                id={project.slug}
+                delay={index * 100}
+                className="scroll-mt-28"
+              >
                 <div className="group flex h-full flex-col rounded-xl border border-border bg-card/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_20px_50px_-25px_var(--primary)]">
                   <div className="mb-5 flex items-start justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10">
