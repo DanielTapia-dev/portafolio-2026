@@ -2,6 +2,7 @@ import {ArrowRight} from 'lucide-react';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import type {Locale} from 'next-intl';
 import {Link} from '@/i18n/navigation';
+import {analyticsAttributes} from '@/lib/analytics/events';
 import {cn} from '@/lib/utils';
 import {SocialNetworks} from '../components/SocialNetworks';
 import TypewriterRoles from '../components/TypewriterRoles';
@@ -156,6 +157,9 @@ export default async function Home({
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-6 py-3 font-medium text-foreground transition-colors hover:border-primary/50 hover:bg-secondary"
+                {...analyticsAttributes('contact_cta_clicked', {
+                  placement: 'home_hero'
+                })}
               >
                 {t('contactMe')}
               </Link>

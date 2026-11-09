@@ -4,15 +4,22 @@ import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
 import {useTranslations} from 'next-intl';
 import {ChevronLeft, ChevronRight, Images, Maximize2, X} from 'lucide-react';
+import {analyticsAttributes} from '@/lib/analytics/events';
 
 const FADE_DURATION_MS = 180;
 
 type ProjectGalleryProps = {
   images: string[];
   title: string;
+  // Project slug, reported when the gallery is opened.
+  slug: string;
 };
 
-export default function ProjectGallery({images, title}: ProjectGalleryProps) {
+export default function ProjectGallery({
+  images,
+  title,
+  slug
+}: ProjectGalleryProps) {
   const t = useTranslations('Gallery');
   const dialogRef = useRef<HTMLDialogElement>(null);
   const fadeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -60,6 +67,7 @@ export default function ProjectGallery({images, title}: ProjectGalleryProps) {
         type="button"
         onClick={open}
         aria-label={t('open', {title})}
+        {...analyticsAttributes('project_gallery_opened', {project: slug})}
         className="group block w-full cursor-zoom-in overflow-hidden rounded-xl border border-border bg-card text-left shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)] transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_30px_80px_-30px_var(--primary)]"
       >
         {/* Browser chrome: frames screenshots of any shape consistently. */}

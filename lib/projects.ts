@@ -21,7 +21,14 @@ export const projects: Project[] = [
   {
     slug: 'falabella-seller-center',
     images: screenshots('falabella-seller-center', ['cover.png']),
-    techs: ['React', 'TypeScript', 'Microfrontends', 'i18n', 'Design Systems'],
+    techs: [
+      'React',
+      'TypeScript',
+      'Fastify',
+      'Microfrontends',
+      'i18n',
+      'Design Systems'
+    ],
     featured: true
   },
   {
@@ -69,7 +76,7 @@ export const projects: Project[] = [
     ]),
     techs: [
       'Angular',
-      'NestJS',
+      '.NET 8',
       'PostgreSQL',
       'Microfrontends',
       'Azure DevOps'
@@ -79,7 +86,7 @@ export const projects: Project[] = [
   {
     slug: 'smart-irb',
     images: screenshots('smart-irb', ['cover.png']),
-    techs: ['Angular', 'PrimeNG', 'NestJS', 'PostgreSQL', 'MongoDB'],
+    techs: ['Angular', 'PrimeNG', '.NET 8', 'PostgreSQL', 'MongoDB'],
     featured: true
   },
   {
