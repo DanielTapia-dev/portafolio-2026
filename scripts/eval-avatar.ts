@@ -2,7 +2,7 @@
 // run it with `npm run eval:avatar` only after Daniel approves.
 import {mkdirSync, writeFileSync} from 'node:fs';
 import type Anthropic from '@anthropic-ai/sdk';
-import {checkRules} from '../evals/avatar/rules';
+import {checkAnswerShape, checkRules} from '../evals/avatar/rules';
 import questions from '../evals/avatar/questions.json';
 import {ANSWER_MODEL, getAnthropic, streamAnswer} from '@/lib/avatar/answer';
 import {messageCostMicroUsd, type UsageLike} from '@/lib/avatar/pricing';
@@ -16,6 +16,7 @@ type Judged = {verdict: Verdict | null; error: string | null; costMicroUsd: numb
 type Run = {
   error: string | null;
   answer: string;
+  stopReason: string | null;
   ttftMs: number | null;
   totalMs: number;
   usage: Usage | null;
@@ -45,7 +46,7 @@ async function runConversation(
   client: Anthropic
 ): Promise<Run> {
   const start = performance.now();
-  const run: Run = {error: null, answer: '', ttftMs: null, totalMs: 0, usage: null, costMicroUsd: 0};
+  const run: Run = {error: null, answer: '', stopReason: null, ttftMs: null, totalMs: 0, usage: null, costMicroUsd: 0};
   try {
     for await (const chunk of streamAnswer({messages, locale: lang}, client)) {
       if (chunk.type === 'text') {
@@ -53,6 +54,7 @@ async function runConversation(
         run.answer += chunk.text;
       } else {
         run.totalMs = performance.now() - start;
+        run.stopReason = chunk.stopReason;
         run.usage = chunk.usage;
         run.costMicroUsd = chunk.costMicroUsd;
       }
@@ -151,7 +153,13 @@ async function collect(client: Anthropic, state: State): Promise<void> {
     const lang = q.lang as 'en' | 'es';
     const run = await runConversation([{role: 'user', text: q.question}], lang, client);
     const failed = run.error !== null;
-    const broken = failed ? ['error'] : checkRules(run.answer, lang, {salary: q.salaryRule});
+    // Mirrors the route: an answer it would turn into an error fails outright.
+    const shape = failed ? [] : checkAnswerShape(run.answer, run.stopReason);
+    const broken = failed
+      ? ['error']
+      : shape.length > 0
+        ? shape
+        : checkRules(run.answer, lang, {salary: q.salaryRule});
     const judged: Judged = failed
       ? {verdict: null, error: 'answer failed', costMicroUsd: 0}
       : await judge(q, run.answer, client);
