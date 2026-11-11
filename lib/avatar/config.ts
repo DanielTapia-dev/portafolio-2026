@@ -15,7 +15,14 @@ function positive(value: string | undefined, fallback: number): number {
 
 // Returns null when a secret is missing: the avatar then stays paused instead
 // of crashing the page.
-export function readAvatarConfig(env: Record<string, string | undefined> = process.env): AvatarConfig | null {
+export function readAvatarConfig(rawEnv: Record<string, string | undefined> = process.env): AvatarConfig | null {
+  // A blank value copied from .env.example must count as unset, otherwise an
+  // empty UPSTASH_* would win over the KV_* names the Marketplace creates.
+  const env: Record<string, string | undefined> = {};
+  for (const [name, value] of Object.entries(rawEnv)) {
+    const trimmed = value?.trim();
+    env[name] = trimmed === '' ? undefined : trimmed;
+  }
   const anthropicApiKey = env.ANTHROPIC_API_KEY;
   const redisUrl = env.UPSTASH_REDIS_REST_URL ?? env.KV_REST_API_URL;
   const redisToken = env.UPSTASH_REDIS_REST_TOKEN ?? env.KV_REST_API_TOKEN;
