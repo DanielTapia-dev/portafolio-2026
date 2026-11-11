@@ -32,12 +32,22 @@ export default function AvatarChat() {
   const locale = useLocale() as AvatarLocale;
   const {state, send, reset} = useAvatarSession(locale);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  // Set by controls that unmount when clicked (suggestions, New conversation).
+  const focusRequestedRef = useRef(false);
 
   useEffect(() => {
     if (botIdStarted) return;
     botIdStarted = true;
     initBotId({protect: [{path: CHAT_ENDPOINT, method: 'POST'}]});
   }, []);
+
+  // Focus after the render that follows the click: from a blocked state the
+  // textarea is still disabled until then, and the clicked button is gone.
+  useEffect(() => {
+    if (!focusRequestedRef.current || state.status === 'blocked') return;
+    focusRequestedRef.current = false;
+    inputRef.current?.focus();
+  });
 
   const lastTurn = state.turns.at(-1);
   const paused = state.mode === 'paused';
@@ -65,10 +75,10 @@ export default function AvatarChat() {
 
       <div className="shrink-0 space-y-4 px-4 pb-4 md:max-h-[45%] md:overflow-y-auto md:px-6">
         {state.turns.length === 0 && !paused && (
-          <SuggestedQuestions onPick={(question) => {
+          <SuggestedQuestions
+            onPick={(question) => {
               send(question, 'suggested');
-              // The suggestion buttons unmount; keep focus in the chat.
-              inputRef.current?.focus();
+              focusRequestedRef.current = true;
             }}
           />
         )}
@@ -88,7 +98,7 @@ export default function AvatarChat() {
             type="button"
             onClick={() => {
               reset();
-              inputRef.current?.focus();
+              focusRequestedRef.current = true;
             }}
             className={
               blocked
