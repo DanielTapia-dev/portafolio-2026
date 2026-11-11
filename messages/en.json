@@ -7,6 +7,7 @@
     "home": "Home",
     "about": "About",
     "projects": "Projects",
+    "ask": "Ask AI",
     "contact": "Contact",
     "toggleMenu": "Toggle menu",
     "switchLanguage": "Ver en español",
@@ -24,6 +25,7 @@
     "intro": "Senior Full Stack Developer working on Falabella Seller Center through SmartJob. I take part in architecture decisions, lead a group of developers on the Promotions team, and stay hands-on from the interface to the services behind it.",
     "viewProjects": "View projects",
     "contactMe": "Contact me",
+    "askAvatar": "Talk to my AI avatar",
     "nav": {
       "about": {
         "label": "ABOUT",
@@ -449,6 +451,53 @@
       "sending": "Sending...",
       "submit": "Send message",
       "error": "Failed to send message. Please try again or email me directly."
+    }
+  },
+  "Ask": {
+    "eyebrow": "AI avatar",
+    "title": "Ask my AI avatar",
+    "intro": "An AI version of me, built from this portfolio and my CV. Ask about my experience, projects, stack or the way I work.",
+    "aiBadge": "AI",
+    "avatarAlt": "Photo of Daniel Tapia",
+    "notice": {
+      "title": "Before you start",
+      "ai": "It's an AI avatar, not me in person.",
+      "storage": "Your messages are not stored on this site.",
+      "processing": "Anthropic processes your messages to generate the answers and doesn't use them to train its models. It deletes them within 30 days, except messages flagged for breaking its usage policy.",
+      "personalData": "Please don't share personal data.",
+      "contact": "To talk to me, use the contact form or LinkedIn."
+    },
+    "greeting": "Hi! I'm Daniel's AI avatar. Ask me about my experience, projects or stack and I'll answer from my portfolio and CV.",
+    "suggestionsLabel": "Suggested questions",
+    "suggestions": {
+      "falabella": "What do you do at Falabella?",
+      "stack": "What's your main stack?",
+      "leadership": "Do you have leadership experience?",
+      "project": "Tell me about a featured project.",
+      "certifications": "Which certifications do you have?",
+      "remote": "Do you work remotely? Would you relocate?"
+    },
+    "inputLabel": "Your question",
+    "placeholder": "Ask about my experience, projects or stack…",
+    "send": "Send",
+    "you": "You",
+    "avatarName": "Daniel (AI)",
+    "thinking": "Thinking…",
+    "charCount": "{count}/{max}",
+    "remaining": "{count, plural, one {# question left} other {# questions left}} in this conversation",
+    "newConversation": "New conversation",
+    "contactTitle": "Want to talk to the real Daniel?",
+    "contactCta": "Contact me",
+    "linkedin": "LinkedIn",
+    "errors": {
+      "invalid": "I couldn't read that message. Please try a shorter question.",
+      "bot": "I couldn't verify your browser. You can still reach me through the contact form or LinkedIn.",
+      "signature": "This conversation was restarted. Please ask your question again.",
+      "session_limit": "This conversation has reached its limit. Start a new one, or reach me through the contact form or LinkedIn.",
+      "rate_limited": "Too many questions for now. Please try again later, or contact me directly.",
+      "paused": "The avatar is resting right now. You can still reach me through the contact form or LinkedIn.",
+      "upstream": "Something went wrong while answering. Please try again.",
+      "refusal": "I can't answer that one. Ask me about my experience, or contact me directly."
     }
   }
 }

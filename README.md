@@ -10,6 +10,7 @@ Personal portfolio of Daniel Tapia, Full Stack Developer. It presents my experie
 - **Project galleries.** Each featured project opens a modal gallery of its screenshots, with keyboard navigation (Esc, ← and →).
 - **Contact form.** Messages are emailed through [Resend](https://resend.com).
 - **Static rendering.** Every page is prerendered for both languages.
+- **AI avatar.** `/ask` is a chat where recruiters ask an AI avatar about my experience. See [AI avatar](#ai-avatar).
 - **Private analytics dashboard.** `/admin/analytics`, behind a sign-in, shows visits, countries and regions, and the most visited pages from [PostHog](https://posthog.com). See [Analytics](#analytics).
 
 ## Tech stack
@@ -50,6 +51,8 @@ Copy `.env.example` to `.env.local` and fill in:
 | `ADMIN_PASSWORD` | Password for `/admin`. Use a long one: the sign-in is the only thing protecting your analytics |
 | `ADMIN_SESSION_SECRET` | Optional, 32+ random characters to sign admin sessions. Without it, sessions are signed with the credentials, so changing the password signs everyone out |
 
+The AI avatar has its own variables, listed in [AI avatar](#ai-avatar).
+
 ### Scripts
 
 | Command | Description |
@@ -58,6 +61,8 @@ Copy `.env.example` to `.env.local` and fill in:
 | `npm run build` | Build for production |
 | `npm run start` | Serve the production build |
 | `npm run lint` | Run ESLint |
+| `npm test` | Run the unit tests (Vitest) |
+| `npm run eval:avatar` | Run the avatar's 15-question eval against the real model. Manual, costs about 1 USD |
 
 ## Project structure
 
@@ -68,13 +73,17 @@ app/
     (general)/         About, Projects and Contact
   admin/               Private area: its own root layout, sign-in and analytics dashboard
   api/contact/         Contact form endpoint (Resend)
+  api/avatar/          AI avatar chat endpoint
   components/          Header, ProjectGallery, ProfileAvatar, SocialNetworks
 i18n/                  next-intl routing, navigation and request config
 messages/              en.json (source of truth) and es.json
 lib/
   projects.ts          Project data: slug, images, tech stack and links
   admin/               Sign-in credentials, session tokens and the admin guard
+  avatar/              AI avatar: prompt, limits, budget and streaming
   analytics/           Event catalog, PostHog queries, date ranges and formatting
+content/profile/       cv.md, part of what the avatar knows (see AI avatar)
+evals/avatar/          Questions and rules for the avatar eval
 public/projects/       Screenshots, one folder per project
 instrumentation-client.ts  PostHog setup and click tracking in the browser
 proxy.ts               Locale detection, redirects and the /admin gate
@@ -89,6 +98,42 @@ proxy.ts               Locale detection, redirects and the /admin gate
 TypeScript checks that every slug has a translation, because message keys are typed from `messages/en.json`.
 
 > This repository is public. Before committing a screenshot, blur any personal or client data: names, ID numbers, emails, phone numbers, addresses, account numbers and access keys.
+
+## AI avatar
+
+`/ask` (`/es/ask`) is a chat where recruiters talk to an AI avatar of me. It answers from the site's own content (the copy in `messages/*.json`, `lib/projects.ts`, `lib/profile.ts`) and `content/profile/cv.md`, in the visitor's language, and points to the contact form or LinkedIn for anything it cannot answer. Conversation text is never stored or logged; only error codes, token usage and cost are. It is a Claude model behind a signed, rate-limited, budget-capped API route that BotID protects.
+
+### Setup
+
+1. In the [Anthropic console](https://platform.claude.com), create a workspace for the avatar, generate its API key, and set a monthly spend limit above the hard cap (for example 70 USD). The Default workspace cannot have its own limit, so do not use it.
+2. In Vercel, add **Upstash Redis** from the Marketplace on the free plan. It creates `KV_REST_API_URL` and `KV_REST_API_TOKEN`, which the avatar accepts.
+3. Generate the signing secret: `openssl rand -hex 32`.
+4. Choose the monthly caps. Phase 1 uses 45 USD soft and 60 USD hard.
+5. Add the variables below in Vercel for Production and Preview, then redeploy.
+6. Run `npm run eval:avatar` before linking the page, and again before every deploy that changes `PROMPT_VERSION`.
+
+| Variable | Description |
+| --- | --- |
+| `ANTHROPIC_API_KEY` | Key of the avatar's own workspace. Server only |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis. `KV_REST_API_URL` and `KV_REST_API_TOKEN` also work. Server only |
+| `AVATAR_SIGNING_SECRET` | 32+ random characters that sign conversations and hash IPs. Server only |
+| `AVATAR_ENABLED` | `true` to run. Anything else pauses the avatar at once: this is the kill switch |
+| `AVATAR_BUDGET_SOFT_USD`, `AVATAR_BUDGET_HARD_USD` | Monthly caps in USD. Defaults 45 and 60 |
+| `AVATAR_FIXED_MONTHLY_USD` | Fixed monthly subscriptions counted against the caps. Default 0 |
+| `AVATAR_SESSION_QUESTIONS`, `AVATAR_SESSION_MINUTES`, `AVATAR_IP_DAILY`, `AVATAR_IP_PER_MINUTE`, `AVATAR_GLOBAL_DAILY` | Optional limit overrides. Defaults 20, 30, 40, 6 and 500 |
+
+If a secret is missing or Redis fails, the avatar shows as paused instead of breaking the page.
+
+### Tests and eval
+
+- `npm test` runs the unit tests. They need no keys and make no API calls.
+- `npm run eval:avatar` asks the real model the 15 questions in `evals/avatar/questions.json` and checks the answers against the rules in `evals/avatar/rules.ts`. It reads `.env.local`, is run by hand, and costs about 1 USD. Run it before each deploy that changes `PROMPT_VERSION`.
+
+### Updating what the avatar knows
+
+The avatar's knowledge comes from the site copy (`messages/*.json`), `lib/projects.ts`, `lib/profile.ts` and `content/profile/cv.md`. They are bundled into the API route at build time, so redeploy after editing. Editing the site copy changes what the avatar knows and changes the prompt (and so its cache): consider bumping `PROMPT_VERSION` and running the eval.
+
+This repository is public, and the avatar can repeat anything in its profile, so `content/profile/cv.md` must never contain a phone number or email address. (The site's contact email elsewhere is intentional.) Visitors reach me through the contact form.
 
 ## Analytics
 

@@ -10,6 +10,7 @@ const routes = [
   {href: '/', key: 'home'},
   {href: '/about', key: 'about'},
   {href: '/projects', key: 'projects'},
+  {href: '/ask', key: 'ask'},
   {href: '/contact', key: 'contact'}
 ] as const;
 

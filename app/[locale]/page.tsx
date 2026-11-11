@@ -1,4 +1,4 @@
-import {ArrowRight} from 'lucide-react';
+import {ArrowRight, MessageCircle} from 'lucide-react';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import type {Locale} from 'next-intl';
 import {Link} from '@/i18n/navigation';
@@ -162,6 +162,13 @@ export default async function Home({
                 })}
               >
                 {t('contactMe')}
+              </Link>
+              <Link
+                href="/ask"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-6 py-3 font-medium text-foreground transition-colors hover:border-primary/50 hover:bg-secondary"
+              >
+                <MessageCircle size={18} aria-hidden />
+                {t('askAvatar')}
               </Link>
             </div>
 

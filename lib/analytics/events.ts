@@ -11,7 +11,10 @@ export const ANALYTICS_EVENTS = [
   'project_gallery_opened',
   'project_link_clicked',
   'featured_project_clicked',
-  'certification_verified'
+  'certification_verified',
+  'avatar_conversation_started',
+  'avatar_question_asked',
+  'avatar_limit_reached'
 ] as const;
 
 export type AnalyticsEvent = (typeof ANALYTICS_EVENTS)[number];
@@ -21,7 +24,10 @@ export const ANALYTICS_PROPERTY_KEYS = [
   'placement',
   'channel',
   'project',
-  'link'
+  'link',
+  'topic',
+  'outcome',
+  'latency'
 ] as const;
 
 export type AnalyticsPropertyKey = (typeof ANALYTICS_PROPERTY_KEYS)[number];
@@ -38,6 +44,26 @@ export type AnalyticsDomEventDetail = {
 export const isAnalyticsEvent = (value: unknown): value is AnalyticsEvent =>
   typeof value === 'string' &&
   (ANALYTICS_EVENTS as readonly string[]).includes(value);
+
+// Super properties: flags that mark the whole visit, so every later event in it
+// carries them (for example the contact form after an avatar chat). Only
+// allowlisted names are accepted and the value is always true.
+export const ANALYTICS_SUPER_PROPERTIES = ['avatar_used'] as const;
+
+export type AnalyticsSuperProperty = (typeof ANALYTICS_SUPER_PROPERTIES)[number];
+
+// Browser event that client components dispatch to register a super property.
+export const ANALYTICS_REGISTER_DOM_EVENT = 'portfolio:analytics-register';
+
+export type AnalyticsRegisterDomEventDetail = {
+  property: AnalyticsSuperProperty;
+};
+
+export const isAnalyticsSuperProperty = (
+  value: unknown
+): value is AnalyticsSuperProperty =>
+  typeof value === 'string' &&
+  (ANALYTICS_SUPER_PROPERTIES as readonly string[]).includes(value);
 
 // Data attributes for an element whose clicks should be tracked. A single
 // listener in instrumentation-client.ts reads them, so server components can
@@ -64,6 +90,18 @@ export function trackEvent(
     new CustomEvent<AnalyticsDomEventDetail>(ANALYTICS_DOM_EVENT, {
       detail: {event, properties}
     })
+  );
+}
+
+// Marks the current visit with a super property. Like trackEvent, it is a
+// no-op until the tracker in instrumentation-client.ts is listening.
+export function registerAnalyticsProperty(property: AnalyticsSuperProperty) {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(
+    new CustomEvent<AnalyticsRegisterDomEventDetail>(
+      ANALYTICS_REGISTER_DOM_EVENT,
+      {detail: {property}}
+    )
   );
 }
 

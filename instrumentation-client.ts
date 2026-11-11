@@ -2,10 +2,13 @@ import posthog, {type CaptureResult} from 'posthog-js';
 import {
   ANALYTICS_DOM_EVENT,
   ANALYTICS_PROPERTY_KEYS,
+  ANALYTICS_REGISTER_DOM_EVENT,
   INTERNAL_TRAFFIC_COOKIE,
   isAnalyticsEvent,
+  isAnalyticsSuperProperty,
   type AnalyticsDomEventDetail,
-  type AnalyticsProperties
+  type AnalyticsProperties,
+  type AnalyticsRegisterDomEventDetail
 } from '@/lib/analytics/events';
 
 // Runs once in the browser before the app hydrates (Next.js 15.3+).
@@ -157,6 +160,16 @@ function startTracking(projectToken: string) {
       detail.event,
       pickProperties((key) => detail.properties?.[key as keyof AnalyticsProperties])
     );
+  });
+
+  // Marks the visit with a super property (such as avatar_used) so later events
+  // carry it. Persistence is in memory, so it lasts only for this visit.
+  window.addEventListener(ANALYTICS_REGISTER_DOM_EVENT, (event) => {
+    const detail = (event as CustomEvent<AnalyticsRegisterDomEventDetail>)
+      .detail;
+    if (!detail || !isAnalyticsSuperProperty(detail.property)) return;
+
+    posthog.register({[detail.property]: true});
   });
 }
 
