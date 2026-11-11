@@ -123,6 +123,25 @@ describe('handleChat pre-stream errors', () => {
     expect(paused.checkBot).not.toHaveBeenCalled();
   });
 
+  it('fails closed with a logged code when the bot check throws', async () => {
+    const {deps, log, answer} = setup({checkBot: vi.fn(async () => Promise.reject(new Error('no oidc')))});
+    const response = await handleChat(post(body()), deps);
+    expect(response.status).toBe(403);
+    expect(await response.json()).toEqual({ok: false, code: 'bot'});
+    expect(log).toHaveBeenCalledTimes(1);
+    expect(log).toHaveBeenCalledWith(expect.objectContaining({code: 'bot_check_failed'}));
+    expect(answer).not.toHaveBeenCalled();
+  });
+
+  it('records nothing when the classifier is free and the answer fails first', async () => {
+    const s = setup({
+      answer: answerOf([new Error('boom')]),
+      classify: vi.fn(async () => ({topic: 'other' as const, lang: 'en', costMicroUsd: 0})),
+    });
+    expect((await handleChat(post(body()), s.deps)).status).toBe(502);
+    expect(await readMonthStats(s.redis!, NOW)).toEqual({spendMicroUsd: 0, questions: 0, conversations: 0});
+  });
+
   it('does not call Claude or record spend when the mode is paused by the hard cap', async () => {
     const {deps, redis, answer, classify} = setup();
     await redis!.set('avatar:spend:2026-11', 61_000_000);
@@ -155,7 +174,8 @@ describe('handleChat pre-stream errors', () => {
         s.deps.config = {...CONFIG, enabled: false};
         break;
       case 'a body over 32 KB':
-        request = post(body({messages: [{role: 'user', text: 'x'.repeat(40_000)}]}));
+        // Valid JSON padded past 32 KB, so only the byte check can reject it.
+        request = post(JSON.stringify(body()) + ' '.repeat(33_000), true);
         break;
       case 'malformed JSON':
         request = post('{not json', true);
@@ -200,9 +220,12 @@ describe('handleChat pre-stream errors', () => {
     const response = await handleChat(request, s.deps);
     expect(response.status).toBe(status);
     expect(await response.json()).toEqual({ok: false, code});
+    if (code === 'invalid' && scenario === 'a body over 32 KB') {
+      expect(s.checkBot).not.toHaveBeenCalled();
+    }
     if (code === 'upstream') {
-      // No spend is recorded when Claude fails before answering.
-      expect((await stats(s.redis!)).questions).toBe(0);
+      // Only the classifier cost is recorded, and no question is counted.
+      expect(await stats(s.redis!)).toEqual({spendMicroUsd: 300, questions: 1, conversations: 0});
     }
   });
 });
@@ -239,6 +262,31 @@ describe('handleChat stream', () => {
     const {deps, classify} = setup();
     await events(await handleChat(post(body({locale: 'es'})), deps));
     expect(classify).toHaveBeenCalledWith(QUESTION, 'es');
+  });
+
+  it('calls the answer without an abort signal', async () => {
+    const {deps, answer} = setup();
+    await events(await handleChat(post(body()), deps));
+    expect(answer.mock.calls[0][0].signal).toBeUndefined();
+  });
+
+  it('records the full cost when the client cancels mid-answer', async () => {
+    let finished!: () => void;
+    const done = new Promise<void>((resolve) => (finished = resolve));
+    const s = setup({log: vi.fn(() => finished())});
+    const response = await handleChat(post(body()), s.deps);
+    const reader = response.body!.getReader();
+    await reader.read();
+    await reader.cancel();
+    await done;
+    expect(await readMonthStats(s.redis!, NOW)).toEqual({spendMicroUsd: 5300, questions: 1, conversations: 1});
+  });
+
+  it('sends an upstream error for an empty answer and still records the spend', async () => {
+    const {deps, redis} = setup({answer: answerOf([{type: 'text', text: '  '}, END])});
+    const all = await events(await handleChat(post(body()), deps));
+    expect(all).toEqual([{type: 'delta', text: '  '}, {type: 'error', code: 'upstream'}]);
+    expect((await readMonthStats(redis!, NOW)).spendMicroUsd).toBe(5300);
   });
 
   it('records the answer and classifier cost', async () => {

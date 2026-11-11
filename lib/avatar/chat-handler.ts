@@ -70,7 +70,13 @@ export async function handleChat(request: Request, deps: ChatDeps): Promise<Resp
   if (!parsed.ok) return fail('invalid');
   const {sessionId, locale, messages, signature} = parsed.request;
 
-  if ((await deps.checkBot()).isBot) return fail('bot');
+  // Fail closed: a BotID outage must not let unverified traffic through.
+  try {
+    if ((await deps.checkBot()).isBot) return fail('bot');
+  } catch {
+    deps.log(logEntry('bot_check_failed', null, null));
+    return Response.json({ok: false, code: 'bot'}, {status: ERROR_STATUS.bot});
+  }
 
   // Fail closed: if Redis cannot count, nothing reaches Claude.
   let limits;
@@ -104,11 +110,28 @@ export async function handleChat(request: Request, deps: ChatDeps): Promise<Resp
 
   // classify never throws, so starting it unawaited cannot leave a rejection.
   const topic = deps.classify(messages[messages.length - 1].text, locale);
-  const answer = deps.answer({messages, locale, signal: request.signal});
+  // No abort signal on purpose: Anthropic bills what it already processed, so
+  // generation runs to its end (bounded by max_tokens) and the full cost is
+  // always recorded, even when the client has gone.
+  const answer = deps.answer({messages, locale});
   let first: IteratorResult<AnswerChunk>;
   try {
     first = await answer.next();
   } catch {
+    // The classifier already ran and was billed; a failed answer is not a
+    // started conversation.
+    const classified = await topic;
+    if (classified.costMicroUsd > 0) {
+      try {
+        await recordUsage(
+          redis,
+          {costMicroUsd: classified.costMicroUsd, isNewConversation: false},
+          deps.now()
+        );
+      } catch {
+        deps.log(logEntry('spend_record_failed', null, classified.costMicroUsd));
+      }
+    }
     return fail('upstream');
   }
 
@@ -148,6 +171,13 @@ export async function handleChat(request: Request, deps: ChatDeps): Promise<Resp
       if (broke || !end) {
         code = 'upstream';
         send({type: 'error', code: 'upstream'});
+      } else if (
+        // The next turn's parseChatRequest would reject such a transcript.
+        text.trim().length === 0 ||
+        text.length > CHAT_LIMITS.assistantTextMax
+      ) {
+        code = 'upstream';
+        send({type: 'error', code: 'upstream'});
       } else if (end.stopReason === 'refusal') {
         code = 'refusal';
         send({type: 'error', code: 'refusal'});
@@ -168,7 +198,6 @@ export async function handleChat(request: Request, deps: ChatDeps): Promise<Resp
       if (open) controller.close();
 
       const costMicroUsd = (end?.costMicroUsd ?? 0) + classified.costMicroUsd;
-      deps.log(logEntry(code, end, costMicroUsd));
       try {
         await recordUsage(
           redis,
@@ -178,6 +207,8 @@ export async function handleChat(request: Request, deps: ChatDeps): Promise<Resp
       } catch {
         deps.log(logEntry('spend_record_failed', end, costMicroUsd));
       }
+      // Logged last, so a log entry means the request is fully settled.
+      deps.log(logEntry(code, end, costMicroUsd));
     },
   });
 
