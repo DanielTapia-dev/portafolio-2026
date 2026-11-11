@@ -58,6 +58,8 @@ function setup(overrides: Partial<ChatDeps> = {}) {
   const classify = vi.fn(async () => ({topic: 'experience' as const, lang: 'en', costMicroUsd: 300}));
   const checkBot = vi.fn(async () => ({isBot: false}));
   const answer = vi.fn(answerOf([{type: 'text', text: 'Ho'}, {type: 'text', text: 'la'}, END]));
+  const pumps: Promise<unknown>[] = [];
+  const waitUntil = vi.fn((promise: Promise<unknown>) => void pumps.push(promise));
   const deps: ChatDeps = {
     config: CONFIG,
     redis,
@@ -67,9 +69,10 @@ function setup(overrides: Partial<ChatDeps> = {}) {
     classify,
     now: () => NOW,
     log,
+    waitUntil,
     ...overrides,
   };
-  return {deps, redis, log, classify, checkBot, answer};
+  return {deps, redis, log, classify, checkBot, answer, waitUntil, pumps};
 }
 
 type Body = {sessionId: string; locale: string; messages: ChatMessage[]; signature: string | null};
@@ -102,6 +105,7 @@ describe('handleChat pre-stream errors', () => {
     expect((await handleChat(post(body()), bot.deps)).status).toBe(403);
     expect(ipDaily).not.toHaveBeenCalled();
     expect(bot.answer).not.toHaveBeenCalled();
+    expect(bot.classify).not.toHaveBeenCalled();
 
     // Exhausted limits never reach the mode check or Claude.
     const limited = setup();
@@ -111,6 +115,31 @@ describe('handleChat pre-stream errors', () => {
     expect(getSpy).not.toHaveBeenCalled();
     expect(limited.answer).not.toHaveBeenCalled();
     expect(limited.classify).not.toHaveBeenCalled();
+
+    // Redis failing in the limits step never reaches Claude.
+    const down = setup();
+    down.deps.redis = createFakeRedis({failing: true});
+    expect((await handleChat(post(body()), down.deps)).status).toBe(503);
+    expect(down.answer).not.toHaveBeenCalled();
+    expect(down.classify).not.toHaveBeenCalled();
+
+    // A bad signature never reaches Claude.
+    const tampered = setup();
+    await tampered.redis!.set(`avatar:session:${SESSION}`, 1, {ex: 1800});
+    const history: ChatMessage[] = [
+      {role: 'user', text: 'first'},
+      {role: 'assistant', text: 'reply'},
+    ];
+    const forged = body({
+      messages: [...history, {role: 'user', text: 'second'}],
+      signature: signTranscript(
+        {sessionId: SESSION, messages: [{role: 'user', text: 'other'}, history[1]], promptVersion: PROMPT_VERSION},
+        SECRET
+      ),
+    });
+    expect((await handleChat(post(forged), tampered.deps)).status).toBe(409);
+    expect(tampered.answer).not.toHaveBeenCalled();
+    expect(tampered.classify).not.toHaveBeenCalled();
 
     // An invalid body never reaches the bot check.
     const invalid = setup();
@@ -316,6 +345,34 @@ describe('handleChat stream', () => {
     expect(all.some((e) => e.type === 'done')).toBe(false);
     // The refused answer still cost money.
     expect((await readMonthStats(redis!, NOW)).spendMicroUsd).toBe(5300);
+  });
+
+  it('ends a refusal with no text as refusal, not upstream', async () => {
+    const {deps, redis, log, pumps} = setup({answer: answerOf([{...END, stopReason: 'refusal'}])});
+    const all = await events(await handleChat(post(body()), deps));
+    expect(all).toEqual([{type: 'error', code: 'refusal'}]);
+    await Promise.all(pumps);
+    expect((await readMonthStats(redis!, NOW)).spendMicroUsd).toBe(5300);
+    expect(log).toHaveBeenCalledWith(expect.objectContaining({code: 'refusal'}));
+  });
+
+  it('hands waitUntil a promise that settles only after spend and log are written', async () => {
+    const s = setup();
+    const response = await handleChat(post(body()), s.deps);
+    expect(s.waitUntil).toHaveBeenCalledTimes(1);
+    await events(response);
+    await s.pumps[0];
+    expect(await readMonthStats(s.redis!, NOW)).toEqual({spendMicroUsd: 5300, questions: 1, conversations: 1});
+    expect(s.log).toHaveBeenCalledTimes(1);
+  });
+
+  it('never rejects the pump, even when the answer and the log fail', async () => {
+    const log = vi.fn(() => {
+      throw new Error('log down');
+    });
+    const s = setup({log, answer: answerOf([{type: 'text', text: 'Ho'}, new Error('cut')])});
+    await events(await handleChat(post(body()), s.deps));
+    await expect(s.pumps[0]).resolves.toBeUndefined();
   });
 
   it('sends an upstream error when the answer breaks mid-stream', async () => {

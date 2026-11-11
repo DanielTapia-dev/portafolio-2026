@@ -1,6 +1,6 @@
 import {getAnthropic, streamAnswer, type AnswerChunk} from './answer';
 import {getMode, recordUsage} from './budget';
-import type {AvatarConfig} from './config';
+import {readAvatarConfig, type AvatarConfig} from './config';
 import {checkLimits, clientIp, createLimiters, hashIp, type Limiters} from './limits';
 import {PROMPT_VERSION} from './prompt';
 import {
@@ -15,8 +15,8 @@ import {getAvatarRedis, getUpstash, type AvatarRedis} from './redis';
 import {encodeEvent} from './sse';
 import {classifyTopic, type TopicResult} from './topics';
 import {parseChatRequest, signTranscript, verifyTranscript} from './transcript';
-import {readAvatarConfig} from './config';
 import {checkBotId} from 'botid/server';
+import {after} from 'next/server';
 
 export type ChatDeps = {
   config: AvatarConfig | null;
@@ -31,6 +31,8 @@ export type ChatDeps = {
   classify: (question: string, fallbackLang: AvatarLocale) => Promise<TopicResult>;
   now: () => Date;
   log: (entry: Record<string, string | number | boolean | null>) => void;
+  // Keeps the function alive after the response ends (Vercel waitUntil).
+  waitUntil: (promise: Promise<unknown>) => void;
 };
 
 type EndChunk = Extract<AnswerChunk, {type: 'end'}>;
@@ -136,21 +138,41 @@ export async function handleChat(request: Request, deps: ChatDeps): Promise<Resp
   }
 
   const encoder = new TextEncoder();
+  let controller!: ReadableStreamDefaultController<Uint8Array>;
   const stream = new ReadableStream<Uint8Array>({
-    async start(controller) {
-      let open = true;
-      // The client may leave mid-answer; the spend must still be recorded.
-      const send = (event: ChatEvent) => {
-        if (!open) return;
-        try {
-          controller.enqueue(encoder.encode(encodeEvent(event)));
-        } catch {
-          open = false;
-        }
-      };
+    start(c) {
+      controller = c;
+    },
+  });
+  let open = true;
+  // The client may leave mid-answer; the spend must still be recorded.
+  const send = (event: ChatEvent) => {
+    if (!open) return;
+    try {
+      controller.enqueue(encoder.encode(encodeEvent(event)));
+    } catch {
+      open = false;
+    }
+  };
+  const closeStream = () => {
+    if (!open) return;
+    open = false;
+    try {
+      controller.close();
+    } catch {
+      // Already closed by a cancel.
+    }
+  };
 
+  // The pump owns everything after the first chunk, including recording the
+  // spend. Nothing awaits a stream's start() once the response ends, so it is
+  // handed to waitUntil: that is what keeps the tail alive on Vercel.
+  const pump = (async () => {
+    let end: EndChunk | null = null;
+    let costMicroUsd = 0;
+    let code = 'upstream';
+    try {
       let text = '';
-      let end: EndChunk | null = null;
       let broke = false;
       try {
         for (let step = first; !step.done; step = await answer.next()) {
@@ -167,21 +189,20 @@ export async function handleChat(request: Request, deps: ChatDeps): Promise<Resp
       }
 
       const classified = await topic;
-      let code = 'ok';
       if (broke || !end) {
-        code = 'upstream';
         send({type: 'error', code: 'upstream'});
+      } else if (end.stopReason === 'refusal') {
+        // First, so a refusal with no text is not mistaken for an empty answer.
+        code = 'refusal';
+        send({type: 'error', code: 'refusal'});
       } else if (
         // The next turn's parseChatRequest would reject such a transcript.
         text.trim().length === 0 ||
         text.length > CHAT_LIMITS.assistantTextMax
       ) {
-        code = 'upstream';
         send({type: 'error', code: 'upstream'});
-      } else if (end.stopReason === 'refusal') {
-        code = 'refusal';
-        send({type: 'error', code: 'refusal'});
       } else {
+        code = 'ok';
         const full: ChatMessage[] = [...messages, {role: 'assistant', text}];
         send({
           type: 'done',
@@ -195,9 +216,9 @@ export async function handleChat(request: Request, deps: ChatDeps): Promise<Resp
           remaining: limits.remaining,
         });
       }
-      if (open) controller.close();
+      closeStream();
 
-      const costMicroUsd = (end?.costMicroUsd ?? 0) + classified.costMicroUsd;
+      costMicroUsd = (end?.costMicroUsd ?? 0) + classified.costMicroUsd;
       try {
         await recordUsage(
           redis,
@@ -209,8 +230,13 @@ export async function handleChat(request: Request, deps: ChatDeps): Promise<Resp
       }
       // Logged last, so a log entry means the request is fully settled.
       deps.log(logEntry(code, end, costMicroUsd));
-    },
-  });
+    } catch {
+      // The pump must never reject: nobody is left to handle it.
+    } finally {
+      closeStream();
+    }
+  })();
+  deps.waitUntil(pump);
 
   return new Response(stream, {
     status: 200,
@@ -244,5 +270,6 @@ export function defaultChatDeps(): ChatDeps {
     classify: (question, lang) => classifyTopic(question, lang, getAnthropic(config!.anthropicApiKey)),
     now: () => new Date(),
     log: (entry) => console.info(JSON.stringify({scope: 'avatar', ...entry})),
+    waitUntil: (promise) => after(promise),
   };
 }
