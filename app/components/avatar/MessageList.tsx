@@ -66,7 +66,10 @@ export default function MessageList({turns, busy}: MessageListProps) {
         </p>
       </div>
 
-      {turns.map((turn) => (
+      {turns.map((turn) => {
+        // Anthropic advises discarding partial output after a refusal.
+        const answer = turn.error === 'refusal' ? '' : turn.answer;
+        return (
         <div key={turn.id} className="space-y-5">
           <div className="ml-auto max-w-[85%] space-y-1 text-right">
             <p className="text-xs font-medium text-muted-foreground">
@@ -77,17 +80,17 @@ export default function MessageList({turns, busy}: MessageListProps) {
             </p>
           </div>
 
-          {(turn.answer || turn.status === 'streaming') && (
+          {(answer || turn.status === 'streaming') && (
             <div className="max-w-[85%] space-y-1">
               <p className="text-xs font-medium text-muted-foreground">
                 {t('avatarName')}
               </p>
-              {turn.answer ? (
+              {answer ? (
                 <p
                   lang={turn.lang ?? undefined}
                   className="whitespace-pre-wrap break-words rounded-2xl rounded-tl-sm border border-border bg-background/60 px-4 py-3 text-foreground"
                 >
-                  <AnswerText text={turn.answer} />
+                  <AnswerText text={answer} />
                 </p>
               ) : (
                 <p className="rounded-2xl rounded-tl-sm border border-border bg-background/60 px-4 py-3 text-muted-foreground animate-pulse motion-reduce:animate-none">
@@ -97,7 +100,8 @@ export default function MessageList({turns, busy}: MessageListProps) {
             </div>
           )}
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

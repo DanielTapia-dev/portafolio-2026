@@ -97,7 +97,10 @@ export function sessionReducer(
         ...state,
         turns: updateLastTurn(state, {answer: last.answer + action.text})
       };
-    case 'done':
+    case 'done': {
+      // The server rejects a 21st question as invalid, so the composer closes
+      // here instead of inviting a request that can never work.
+      const exhausted = action.event.remaining <= 0;
       return {
         ...state,
         history: [
@@ -109,8 +112,10 @@ export function sessionReducer(
         remaining: action.event.remaining,
         mode: action.event.mode,
         turns: updateLastTurn(state, {status: 'done', lang: action.event.lang}),
-        status: 'idle'
+        status: exhausted ? 'blocked' : 'idle',
+        notice: exhausted ? 'session_limit' : state.notice
       };
+    }
     case 'fail': {
       const turns = updateLastTurn(state, {
         status: 'error',

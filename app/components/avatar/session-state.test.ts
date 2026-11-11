@@ -76,6 +76,21 @@ describe('sessionReducer', () => {
     expect(s.turns[0].answer).toBe('Hello');
   });
 
+  it('blocks the composer when the last answer leaves no questions', () => {
+    const s = reduce(idle, send('Q'), delta('A'), done({remaining: 0}));
+    expect(s).toMatchObject({
+      status: 'blocked',
+      notice: 'session_limit',
+      signature: 'sig-1',
+      remaining: 0,
+      history: [
+        {role: 'user', text: 'Q'},
+        {role: 'assistant', text: 'A'}
+      ]
+    });
+    expect(canSend(s, false)).toBe(false);
+  });
+
   it('stores the done event', () => {
     expect(afterOneDone).toMatchObject({
       history: [

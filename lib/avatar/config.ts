@@ -1,3 +1,5 @@
+import {CHAT_LIMITS} from './protocol';
+
 export type AvatarLimits = {sessionQuestions: number; sessionMinutes: number; ipDaily: number; ipPerMinute: number; globalDaily: number};
 
 export type AvatarConfig = {
@@ -41,7 +43,9 @@ export function readAvatarConfig(rawEnv: Record<string, string | undefined> = pr
       fixedUsd: positive(env.AVATAR_FIXED_MONTHLY_USD, 0),
     },
     limits: {
-      sessionQuestions: positive(env.AVATAR_SESSION_QUESTIONS, 20),
+      // The request format allows 20 user messages (§9.1), so a larger value
+      // could never be used: the 21st question would be rejected as invalid.
+      sessionQuestions: Math.min(positive(env.AVATAR_SESSION_QUESTIONS, 20), CHAT_LIMITS.maxUserMessages),
       sessionMinutes: positive(env.AVATAR_SESSION_MINUTES, 30),
       ipDaily: positive(env.AVATAR_IP_DAILY, 40),
       ipPerMinute: positive(env.AVATAR_IP_PER_MINUTE, 6),

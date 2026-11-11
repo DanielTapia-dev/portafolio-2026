@@ -8,10 +8,13 @@ export type Limiter = {limit(identifier: string): Promise<{success: boolean}>};
 export type Limiters = {ipPerMinute: Limiter; ipDaily: Limiter; globalDaily: Limiter};
 export type LimitOutcome = {ok: true; remaining: number} | {ok: false; code: 'session_limit' | 'rate_limited'};
 
-// Distinct prefixes so the three windows can never share a key.
+// Distinct prefixes so the three windows can never share a key. timeout: 0
+// turns off the library's default 5 s race, which resolves success: true when
+// Redis is slow (fail open); with it off a slow or broken Redis throws, and the
+// handler answers paused.
 export function createLimiters(redis: Redis, limits: AvatarLimits): Limiters {
   const build = (prefix: string, max: number, window: '1 m' | '1 d') =>
-    new Ratelimit({redis, limiter: Ratelimit.slidingWindow(max, window), prefix: `avatar:rl:${prefix}`, analytics: false});
+    new Ratelimit({redis, limiter: Ratelimit.slidingWindow(max, window), prefix: `avatar:rl:${prefix}`, analytics: false, timeout: 0});
   return {
     ipPerMinute: build('ip-minute', limits.ipPerMinute, '1 m'),
     ipDaily: build('ip-day', limits.ipDaily, '1 d'),

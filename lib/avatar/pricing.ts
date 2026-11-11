@@ -33,6 +33,6 @@ export function usageCostMicroUsd(model: string, usage: UsageLike): number {
 
 export function messageCostMicroUsd(message: {model: string; usage: UsageLike & {iterations?: (UsageLike & {model?: string | null})[] | null}}): number {
   const {iterations} = message.usage;
-  if (!iterations) return usageCostMicroUsd(message.model, message.usage);
+  if (!iterations?.length) return usageCostMicroUsd(message.model, message.usage);
   return iterations.reduce((sum, it) => sum + usageCostMicroUsd(it.model ?? message.model, it), 0);
 }

@@ -1,7 +1,8 @@
 import {describe, expect, it} from 'vitest';
 import type {AvatarLimits} from './config';
 import {createFakeRedis} from './testing/fake-redis';
-import {checkLimits, clientIp, hashIp, type Limiter, type Limiters} from './limits';
+import {Redis} from '@upstash/redis';
+import {checkLimits, clientIp, createLimiters, hashIp, type Limiter, type Limiters} from './limits';
 
 const SECRET = 'test-secret';
 const LIMITS: AvatarLimits = {sessionQuestions: 20, sessionMinutes: 30, ipDaily: 40, ipPerMinute: 6, globalDaily: 500};
@@ -81,6 +82,13 @@ describe('checkLimits', () => {
 });
 
 describe('hashIp', () => {
+  it('builds limiters without the fail-open timeout', () => {
+    const redis = new Redis({url: 'https://redis.test', token: 'token'});
+    const limiters = createLimiters(redis, LIMITS) as unknown as Record<string, {timeout: number}>;
+    // The library default (5 s) answers success: true when Redis is slow.
+    for (const name of ['ipPerMinute', 'ipDaily', 'globalDaily']) expect(limiters[name].timeout).toBe(0);
+  });
+
   it('hashes the IP', () => {
     expect(hashIp('203.0.113.7', SECRET)).toMatch(/^ip:[0-9a-f]{64}$/);
     expect(hashIp('203.0.113.7', SECRET)).not.toContain('203');

@@ -132,6 +132,10 @@ export function useAvatarSession(locale: AvatarLocale) {
                 )
               });
               dispatch({type: 'done', event});
+              // done closed the session: report it once, like a rejected send.
+              if (event.remaining <= 0) {
+                trackEvent('avatar_limit_reached', {outcome: 'session_limit'});
+              }
               return;
             } else {
               return fail(event.code);
