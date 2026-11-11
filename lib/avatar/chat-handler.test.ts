@@ -28,7 +28,7 @@ const CONFIG: AvatarConfig = {
 };
 
 const USAGE = {input_tokens: 100, output_tokens: 50, cache_creation_input_tokens: 10, cache_read_input_tokens: 20};
-const END: AnswerChunk = {type: 'end', stopReason: 'end_turn', model: 'claude-opus-5-5', costMicroUsd: 5000, usage: USAGE};
+const END: AnswerChunk = {type: 'end', stopReason: 'end_turn', model: 'claude-sonnet-5-5', costMicroUsd: 5000, usage: USAGE};
 
 function fakeLimiter(max: number): Limiter {
   const counts = new Map<string, number>();
@@ -400,7 +400,7 @@ describe('handleChat stream', () => {
     expect(log).toHaveBeenCalledTimes(1);
     expect(log).toHaveBeenCalledWith({
       code: 'ok',
-      model: 'claude-opus-5-5',
+      model: 'claude-sonnet-5-5',
       inputTokens: 100,
       outputTokens: 50,
       cacheReadTokens: 20,

@@ -3,7 +3,7 @@ import {messageCostMicroUsd, type UsageLike} from './pricing';
 import {SYSTEM_PROMPT, toClaudeMessages} from './prompt';
 import type {AvatarLocale, ChatMessage} from './protocol';
 
-export const ANSWER_MODEL = 'claude-opus-5-5';
+export const ANSWER_MODEL = 'claude-sonnet-5-5';
 
 let cached: {apiKey: string; client: Anthropic} | undefined;
 
@@ -23,7 +23,8 @@ export async function* streamAnswer(
   input: {messages: ChatMessage[]; locale: AvatarLocale; signal?: AbortSignal},
   client: Anthropic,
 ): AsyncGenerator<AnswerChunk> {
-  // No `thinking` key: Opus 5.5 rejects disabled/budgets, and omitting it means adaptive.
+  // No `thinking` key: Sonnet 5.5 rejects `{type: 'disabled'}` and budgets, and omitting it keeps
+  // the default adaptive thinking, which stays minimal at effort `low`.
   const stream = client.beta.messages.stream(
     {
       model: ANSWER_MODEL,
