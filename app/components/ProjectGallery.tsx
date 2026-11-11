@@ -113,40 +113,46 @@ export default function ProjectGallery({
           if (event.key === 'ArrowLeft') step(-1);
           if (event.key === 'ArrowRight') step(1);
         }}
-        className="m-auto w-[calc(100%-2rem)] max-w-6xl bg-transparent p-0 backdrop:bg-slate-950/85 backdrop:backdrop-blur-sm"
+        className="m-auto w-[calc(100%-1rem)] max-w-[1600px] bg-transparent p-0 sm:w-[calc(100%-2rem)] backdrop:bg-slate-950/85 backdrop:backdrop-blur-sm"
       >
-        <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-slate-800/90 p-4 md:p-6 shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)]">
+        <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-slate-800/90 p-3 md:p-5 shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)]">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(148,163,184,0.24),transparent_45%),radial-gradient(circle_at_bottom_left,rgba(56,189,248,0.16),transparent_40%)]" />
 
           <button
             type="button"
             onClick={close}
-            className="absolute right-4 top-4 z-20 rounded-full border border-white/20 bg-black/20 p-2 text-slate-200 hover:bg-black/35 hover:text-white transition-colors"
+            className="absolute right-3 top-3 z-20 rounded-full border border-white/20 bg-black/20 p-2 text-slate-200 hover:bg-black/35 hover:text-white transition-colors md:right-4 md:top-4"
             aria-label={t('close')}
           >
             <X size={20} />
           </button>
 
-          <div className="relative z-10 mb-5 pr-12">
-            <p className="mb-2 inline-flex rounded-full border border-sky-300/30 bg-sky-300/10 px-3 py-1 text-xs font-medium tracking-wide text-sky-100">
+          {/* One compact row, so the screenshot gets the height. */}
+          <div className="relative z-10 mb-3 flex min-h-10 flex-wrap items-center gap-x-3 gap-y-1 pr-12 md:mb-4">
+            <p className="inline-flex rounded-full border border-sky-300/30 bg-sky-300/10 px-3 py-1 text-xs font-medium tracking-wide text-sky-100">
               {t('label')}
             </p>
-            <h3 className="text-lg md:text-2xl font-semibold text-white">
+            <h3 className="text-base md:text-xl font-semibold text-white">
               {title}
             </h3>
           </div>
 
-          {/* The image keeps its own proportions, so there are no letterbox bars. */}
+          {/* Sized by the frame, not by the file: next/image never upscales, so on
+              high-density screens the image's own size comes out about half as
+              wide as the frame. object-contain keeps tall shots in proportion,
+              and the drop shadow follows the picture instead of the box. */}
           <div className="relative z-10 flex min-h-[30vh] items-center justify-center">
             <Image
               src={images[active]}
               alt={altFor(active)}
               width={0}
               height={0}
-              sizes="(min-width: 1152px) 1104px, 95vw"
-              className={`h-auto max-h-[62vh] w-auto max-w-full rounded-xl border border-white/10 shadow-2xl transition-opacity duration-200 ${
-                isFading ? 'opacity-0' : 'opacity-100'
-              }`}
+              sizes="(min-width: 1632px) 1560px, 96vw"
+              className={`h-auto w-full rounded-xl object-contain [filter:drop-shadow(0_0_1px_rgba(255,255,255,0.3))_drop-shadow(0_24px_48px_rgba(0,0,0,0.55))] transition-opacity duration-200 ${
+                hasMany
+                  ? 'max-h-[calc(100dvh-14.5rem)]'
+                  : 'max-h-[calc(100dvh-9rem)]'
+              } ${isFading ? 'opacity-0' : 'opacity-100'}`}
             />
 
             <div className="absolute bottom-3 right-3 rounded-full border border-white/20 bg-black/50 px-3 py-1 text-xs font-medium text-slate-100 backdrop-blur">
@@ -178,14 +184,14 @@ export default function ProjectGallery({
           </div>
 
           {hasMany && (
-            <div className="relative z-10 mt-4 rounded-xl border border-white/10 bg-black/20 p-2">
+            <div className="relative z-10 mt-3 rounded-xl border border-white/10 bg-black/20 p-1.5 md:mt-4 md:p-2">
               <div className="flex items-center justify-center gap-2 overflow-x-auto">
                 {images.map((thumb, index) => (
                   <button
                     key={thumb}
                     type="button"
                     onClick={() => changeImage(index)}
-                    className={`relative h-14 w-24 shrink-0 overflow-hidden rounded-lg border transition-all ${
+                    className={`relative h-11 w-20 shrink-0 overflow-hidden rounded-lg border transition-all md:h-14 md:w-24 ${
                       active === index
                         ? 'border-sky-300 shadow-[0_0_0_1px_rgba(125,211,252,0.45)]'
                         : 'border-white/15 opacity-70 hover:opacity-100 hover:border-white/40'
