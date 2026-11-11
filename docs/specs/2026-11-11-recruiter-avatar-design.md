@@ -752,6 +752,7 @@ Regla aplicada: si se contradicen, manda el portafolio; lo que solo está en el 
 5. Los nombres de variables que crea la integración de Upstash en Vercel.
    - Resultado (2026-11-11): la integración de Vercel Marketplace crea `KV_REST_API_URL` y `KV_REST_API_TOKEN`; las bases creadas en Upstash directamente usan `UPSTASH_REDIS_REST_URL` y `UPSTASH_REDIS_REST_TOKEN`. `lib/avatar/config.ts` acepta ambas.
 6. Que `content/profile/cv.md` llegue a las funciones de Vercel con `outputFileTracingIncludes`.
+   - Resultado (2026-11-11): sí. Tras `npm run build`, `grep -c "content/profile/cv.md" .next/server/app/api/avatar/chat/route.js.nft.json` devuelve 1, así que el archivo está en la traza de la función `/api/avatar/chat`.
 7. El tamaño real del prefijo con la API de conteo de tokens.
 8. Que Haiku 5.5 acepte salida estructurada con effort `low` para el clasificador de temas.
 

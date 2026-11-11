@@ -7,6 +7,7 @@
     "home": "Home",
     "about": "About",
     "projects": "Projects",
+    "ask": "Ask AI",
     "contact": "Contact",
     "toggleMenu": "Toggle menu",
     "switchLanguage": "Ver en español",
@@ -24,6 +25,7 @@
     "intro": "Senior Full Stack Developer working on Falabella Seller Center through SmartJob. I take part in architecture decisions, lead a group of developers on the Promotions team, and stay hands-on from the interface to the services behind it.",
     "viewProjects": "View projects",
     "contactMe": "Contact me",
+    "askAvatar": "Talk to my AI avatar",
     "nav": {
       "about": {
         "label": "ABOUT",

@@ -7,6 +7,7 @@
     "home": "Inicio",
     "about": "Sobre mí",
     "projects": "Proyectos",
+    "ask": "Pregúntame",
     "contact": "Contacto",
     "toggleMenu": "Abrir o cerrar el menú",
     "switchLanguage": "View in English",
@@ -24,6 +25,7 @@
     "intro": "Desarrollador Full Stack Senior en Falabella Seller Center a través de SmartJob. Participo en decisiones de arquitectura, lidero a un grupo de desarrolladores en el equipo de Promociones y sigo trabajando directamente en el código, de la interfaz a los servicios que la sostienen.",
     "viewProjects": "Ver proyectos",
     "contactMe": "Contáctame",
+    "askAvatar": "Habla con mi avatar",
     "nav": {
       "about": {
         "label": "SOBRE MÍ",
