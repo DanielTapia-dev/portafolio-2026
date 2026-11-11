@@ -1,6 +1,6 @@
 import {useEffect, useRef} from 'react';
-import Link from 'next/link';
 import {useTranslations} from 'next-intl';
+import {Link} from '@/i18n/navigation';
 import {splitLinks} from './chat-utils';
 import type {Turn} from './session-state';
 
@@ -26,7 +26,8 @@ function AnswerText({text}: {text: string}) {
       );
     }
     return (
-      <Link key={index} href={part.href} className={linkClassName}>
+      // The page locale picks the prefix, so /es/contact is mapped to /contact.
+      <Link key={index} href="/contact" className={linkClassName}>
         {part.label}
       </Link>
     );
@@ -54,7 +55,7 @@ export default function MessageList({turns, busy}: MessageListProps) {
     <div
       ref={containerRef}
       aria-busy={busy}
-      className="flex-1 space-y-5 overflow-y-auto px-4 py-5 md:px-6"
+      className="space-y-5 px-4 py-5 md:min-h-0 md:flex-1 md:overflow-y-auto md:px-6"
     >
       <div className="max-w-[85%] space-y-1">
         <p className="text-xs font-medium text-muted-foreground">

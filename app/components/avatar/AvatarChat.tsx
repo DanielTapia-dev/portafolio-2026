@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect} from 'react';
+import {useEffect, useRef} from 'react';
 import {RotateCcw} from 'lucide-react';
 import {initBotId} from 'botid/client/core';
 import {useLocale, useTranslations} from 'next-intl';
@@ -31,6 +31,7 @@ export default function AvatarChat() {
   const t = useTranslations('Ask');
   const locale = useLocale() as AvatarLocale;
   const {state, send, reset} = useAvatarSession(locale);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (botIdStarted) return;
@@ -42,22 +43,34 @@ export default function AvatarChat() {
   const paused = state.mode === 'paused';
   const busy = state.status === 'streaming';
   const blocked = state.status === 'blocked';
+  // state.notice is never cleared by later turns, so it only shows while
+  // nothing newer has happened: before the first question after a restart, or
+  // once the conversation is blocked or paused.
+  const stateNotice =
+    state.turns.length === 0 || blocked || paused ? state.notice : null;
   const noticeCode: NoticeCode | null =
     (lastTurn?.status === 'error' ? lastTurn.error : null) ??
-    state.notice ??
+    stateNotice ??
     (paused ? 'paused' : null);
   const noticeKey =
     noticeCode && KNOWN_NOTICES.includes(noticeCode) ? noticeCode : 'upstream';
   // Announced once, when the whole answer is in, not word by word.
   const announcement = lastTurn?.status === 'done' ? lastTurn.answer : '';
 
+  // Phones: natural height, so the composer can stick to the viewport while the
+  // page scrolls. md and up: a fixed-height card with its own scroll.
   return (
-    <section className="flex h-[calc(100dvh-8rem)] min-h-[32rem] flex-col overflow-hidden rounded-2xl border border-border bg-card">
+    <section className="flex flex-col rounded-2xl border border-border bg-card md:h-[calc(100dvh-8rem)] md:min-h-[32rem] md:overflow-hidden">
       <MessageList turns={state.turns} busy={busy} />
 
-      <div className="space-y-4 px-4 pb-4 md:px-6">
+      <div className="shrink-0 space-y-4 px-4 pb-4 md:max-h-[45%] md:overflow-y-auto md:px-6">
         {state.turns.length === 0 && !paused && (
-          <SuggestedQuestions onPick={(question) => send(question, 'suggested')} />
+          <SuggestedQuestions onPick={(question) => {
+              send(question, 'suggested');
+              // The suggestion buttons unmount; keep focus in the chat.
+              inputRef.current?.focus();
+            }}
+          />
         )}
 
         {noticeCode && (
@@ -73,7 +86,10 @@ export default function AvatarChat() {
         {(state.turns.length > 0 || blocked) && !paused && (
           <button
             type="button"
-            onClick={reset}
+            onClick={() => {
+              reset();
+              inputRef.current?.focus();
+            }}
             className={
               blocked
                 ? 'inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
@@ -89,12 +105,18 @@ export default function AvatarChat() {
       {!paused && (
         <Composer
           disabled={busy || blocked}
+          locked={blocked}
+          inputRef={inputRef}
           remaining={state.remaining}
           onSend={(question) => send(question, 'typed')}
         />
       )}
 
-      <div className="sr-only" aria-live="polite">
+      <div
+        className="sr-only"
+        aria-live="polite"
+        lang={lastTurn?.lang ?? locale}
+      >
         {announcement}
       </div>
     </section>

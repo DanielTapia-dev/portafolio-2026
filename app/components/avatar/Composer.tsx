@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react';
+import {useState, type RefObject} from 'react';
 import {Send} from 'lucide-react';
 import {useTranslations} from 'next-intl';
 import {CHAT_LIMITS} from '@/lib/avatar/protocol';
@@ -10,14 +10,24 @@ const REMAINING_NOTICE_AT = 3;
 type ComposerProps = {
   // True while an answer streams or the conversation is blocked.
   disabled: boolean;
+  // The box itself is locked only when the conversation is blocked, so focus
+  // survives while an answer streams.
+  locked: boolean;
+  // Owned by AvatarChat, which also refocuses it after a suggested question.
+  inputRef: RefObject<HTMLTextAreaElement | null>;
   remaining: number | null;
   onSend: (question: string) => void;
 };
 
-export default function Composer({disabled, remaining, onSend}: ComposerProps) {
+export default function Composer({
+  disabled,
+  locked,
+  inputRef,
+  remaining,
+  onSend
+}: ComposerProps) {
   const t = useTranslations('Ask');
   const [text, setText] = useState('');
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const max = CHAT_LIMITS.userTextMax;
 
   const submit = () => {
@@ -26,7 +36,7 @@ export default function Composer({disabled, remaining, onSend}: ComposerProps) {
     onSend(question);
     setText('');
     // The send button may have taken the focus; typing continues in the box.
-    textareaRef.current?.focus();
+    inputRef.current?.focus();
   };
 
   return (
@@ -49,7 +59,8 @@ export default function Composer({disabled, remaining, onSend}: ComposerProps) {
           </label>
           <textarea
             id="ask-input"
-            ref={textareaRef}
+            ref={inputRef}
+            disabled={locked}
             rows={2}
             value={text}
             maxLength={max}
@@ -67,7 +78,7 @@ export default function Composer({disabled, remaining, onSend}: ComposerProps) {
               }
             }}
             // 16px stops iOS Safari from zooming in when the box gets focus.
-            className="w-full resize-none rounded-lg border border-border bg-background/60 px-4 py-3 text-base text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+            className="w-full resize-none rounded-lg border border-border bg-background/60 px-4 py-3 text-base text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60"
           />
         </div>
         <button

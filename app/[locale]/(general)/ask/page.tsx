@@ -25,10 +25,16 @@ export default async function AskPage({
     <div className="min-h-screen pt-28 pb-20">
       <div className="mx-auto max-w-3xl space-y-10 px-6">
         <header className="space-y-5 text-center animate-fade-up motion-reduce:animate-none">
-          <ProfileAvatar src="/Profile.jpg" alt={t('avatarAlt')} />
+          <div className="relative mx-auto w-fit">
+            <ProfileAvatar src="/Profile.jpg" alt={t('avatarAlt')} />
+            {/* Always visible on the photo, so nobody mistakes it for a person. */}
+            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-full border border-primary/40 bg-background px-2.5 py-0.5 text-xs font-bold text-primary shadow">
+              {t('aiBadge')}
+            </span>
+          </div>
           <p className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
             <Sparkles size={14} aria-hidden="true" />
-            {t('aiBadge')} · {t('eyebrow')}
+            {t('eyebrow')}
           </p>
           <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-5xl">
             {t('title')}
