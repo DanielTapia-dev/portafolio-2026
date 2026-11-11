@@ -380,7 +380,7 @@ Ventana deslizante con `@upstash/ratelimit`. Los valores se pueden cambiar por v
 | Global | 500 preguntas al día | `AVATAR_GLOBAL_DAILY` |
 | Voz y video (fases 2 y 3) | 5 minutos por sesión y 10 minutos por IP al día | Se definen en sus specs |
 
-- **IPs:** la IP se obtiene de las cabeceras de Vercel y se guarda solo como HMAC-SHA256 con `AVATAR_SIGNING_SECRET`, con el prefijo `ip:`. Las claves caducan en 24 h.
+- **IPs:** la IP se obtiene de las cabeceras de Vercel y se guarda solo como HMAC-SHA256 con `AVATAR_SIGNING_SECRET`, con el prefijo `ip:`. Las claves caducan en un máximo de 48 h: la ventana deslizante de un día conserva también la ventana anterior.
 - **Sesión:** empieza con la primera pregunta, que crea en Redis una clave con caducidad de 30 minutos. Una pregunta con firma cuya sesión ya caducó recibe `session_limit`.
 - **Límite real:** el identificador de sesión lo genera el cliente, así que cambiarlo permite saltarse el límite de sesión. El límite por IP es el que realmente frena el abuso.
 
@@ -431,7 +431,7 @@ Ventana deslizante con `@upstash/ratelimit`. Los valores se pueden cambiar por v
 ## 11. Privacidad y transparencia
 
 - **Nada de contenido en sistemas propios:** el texto de las conversaciones no se guarda en ningún sitio ni aparece en los logs. Los logs registran solo códigos de error, modelo, uso de tokens y coste.
-- **Redis** solo contiene contadores: IPs como HMAC con caducidad de 24 h, sesiones con caducidad de 30 minutos y totales mensuales.
+- **Redis** solo contiene contadores: IPs como HMAC con caducidad de 48 h como máximo, sesiones con caducidad de 30 minutos y totales mensuales.
 - **Anthropic** recibe las preguntas para generar la respuesta. Su centro de privacidad indica que borra las entradas y salidas de la API en un máximo de 30 días, salvo contenido señalado por abuso. Su documentación de la API describe la retención de otra forma, así que el texto del aviso se verificará antes de publicar (§21).
 - **PostHog** recibe solo categorías (tema, canal, resultado, rango de latencia), nunca el texto. Se mantiene la configuración actual: sin cookies, sin perfiles de persona y respetando Do Not Track.
 - **Aviso en la página**, visible antes de la primera pregunta y sin muro de consentimiento:
