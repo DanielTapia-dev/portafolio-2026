@@ -41,6 +41,10 @@ describe('rules', () => {
     expect(detectLang('Trabajo con React y Node en el equipo de promociones.')).toBe('es');
     expect(detectLang('I work with React and Node on the promotions team.')).toBe('en');
   });
+  it('detects short answers', () => {
+    expect(detectLang('Sí, estoy dispuesto a reubicarme; escríbeme por /es/contact.')).toBe('es');
+    expect(detectLang('Yes, I can relocate. Write to me at /contact.')).toBe('en');
+  });
   it('lists every broken rule', () =>
     expect(checkRules('Call +1 202 555 0143', 'es')).toEqual(
       expect.arrayContaining(['phone', 'language'])

@@ -33,23 +33,23 @@ export function claimsTechLead(text: string): boolean {
   return TECH_LEAD.test(text);
 }
 
+// No word shared by both languages ("a", "no", "i"), so short answers are not biased.
 const STOPWORDS = {
-  es: 'de la que el en y los las por con para una mi es del',
-  en: 'the and of to in my is with for a on as at it i'
+  es: new Set(
+    'de la que el en y los las por con para una mi es del se no un su lo al como más'.split(' ')
+  ),
+  en: new Set('the and of to in my is with for on as at it am are was this that you'.split(' '))
 };
 
-function countWords(text: string, words: string): number {
-  return words
-    .split(' ')
-    .reduce(
-      (total, word) => total + (text.match(new RegExp(`\\b${word}\\b`, 'gi'))?.length ?? 0),
-      0
-    );
+function countWords(words: string[], vocabulary: Set<string>): number {
+  return words.filter((word) => vocabulary.has(word)).length;
 }
 
 // Frequent function words are enough for the answers of this eval; a tie is English.
+// Splitting on non-letters keeps accented words whole, which \b would not.
 export function detectLang(text: string): 'en' | 'es' {
-  return countWords(text, STOPWORDS.es) > countWords(text, STOPWORDS.en) ? 'es' : 'en';
+  const words = text.toLowerCase().split(/[^\p{L}]+/u);
+  return countWords(words, STOPWORDS.es) > countWords(words, STOPWORDS.en) ? 'es' : 'en';
 }
 
 // Returns the codes of the broken rules. The salary rule is opt-in because other
