@@ -104,7 +104,7 @@ async function judge(q: Question, answer: string, client: Anthropic): Promise<Ju
           ].join('\n')
         }
       ]
-    });
+    }, {timeout: 120_000}); // The judge reasons at effort medium and can exceed the 30 s avatar default.
     const costMicroUsd = messageCostMicroUsd(message);
     if (message.stop_reason !== 'end_turn') {
       return {verdict: null, error: `stop_reason ${message.stop_reason}`, costMicroUsd};
