@@ -31,7 +31,7 @@ export function readAvatarConfig(env: Record<string, string | undefined> = proce
     budget: {
       softUsd: positive(env.AVATAR_BUDGET_SOFT_USD, 45),
       hardUsd: positive(env.AVATAR_BUDGET_HARD_USD, 60),
-      fixedUsd: positive(env.AVATAR_BUDGET_FIXED_USD, 0),
+      fixedUsd: positive(env.AVATAR_FIXED_MONTHLY_USD, 0),
     },
     limits: {
       sessionQuestions: positive(env.AVATAR_SESSION_QUESTIONS, 20),

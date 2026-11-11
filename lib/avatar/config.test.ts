@@ -18,4 +18,5 @@ describe('readAvatarConfig', () => {
   it('applies defaults', () => expect(readAvatarConfig(base)).toMatchObject({budget: {softUsd: 45, hardUsd: 60, fixedUsd: 0}, limits: {sessionQuestions: 20, sessionMinutes: 30, ipDaily: 40, ipPerMinute: 6, globalDaily: 500}}));
   it('ignores invalid overrides', () => expect(readAvatarConfig({...base, AVATAR_IP_DAILY: '-3'})?.limits.ipDaily).toBe(40));
   it('accepts valid overrides', () => expect(readAvatarConfig({...base, AVATAR_BUDGET_SOFT_USD: '10'})?.budget.softUsd).toBe(10));
+  it('reads the fixed monthly cost', () => expect(readAvatarConfig({...base, AVATAR_FIXED_MONTHLY_USD: '22'})?.budget.fixedUsd).toBe(22));
 });

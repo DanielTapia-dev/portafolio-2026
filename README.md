@@ -119,7 +119,7 @@ TypeScript checks that every slug has a translation, because message keys are ty
 | `AVATAR_SIGNING_SECRET` | 32+ random characters that sign conversations and hash IPs. Server only |
 | `AVATAR_ENABLED` | `true` to run. Anything else pauses the avatar at once: this is the kill switch |
 | `AVATAR_BUDGET_SOFT_USD`, `AVATAR_BUDGET_HARD_USD` | Monthly caps in USD. Defaults 45 and 60 |
-| `AVATAR_BUDGET_FIXED_USD` | Fixed monthly subscriptions counted against the caps. Default 0 |
+| `AVATAR_FIXED_MONTHLY_USD` | Fixed monthly subscriptions counted against the caps. Default 0 |
 | `AVATAR_SESSION_QUESTIONS`, `AVATAR_SESSION_MINUTES`, `AVATAR_IP_DAILY`, `AVATAR_IP_PER_MINUTE`, `AVATAR_GLOBAL_DAILY` | Optional limit overrides. Defaults 20, 30, 40, 6 and 500 |
 
 If a secret is missing or Redis fails, the avatar shows as paused instead of breaking the page.
