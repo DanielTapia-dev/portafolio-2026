@@ -245,15 +245,16 @@ client.beta.messages.stream({
 
 - **Dónde va la marca:** una marca explícita al final del system prompt (instrucciones y conocimiento), más la caché automática de nivel superior para la parte creciente de la conversación.
 - **Duración:** 5 minutos. Las preguntas de una misma conversación llegan con menos de 5 minutos entre sí, así que la caché se mantiene sola. La de 1 hora cuesta el doble al escribir y con poco tráfico no se amortiza.
-- **Sin precalentamiento:** el tráfico es bajo y la primera pregunta de cada conversación paga la escritura (~0,075 USD).
+- **Sin precalentamiento:** el tráfico es bajo y la primera pregunta de cada conversación paga la escritura (~0,05 USD medidos con Sonnet 5.5; 0,10 USD con Opus 5.5).
 - **Comprobación:** el eval verifica que la segunda pregunta de una conversación tiene `cache_read_input_tokens > 0`.
 
 ### 8.3 Effort y latencia
 
 - **Por qué `low`:** el valor por defecto de Sonnet 5.5 es `high`. `low` mantiene las respuestas rápidas, que es lo adecuado para una conversación.
-- **Si el 90 % de las respuestas supera 2 s hasta el primer texto en el eval**, se prueban en este orden, midiendo calidad y latencia:
-  1. Añadir "Answer directly without deliberating." a las instrucciones.
-  2. Comparar con Sonnet 5.5 en `low` y llevar los números a Daniel antes de cambiar de modelo.
+- **Latencia medida (2026-11-11):** tiempo hasta el primer texto, mediana ~1,2 s con Sonnet 5.5 frente a ~1,9 s con Opus 5.5 (§8.6). La comparación con Sonnet 5.5 que este plan preveía ya se hizo y llevó al cambio de modelo.
+- **Entregas de golpe:** a veces la respuesta entera llega al final. Es la entrega de la API, no el razonamiento, y ningún cambio de instrucciones lo arregla.
+- **Sin "Answer directly without deliberating.":** se descartó porque con Sonnet 5.5 en `low` el razonamiento es de ~0 tokens y no hay deliberación que recortar.
+- **Seguimiento:** la propiedad `latency` de PostHog. Si la mediana sube de 2 s, se revisa el eval y el estado de la API.
 - **Fast mode no se usa:** acelera la salida, pero apenas el tiempo hasta el primer texto, y cuesta el doble.
 
 ### 8.4 Historial de la conversación
