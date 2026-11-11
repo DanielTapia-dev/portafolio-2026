@@ -744,8 +744,13 @@ Regla aplicada: si se contradicen, manda el portafolio; lo que solo está en el 
 1. Que Opus 5.5 acepte turnos anteriores del asistente sin sus bloques de razonamiento, y que la caché se lea en la segunda pregunta.
 2. Que BotID funcione iniciándolo solo en `/ask` y que no deje cookies ni almacenamiento en el navegador.
 3. El texto exacto de la retención de datos de la API de Anthropic para el aviso de privacidad.
+   - Resultado (2026-11-11): la política comercial (privacy.claude.com, artículo 7996866) dice que Anthropic borra las entradas y salidas de la API en un máximo de 30 días, salvo el contenido marcado por incumplir la política de uso (hasta 2 años) o por obligación legal. La documentación de la API dice que los datos retenidos nunca se usan para entrenar sin permiso expreso, y que el contenido no se retiene por defecto salvo en los Covered Models (Fable y Mythos, no Opus 5.5 ni Haiku 5.5). El aviso usa la política comercial, que es la que esa documentación cita como retención estándar:
+     - en: "Anthropic processes your messages to generate the answers and doesn't use them to train its models. It deletes them within 30 days, except messages flagged for breaking its usage policy."
+     - es: "Anthropic procesa tus mensajes para generar las respuestas y no los usa para entrenar sus modelos. Los borra en un máximo de 30 días, salvo los que se marquen por incumplir su política de uso."
 4. Que la consola de Anthropic permita un límite de gasto por workspace y fijarlo.
+   - Resultado (2026-11-11): sí. En la consola, Organization settings > Billing > Spend limits admite un límite mensual por workspace, menor o igual que el de la organización; el workspace Default no admite límite propio, así que el avatar necesita un workspace propio. Al llegar al límite, la API responde 400 `invalid_request_error`, que la ruta trata como `upstream`.
 5. Los nombres de variables que crea la integración de Upstash en Vercel.
+   - Resultado (2026-11-11): la integración de Vercel Marketplace crea `KV_REST_API_URL` y `KV_REST_API_TOKEN`; las bases creadas en Upstash directamente usan `UPSTASH_REDIS_REST_URL` y `UPSTASH_REDIS_REST_TOKEN`. `lib/avatar/config.ts` acepta ambas.
 6. Que `content/profile/cv.md` llegue a las funciones de Vercel con `outputFileTracingIncludes`.
 7. El tamaño real del prefijo con la API de conteo de tokens.
 8. Que Haiku 5.5 acepte salida estructurada con effort `low` para el clasificador de temas.
