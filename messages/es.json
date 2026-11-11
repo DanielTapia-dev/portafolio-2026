@@ -450,5 +450,52 @@
       "submit": "Enviar mensaje",
       "error": "No se pudo enviar el mensaje. Inténtalo de nuevo o escríbeme directamente por correo."
     }
+  },
+  "Ask": {
+    "eyebrow": "Avatar de IA",
+    "title": "Pregúntale a mi avatar de IA",
+    "intro": "Una versión de mí hecha con IA a partir de este portafolio y mi CV. Pregúntale por mi experiencia, mis proyectos, mi stack o mi forma de trabajar.",
+    "aiBadge": "IA",
+    "avatarAlt": "Foto de Daniel Tapia",
+    "notice": {
+      "title": "Antes de empezar",
+      "ai": "Es un avatar de IA, no soy yo en persona.",
+      "storage": "Este sitio no guarda tus mensajes.",
+      "processing": "Anthropic procesa tus mensajes para generar las respuestas y no los usa para entrenar sus modelos. Los borra en un máximo de 30 días, salvo los que se marquen por incumplir su política de uso.",
+      "personalData": "No compartas datos personales.",
+      "contact": "Para hablar conmigo, usa el formulario de contacto o LinkedIn."
+    },
+    "greeting": "¡Hola! Soy el avatar de IA de Daniel. Pregúntame por mi experiencia, mis proyectos o mi stack y te responderé con la información de mi portafolio y mi CV.",
+    "suggestionsLabel": "Preguntas sugeridas",
+    "suggestions": {
+      "falabella": "¿Qué haces en Falabella?",
+      "stack": "¿Cuál es tu stack principal?",
+      "leadership": "¿Tienes experiencia de liderazgo?",
+      "project": "Cuéntame sobre un proyecto destacado.",
+      "certifications": "¿Qué certificaciones tienes?",
+      "remote": "¿Trabajas en remoto? ¿Te reubicarías?"
+    },
+    "inputLabel": "Tu pregunta",
+    "placeholder": "Pregunta por mi experiencia, proyectos o stack…",
+    "send": "Enviar",
+    "you": "Tú",
+    "avatarName": "Daniel (IA)",
+    "thinking": "Pensando…",
+    "charCount": "{count}/{max}",
+    "remaining": "{count, plural, one {Queda # pregunta} other {Quedan # preguntas}} en esta conversación",
+    "newConversation": "Nueva conversación",
+    "contactTitle": "¿Quieres hablar con el Daniel real?",
+    "contactCta": "Contáctame",
+    "linkedin": "LinkedIn",
+    "errors": {
+      "invalid": "No pude leer ese mensaje. Prueba con una pregunta más corta.",
+      "bot": "No pude verificar tu navegador. Puedes escribirme por el formulario de contacto o LinkedIn.",
+      "signature": "La conversación se reinició. Vuelve a hacer tu pregunta.",
+      "session_limit": "Esta conversación llegó a su límite. Empieza una nueva o escríbeme por el formulario de contacto o LinkedIn.",
+      "rate_limited": "Demasiadas preguntas en poco tiempo. Inténtalo en un minuto o contáctame directamente.",
+      "paused": "El avatar está descansando ahora mismo. Puedes escribirme por el formulario de contacto o LinkedIn.",
+      "upstream": "Algo falló al responder. Inténtalo de nuevo.",
+      "refusal": "No puedo responder a eso. Pregúntame por mi experiencia o contáctame directamente."
+    }
   }
 }

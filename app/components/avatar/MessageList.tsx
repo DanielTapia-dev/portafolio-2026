@@ -1,0 +1,102 @@
+import {useEffect, useRef} from 'react';
+import Link from 'next/link';
+import {useTranslations} from 'next-intl';
+import {splitLinks} from './chat-utils';
+import type {Turn} from './session-state';
+
+const linkClassName =
+  'font-medium text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
+
+// The model's text is rendered as plain text; only the links splitLinks
+// recognises become anchors, so nothing it writes can turn into markup.
+function AnswerText({text}: {text: string}) {
+  return splitLinks(text).map((part, index) => {
+    if (part.type === 'text') return <span key={index}>{part.text}</span>;
+    if (part.external) {
+      return (
+        <a
+          key={index}
+          href={part.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={linkClassName}
+        >
+          {part.label}
+        </a>
+      );
+    }
+    return (
+      <Link key={index} href={part.href} className={linkClassName}>
+        {part.label}
+      </Link>
+    );
+  });
+}
+
+type MessageListProps = {
+  turns: Turn[];
+  busy: boolean;
+};
+
+export default function MessageList({turns, busy}: MessageListProps) {
+  const t = useTranslations('Ask');
+  const containerRef = useRef<HTMLDivElement>(null);
+  const lastAnswerLength = turns.at(-1)?.answer.length ?? 0;
+
+  // Follow the answer as it streams in. Scrolling the container, not the
+  // page, keeps the composer where it is.
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) container.scrollTop = container.scrollHeight;
+  }, [turns.length, lastAnswerLength]);
+
+  return (
+    <div
+      ref={containerRef}
+      aria-busy={busy}
+      className="flex-1 space-y-5 overflow-y-auto px-4 py-5 md:px-6"
+    >
+      <div className="max-w-[85%] space-y-1">
+        <p className="text-xs font-medium text-muted-foreground">
+          {t('avatarName')}
+        </p>
+        <p className="rounded-2xl rounded-tl-sm border border-border bg-background/60 px-4 py-3 text-foreground">
+          {t('greeting')}
+        </p>
+      </div>
+
+      {turns.map((turn) => (
+        <div key={turn.id} className="space-y-5">
+          <div className="ml-auto max-w-[85%] space-y-1 text-right">
+            <p className="text-xs font-medium text-muted-foreground">
+              {t('you')}
+            </p>
+            <p className="whitespace-pre-wrap break-words rounded-2xl rounded-tr-sm bg-primary px-4 py-3 text-left text-primary-foreground">
+              {turn.question}
+            </p>
+          </div>
+
+          {(turn.answer || turn.status === 'streaming') && (
+            <div className="max-w-[85%] space-y-1">
+              <p className="text-xs font-medium text-muted-foreground">
+                {t('avatarName')}
+              </p>
+              {turn.answer ? (
+                <p
+                  lang={turn.lang ?? undefined}
+                  className="whitespace-pre-wrap break-words rounded-2xl rounded-tl-sm border border-border bg-background/60 px-4 py-3 text-foreground"
+                >
+                  <AnswerText text={turn.answer} />
+                </p>
+              ) : (
+                <p className="rounded-2xl rounded-tl-sm border border-border bg-background/60 px-4 py-3 text-muted-foreground animate-pulse motion-reduce:animate-none">
+                  {t('thinking')}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
