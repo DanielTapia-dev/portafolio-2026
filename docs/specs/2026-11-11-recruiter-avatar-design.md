@@ -777,6 +777,7 @@ Regla aplicada: si se contradicen, manda el portafolio; lo que solo está en el 
    - Resultado (2026-11-11): sí. Tras `npm run build`, `grep -c "content/profile/cv.md" .next/server/app/api/avatar/chat/route.js.nft.json` devuelve 1, así que el archivo está en la traza de la función `/api/avatar/chat`.
 7. El tamaño real del prefijo con la API de conteo de tokens.
    - Resultado (2026-11-11): 19.581 tokens (49.641 caracteres), frente a los ~15K estimados en §6.5. Una conversación de 6 preguntas cuesta ~0,16 USD: ~16 USD al mes con 100 conversaciones y ~49 USD con 300, por encima del tope blando de 45 USD en el escenario alto.
+   - Con las instrucciones finales (`PROMPT_VERSION` 2026-11-11.3) y Sonnet 5.5: 19.683 tokens. Eval final del 2026-11-11: reglas fijas 15/15, sin afirmaciones no respaldadas 15/15, calidad 15/15, mediana 0,84 s y percentil 90 1,37 s hasta el primer texto.
 8. Que Haiku 5.5 acepte salida estructurada con effort `low` para el clasificador de temas.
    - Resultado (2026-11-11): sí, sin cabecera beta. `stop_reason` `end_turn`, 18 tokens de salida y 0 de razonamiento con `max_tokens` 200. `classifyTopic` clasificó bien en español y en inglés en 1,3–1,8 s, cerca del límite de 2 s.
 
