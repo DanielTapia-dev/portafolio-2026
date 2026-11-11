@@ -494,7 +494,7 @@
       "bot": "No pude verificar tu navegador. Puedes escribirme por el formulario de contacto o LinkedIn.",
       "signature": "La conversación se reinició. Vuelve a hacer tu pregunta.",
       "session_limit": "Esta conversación llegó a su límite. Empieza una nueva o escríbeme por el formulario de contacto o LinkedIn.",
-      "rate_limited": "Demasiadas preguntas en poco tiempo. Inténtalo en un minuto o contáctame directamente.",
+      "rate_limited": "Demasiadas preguntas por ahora. Inténtalo más tarde o contáctame directamente.",
       "paused": "El avatar está descansando ahora mismo. Puedes escribirme por el formulario de contacto o LinkedIn.",
       "upstream": "Algo falló al responder. Inténtalo de nuevo.",
       "refusal": "No puedo responder a eso. Pregúntame por mi experiencia o contáctame directamente."

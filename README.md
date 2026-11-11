@@ -82,7 +82,7 @@ lib/
   admin/               Sign-in credentials, session tokens and the admin guard
   avatar/              AI avatar: prompt, limits, budget and streaming
   analytics/           Event catalog, PostHog queries, date ranges and formatting
-content/profile/       cv.md, the only source of facts the avatar can use
+content/profile/       cv.md, part of what the avatar knows (see AI avatar)
 evals/avatar/          Questions and rules for the avatar eval
 public/projects/       Screenshots, one folder per project
 instrumentation-client.ts  PostHog setup and click tracking in the browser
@@ -101,7 +101,7 @@ TypeScript checks that every slug has a translation, because message keys are ty
 
 ## AI avatar
 
-`/ask` (`/es/ask`) is a chat where recruiters talk to an AI avatar of me. It answers from `content/profile/cv.md` only, in the visitor's language, and points to the contact form or LinkedIn for anything it cannot answer. Conversation text is never stored or logged; only error codes, token usage and cost are. It is a Claude model behind a signed, rate-limited, budget-capped API route that BotID protects.
+`/ask` (`/es/ask`) is a chat where recruiters talk to an AI avatar of me. It answers from the site's own content (the copy in `messages/*.json`, `lib/projects.ts`, `lib/profile.ts`) and `content/profile/cv.md`, in the visitor's language, and points to the contact form or LinkedIn for anything it cannot answer. Conversation text is never stored or logged; only error codes, token usage and cost are. It is a Claude model behind a signed, rate-limited, budget-capped API route that BotID protects.
 
 ### Setup
 
@@ -131,7 +131,9 @@ If a secret is missing or Redis fails, the avatar shows as paused instead of bre
 
 ### Updating what the avatar knows
 
-Edit `content/profile/cv.md`; it is bundled into the API route at build time, so redeploy afterwards. This repository is public: never put a phone number or email in that file, or anywhere else in the repo. Visitors reach me through the contact form.
+The avatar's knowledge comes from the site copy (`messages/*.json`), `lib/projects.ts`, `lib/profile.ts` and `content/profile/cv.md`. They are bundled into the API route at build time, so redeploy after editing. Editing the site copy changes what the avatar knows and changes the prompt (and so its cache): consider bumping `PROMPT_VERSION` and running the eval.
+
+This repository is public, and the avatar can repeat anything in its profile, so `content/profile/cv.md` must never contain a phone number or email address. (The site's contact email elsewhere is intentional.) Visitors reach me through the contact form.
 
 ## Analytics
 

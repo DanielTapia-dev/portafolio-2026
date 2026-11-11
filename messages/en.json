@@ -494,7 +494,7 @@
       "bot": "I couldn't verify your browser. You can still reach me through the contact form or LinkedIn.",
       "signature": "This conversation was restarted. Please ask your question again.",
       "session_limit": "This conversation has reached its limit. Start a new one, or reach me through the contact form or LinkedIn.",
-      "rate_limited": "Too many questions in a short time. Please try again in a minute, or contact me directly.",
+      "rate_limited": "Too many questions for now. Please try again later, or contact me directly.",
       "paused": "The avatar is resting right now. You can still reach me through the contact form or LinkedIn.",
       "upstream": "Something went wrong while answering. Please try again.",
       "refusal": "I can't answer that one. Ask me about my experience, or contact me directly."
