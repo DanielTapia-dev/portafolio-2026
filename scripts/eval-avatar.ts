@@ -241,7 +241,8 @@ function report(state: State, fatal: string | null): number {
     rulesOk === total &&
     supported === total &&
     quality >= 14 &&
-    p90 < 2000 &&
+    median < 1500 &&
+    p90 < 3000 &&
     cacheRead > 0;
   console.log(passed ? 'PASS' : 'FAIL');
   return fatal ? 2 : passed ? 0 : 1;

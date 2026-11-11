@@ -25,7 +25,7 @@ Una página nueva, `/ask` (`/es/ask` en español), donde un reclutador conversa 
 | Criterio | Cómo se mide | Umbral |
 | --- | --- | --- |
 | Responde bien y sin inventar | Eval de 15 preguntas (§15.4) | 15/15 en reglas fijas, 15/15 sin afirmaciones no respaldadas, ≥ 14/15 en calidad según el juez |
-| El chat empieza a responder rápido | Eval (tiempo hasta el primer texto) y propiedad `latency` en PostHog | El 90 % de las respuestas muestra el primer texto en menos de 2 s |
+| El chat empieza a responder rápido | Eval (tiempo hasta el primer texto) y propiedad `latency` en PostHog | Mediana por debajo de 1,5 s y percentil 90 por debajo de 3 s. Antes era el 90 % en menos de 2 s; Daniel lo cambió el 2026-11-11 porque la primera pregunta de cada conversación escribe la caché y la API entrega a veces la respuesta entera de golpe (§8.3) |
 | La voz empieza a responder rápido (fase 2) | Se define en el spec de la fase 2 | Menos de ~3 s |
 | Coste medido y dentro del presupuesto | Contador mensual en Redis, tarjeta "Avatar" en `/admin/analytics` y eval | Coste medio por conversación visible; gasto mensual por debajo del tope duro |
 | Uso medido | PostHog | Conversaciones iniciadas, temas más preguntados y clics en contacto después de usar el avatar |
@@ -254,7 +254,7 @@ client.beta.messages.stream({
 - **Latencia medida (2026-11-11):** tiempo hasta el primer texto, mediana ~1,2 s con Sonnet 5.5 frente a ~1,9 s con Opus 5.5 (§8.6). La comparación con Sonnet 5.5 que este plan preveía ya se hizo y llevó al cambio de modelo.
 - **Entregas de golpe:** a veces la respuesta entera llega al final. Es la entrega de la API, no el razonamiento, y ningún cambio de instrucciones lo arregla.
 - **Sin "Answer directly without deliberating.":** se descartó porque con Sonnet 5.5 en `low` el razonamiento es de ~0 tokens y no hay deliberación que recortar.
-- **Seguimiento:** la propiedad `latency` de PostHog. Si la mediana sube de 2 s, se revisa el eval y el estado de la API.
+- **Seguimiento:** la propiedad `latency` de PostHog. Si la mediana supera 1,5 s o el percentil 90 supera 3 s, se revisa el eval y el estado de la API.
 - **Fast mode no se usa:** acelera la salida, pero apenas el tiempo hasta el primer texto, y cuesta el doble.
 
 ### 8.4 Historial de la conversación
@@ -591,7 +591,7 @@ Con el cliente de Anthropic y Redis simulados:
   - 15/15 en reglas fijas.
   - 15/15 sin afirmaciones no respaldadas.
   - ≥ 14/15 en calidad.
-  - Percentil 90 por debajo de 2 s.
+  - Mediana por debajo de 1,5 s y percentil 90 por debajo de 3 s.
 - **Cuándo se ejecuta:** a mano, antes de cada deploy que cambie `PROMPT_VERSION`. Coste aproximado: 1 USD por ejecución.
 
 | # | Idioma | Pregunta | Qué debe hacer |
