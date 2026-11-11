@@ -11,7 +11,7 @@
 
 Una página nueva, `/ask` (`/es/ask` en español), donde un reclutador conversa por texto con un avatar de IA de Daniel. El avatar responde en streaming, en primera persona, sobre su perfil profesional: experiencia, proyectos, stack, logros, certificaciones, estudios, idiomas y forma de trabajar.
 
-- **Modelo:** Claude Opus 5.5 (`claude-opus-5-5`) con el SDK oficial `@anthropic-ai/sdk`, effort `low` y prompt caching.
+- **Modelo:** Claude Sonnet 5.5 (`claude-sonnet-5-5`) con el SDK oficial `@anthropic-ai/sdk`, effort `low` y prompt caching. Opus 5.5 fue la elección inicial y se cambió tras medir la latencia (§8.6).
 - **Conocimiento:** todo el perfil va en el system prompt. Se arma en el servidor a partir de los mismos archivos que usa el sitio, más el CV en texto. No hay RAG ni base vectorial, y ningún contenido del sitio se copia a mano.
 - **Protección:** Vercel BotID, límites por sesión, IP y globales, y un tope de gasto mensual con tres modos (`full`, `text-only`, `paused`).
 - **Preparado para las fases 2 y 3:** un único "cerebro" de texto (`streamAnswer`) al que la voz y el video se conectan como canales de entrada y salida.
@@ -61,7 +61,7 @@ Se describen a alto nivel en §17. Cada una tendrá su propio spec cuando se abo
 | --- | --- | --- |
 | Página propia `/ask` | Sección en Home; widget flotante | No cambia las demás páginas y la carga diferida es natural |
 | Todo el perfil en el system prompt con caching | RAG con embeddings; herramientas de consulta | ~15K tokens caben de sobra. Leer el prefijo de la caché cuesta ~0,003 USD por pregunta. Sin fallos de búsqueda y una sola llamada por pregunta |
-| Claude Opus 5.5 con effort `low` | Sonnet 5.5; Haiku 5.5 | Requisito de modelo de primer nivel. Cabe en el presupuesto (§8.6). Se revisa solo si el eval mide más de 2 s |
+| Claude Sonnet 5.5 con effort `low` | Opus 5.5 (elección inicial); Haiku 5.5 | Menor latencia medida (mediana ~1,2 s frente a ~1,9–2,6 s) y la mitad de coste, con calidad equivalente en el eval. Decisión de Daniel tras ver los números (§8.6) |
 | Haiku 5.5 para clasificar el tema de cada pregunta | Palabras clave; sin temas | ~0,00004 USD por pregunta, en paralelo, sin guardar el texto |
 | No guardar el texto de las conversaciones | Guardarlas anonimizadas | Privacidad más simple y nada que revisar a mano (fuera de alcance) |
 | Historial en el navegador con firma HMAC | Sesiones en Redis; message threads de la API | Sin estado en el servidor y sin guardar contenido. La firma impide inventarse turnos del avatar |
@@ -77,7 +77,7 @@ Se describen a alto nivel en §17. Cada una tendrá su propio spec cuando se abo
        ├─ GET  /api/avatar/status ──► modo actual (full / text-only / paused)
        └─ POST /api/avatar/chat
              1. formato  2. BotID  3. límites  4. presupuesto  5. firma
-             └─► streamAnswer() ──► Claude Opus 5.5 (stream) ──► SSE: delta… done | error
+             └─► streamAnswer() ──► Claude Sonnet 5.5 (stream) ──► SSE: delta… done | error
              └─► classifyTopic() ──► Claude Haiku 5.5 (en paralelo) ──► tema e idioma en done
              └─► registrar gasto en Redis
 ```
@@ -86,7 +86,7 @@ Se describen a alto nivel en §17. Cada una tendrá su propio spec cuando se abo
 
 1. El navegador envía la conversación visible, la pregunta nueva, el identificador de sesión y la firma recibida en la respuesta anterior.
 2. La ruta aplica los controles de §10.1. Si uno falla, responde con un código de error y no llama a Claude.
-3. `streamAnswer` llama a Opus 5.5 y reenvía cada trozo de texto como evento `delta`.
+3. `streamAnswer` llama a Sonnet 5.5 y reenvía cada trozo de texto como evento `delta`.
 4. En paralelo, `classifyTopic` pide a Haiku 5.5 el tema y el idioma de la pregunta.
 5. Al terminar, la ruta calcula el coste con el uso que devuelve la API, lo suma al contador mensual, firma la conversación nueva y envía el evento `done`.
 
@@ -163,7 +163,7 @@ Las marcas de texto enriquecido (`<highlight>…</highlight>`) se eliminan y que
 
 - **Estimación:** ~15K tokens. Unos 16,5K caracteres de perfil en inglés, 18K en español, 6K de CV, más los datos estructurados y las instrucciones.
 - **Medición:** el script del eval mide el tamaño real con la API de conteo de tokens.
-- **Caché:** el mínimo cacheable en Opus 5.5 es de 512 tokens, así que el prefijo se cachea sin problema.
+- **Caché:** el prefijo medido (~19.600 tokens) está muy por encima del tamaño mínimo cacheable, así que se cachea sin problema.
 
 ## 7. Comportamiento: instrucciones del avatar
 
@@ -226,7 +226,7 @@ Antes de enviarla, el servidor neutraliza cualquier `</recruiter_message>` que v
 
 ```ts
 client.beta.messages.stream({
-  model: 'claude-opus-5-5',
+  model: 'claude-sonnet-5-5',
   max_tokens: 2000,
   output_config: {effort: 'low'},
   betas: ['server-side-fallback-2026-07-01'],
@@ -237,7 +237,7 @@ client.beta.messages.stream({
 });
 ```
 
-- **Razonamiento:** en Opus 5.5 no se puede desactivar. Se omite el parámetro `thinking` (equivale a `adaptive`) y el razonamiento no se muestra (`display` por defecto `omitted`). El cliente ignora los bloques `thinking`.
+- **Razonamiento:** en Sonnet 5.5 `thinking` es adaptativo por defecto y `disabled` y los presupuestos se rechazan. Se omite el parámetro y, en `low`, el modelo apenas razona (0 tokens medidos). El razonamiento no se muestra (`display` por defecto `omitted`). El cliente ignora los bloques `thinking`.
 - **`max_tokens`:** 2.000 deja sitio al razonamiento corto de `low` y a una respuesta de unas 90 palabras.
 - **Tiempo de espera:** la ruta declara `maxDuration = 60`. El SDK usa un tiempo de espera de 30 s y un reintento.
 
@@ -250,7 +250,7 @@ client.beta.messages.stream({
 
 ### 8.3 Effort y latencia
 
-- **Por qué `low`:** el valor por defecto de Opus 5.5 es `medium`. En `low` el razonamiento es corto, que es lo adecuado para una conversación.
+- **Por qué `low`:** el valor por defecto de Sonnet 5.5 es `high`. `low` mantiene las respuestas rápidas, que es lo adecuado para una conversación.
 - **Si el 90 % de las respuestas supera 2 s hasta el primer texto en el eval**, se prueban en este orden, midiendo calidad y latencia:
   1. Añadir "Answer directly without deliberating." a las instrucciones.
   2. Comparar con Sonnet 5.5 en `low` y llevar los números a Daniel antes de cambiar de modelo.
@@ -287,7 +287,26 @@ Coste estimado de una conversación de 6 preguntas. Supuestos: 15K tokens de pre
 | Sonnet 5.5 (`low`) | ~0,07 USD | ~7 USD | ~21 USD |
 | Haiku 5.5 | ~0,004 USD | < 1 USD | ~1 USD |
 
-Si dos conversaciones empiezan con menos de 5 minutos de diferencia, la segunda lee la caché y cuesta la mitad. **Decisión:** Opus 5.5. Se revisa con números medidos solo si falla el criterio de latencia.
+Si dos conversaciones empiezan con menos de 5 minutos de diferencia, la segunda lee la caché y cuesta la mitad.
+
+Medido con el prefijo real de 19.581 tokens:
+
+| Modelo | Primera pregunta (escribe la caché) | Siguientes | Conversación de 6 preguntas | 100 conv./mes | 300 conv./mes |
+| --- | --- | --- | --- | --- | --- |
+| Opus 5.5 | 0,10 USD | ~0,008 USD | ~0,16 USD | ~16 USD | ~49 USD |
+| Sonnet 5.5 | 0,05 USD | ~0,0035 USD | ~0,07 USD | ~7 USD | ~21 USD |
+
+Tiempo hasta el primer texto, misma instrucción y 6 preguntas por modelo:
+
+| Modelo | Mediana | Peor caso |
+| --- | --- | --- |
+| Opus 5.5 con fallbacks | ~1,9 s | 8,0 s |
+| Opus 5.5 sin fallbacks | ~1,8 s | 4,7 s |
+| Sonnet 5.5 | ~1,2 s | 4,0 s |
+
+El primer eval con Opus 5.5 dio mediana 2,6 s y p90 5,9 s. A veces la respuesta llega entera al final con cualquiera de los dos modelos: es la entrega de la API, no el razonamiento.
+
+**Decisión:** la decisión inicial fue Opus 5.5. Tras el primer eval (mediana 2,6 s, p90 5,9 s) y esta comparación, Daniel eligió Sonnet 5.5 (2026-11-11). Sonnet 5.5 acepta exactamente la misma petición (`effort` `low`, la beta de fallbacks, `fallbacks: 'default'`, `cache_control` en la raíz y en `system`, sin `thinking`), comprobado en vivo.
 
 ### 8.7 Clasificador de temas
 
@@ -699,7 +718,7 @@ Estimación mensual en USD para 100–300 conversaciones de texto, 100–300 min
 
 | Fase | Variable | Fijo | Total estimado | Topes (blando / duro) |
 | --- | --- | --- | --- | --- |
-| 1 | Claude 14–42 | 0 | 14–42 | 45 / 60 |
+| 1 | Claude ~7–21 (Sonnet 5.5, medido) | 0 | 7–21 | 45 / 60 |
 | 2 | Claude + voz | ~22 (ElevenLabs Creator) | 36–66 | Se recalculan con el fijo incluido |
 | 3 | Claude + voz + video | ~34 (ElevenLabs + Anam) | 48–94 | 85 / 100 |
 
@@ -729,7 +748,7 @@ Regla aplicada: si se contradicen, manda el portafolio; lo que solo está en el 
 
 | Riesgo | Mitigación |
 | --- | --- |
-| Opus 5.5 tarda más de 2 s en empezar a responder | Effort `low`, caché, medición en el eval y en PostHog; plan B con números de Sonnet 5.5 (§8.3) |
+| Latencia hasta el primer texto | Ya se usa Sonnet 5.5 (mediana ~1,2 s). Quedan entregas ocasionales de la respuesta entera de golpe, del lado de la API. Effort `low`, caché y vigilar `latency` en PostHog |
 | Inventa datos | Instrucciones estrictas, prioridad de fuentes, juez que marca afirmaciones no respaldadas, eval antes de cada cambio de prompt |
 | Falso positivo de los filtros de seguridad | `fallbacks: 'default'` y mensaje amable con contacto |
 | Abuso de coste o uso como asistente general | BotID, límites, firma de la conversación, tope duro, límite del workspace de Anthropic y `AVATAR_ENABLED` |
@@ -742,7 +761,7 @@ Regla aplicada: si se contradicen, manda el portafolio; lo que solo está en el 
 ## 21. Verificaciones al empezar el plan
 
 1. Que Opus 5.5 acepte turnos anteriores del asistente sin sus bloques de razonamiento, y que la caché se lea en la segunda pregunta.
-   - Resultado (2026-11-11): sí. Con `streamAnswer` y el prompt real, una segunda pregunta con el turno anterior solo como texto respondió `end_turn` y leyó 19.609 tokens de caché. Coste medido: 0,103 USD la primera pregunta (escribe la caché) y 0,012 USD la segunda. Tiempo hasta el primer texto: 2,3 s y 4,0 s, por encima del objetivo de 2 s; el eval lo mide con 15 preguntas.
+   - Resultado (2026-11-11): sí. Con `streamAnswer` y el prompt real, una segunda pregunta con el turno anterior solo como texto respondió `end_turn` y leyó 19.609 tokens de caché. Coste medido: 0,103 USD la primera pregunta (escribe la caché) y 0,012 USD la segunda. Tiempo hasta el primer texto: 2,3 s y 4,0 s, por encima del objetivo de 2 s; el eval lo mide con 15 preguntas. Se midió con Opus 5.5; Sonnet 5.5 se verificó en vivo con la misma petición (§8.6).
 2. Que BotID funcione iniciándolo solo en `/ask` y que no deje cookies ni almacenamiento en el navegador.
    - Resultado parcial (2026-11-11, en local): en `/` y `/about` no se carga nada de BotID; en `/ask` el chat no deja cookies ni `localStorage`/`sessionStorage` (la única cookie, `NEXT_LOCALE`, la pone next-intl al cambiar de idioma y ya existía). En desarrollo `checkBotId()` no consulta a Vercel, así que falta probar en un deploy de preview que una petición real pasa la verificación y que la cookie y el almacenamiento siguen vacíos.
 3. El texto exacto de la retención de datos de la API de Anthropic para el aviso de privacidad.
