@@ -23,11 +23,17 @@ function parseEvent(block: string): ChatEvent | null {
   }
   // Unknown names are ignored so the server can add events later.
   if (!EVENT_TYPES.includes(name)) return null;
+  let parsed: unknown;
   try {
-    return {type: name, ...JSON.parse(data)} as ChatEvent;
+    parsed = JSON.parse(data);
   } catch {
     throw new Error('Malformed event');
   }
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error('Malformed event');
+  }
+  // type goes last so a payload cannot override the event name.
+  return {...parsed, type: name} as ChatEvent;
 }
 
 export async function* readEvents(
@@ -37,6 +43,7 @@ export async function* readEvents(
   // stream: true keeps a multibyte character split across chunks intact.
   const decoder = new TextDecoder();
   let buffer = '';
+  let finished = false;
   try {
     while (true) {
       const {done, value} = await reader.read();
@@ -47,9 +54,17 @@ export async function* readEvents(
         buffer = buffer.slice(end + 2);
         if (event) yield event;
       }
-      if (done) return;
+      // A final event without its closing blank line is dropped, as in the
+      // SSE standard: the server always terminates events with \n\n.
+      if (done) {
+        finished = true;
+        return;
+      }
     }
   } finally {
+    // On an early exit or a parse error, cancel so the server stops
+    // streaming (and spending tokens) for a reader that is gone.
+    if (!finished) await reader.cancel().catch(() => {});
     reader.releaseLock();
   }
 }

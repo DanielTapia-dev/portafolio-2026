@@ -72,4 +72,62 @@ describe('SSE format', () => {
     const body = streamOf([utf8('event: delta\ndata: {no json\n\n')]);
     await expect(collect(readEvents(body))).rejects.toThrow('Malformed event');
   });
+
+  it('drops a trailing event without its closing blank line', async () => {
+    const body = streamOf([utf8('event: delta\ndata: {"text":"a"}\n')]);
+    expect(await collect(readEvents(body))).toEqual([]);
+  });
+
+  it('rejects payloads that are not plain objects', async () => {
+    for (const data of ['null', '"text"', '5', '[1]']) {
+      const body = streamOf([utf8(`event: delta\ndata: ${data}\n\n`)]);
+      await expect(collect(readEvents(body))).rejects.toThrow('Malformed event');
+    }
+  });
+
+  it('keeps the event name when the payload carries a type', async () => {
+    const body = streamOf([
+      utf8('event: delta\ndata: {"type":"error","text":"a"}\n\n'),
+    ]);
+    expect(await collect(readEvents(body))).toEqual([
+      {type: 'delta', text: 'a'},
+    ]);
+  });
+
+  describe('cancellation', () => {
+    function trackedStream(text: string) {
+      let cancelled = false;
+      const stream = new ReadableStream<Uint8Array>({
+        start(controller) {
+          controller.enqueue(utf8(text));
+        },
+        cancel() {
+          cancelled = true;
+        },
+      });
+      return {stream, wasCancelled: () => cancelled};
+    }
+
+    it('cancels the stream when the consumer stops early', async () => {
+      const {stream, wasCancelled} = trackedStream(
+        encodeEvent({type: 'delta', text: 'a'}) +
+          encodeEvent({type: 'delta', text: 'b'})
+      );
+      for await (const event of readEvents(stream)) {
+        expect(event).toEqual({type: 'delta', text: 'a'});
+        break;
+      }
+      expect(wasCancelled()).toBe(true);
+    });
+
+    it('cancels the stream on malformed data', async () => {
+      const {stream, wasCancelled} = trackedStream(
+        'event: delta\ndata: {no json\n\n'
+      );
+      await expect(collect(readEvents(stream))).rejects.toThrow(
+        'Malformed event'
+      );
+      expect(wasCancelled()).toBe(true);
+    });
+  });
 });
