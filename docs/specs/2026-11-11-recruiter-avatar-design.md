@@ -742,6 +742,7 @@ Regla aplicada: si se contradicen, manda el portafolio; lo que solo está en el 
 ## 21. Verificaciones al empezar el plan
 
 1. Que Opus 5.5 acepte turnos anteriores del asistente sin sus bloques de razonamiento, y que la caché se lea en la segunda pregunta.
+   - Resultado (2026-11-11): sí. Con `streamAnswer` y el prompt real, una segunda pregunta con el turno anterior solo como texto respondió `end_turn` y leyó 19.609 tokens de caché. Coste medido: 0,103 USD la primera pregunta (escribe la caché) y 0,012 USD la segunda. Tiempo hasta el primer texto: 2,3 s y 4,0 s, por encima del objetivo de 2 s; el eval lo mide con 15 preguntas.
 2. Que BotID funcione iniciándolo solo en `/ask` y que no deje cookies ni almacenamiento en el navegador.
 3. El texto exacto de la retención de datos de la API de Anthropic para el aviso de privacidad.
    - Resultado (2026-11-11): la política comercial (privacy.claude.com, artículo 7996866) dice que Anthropic borra las entradas y salidas de la API en un máximo de 30 días, salvo el contenido marcado por incumplir la política de uso (hasta 2 años) o por obligación legal. La documentación de la API dice que los datos retenidos nunca se usan para entrenar sin permiso expreso, y que el contenido no se retiene por defecto salvo en los Covered Models (Fable y Mythos, no Opus 5.5 ni Haiku 5.5). El aviso usa la política comercial, que es la que esa documentación cita como retención estándar:
@@ -754,7 +755,9 @@ Regla aplicada: si se contradicen, manda el portafolio; lo que solo está en el 
 6. Que `content/profile/cv.md` llegue a las funciones de Vercel con `outputFileTracingIncludes`.
    - Resultado (2026-11-11): sí. Tras `npm run build`, `grep -c "content/profile/cv.md" .next/server/app/api/avatar/chat/route.js.nft.json` devuelve 1, así que el archivo está en la traza de la función `/api/avatar/chat`.
 7. El tamaño real del prefijo con la API de conteo de tokens.
+   - Resultado (2026-11-11): 19.581 tokens (49.641 caracteres), frente a los ~15K estimados en §6.5. Una conversación de 6 preguntas cuesta ~0,16 USD: ~16 USD al mes con 100 conversaciones y ~49 USD con 300, por encima del tope blando de 45 USD en el escenario alto.
 8. Que Haiku 5.5 acepte salida estructurada con effort `low` para el clasificador de temas.
+   - Resultado (2026-11-11): sí, sin cabecera beta. `stop_reason` `end_turn`, 18 tokens de salida y 0 de razonamiento con `max_tokens` 200. `classifyTopic` clasificó bien en español y en inglés en 1,3–1,8 s, cerca del límite de 2 s.
 
 ## 22. Fuentes (consultadas el 2026-11-11)
 
