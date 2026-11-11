@@ -5,17 +5,19 @@ import {
   CHAT_ENDPOINT,
   STATUS_ENDPOINT,
   type AvatarLocale,
-  type ErrorBody,
-  type StatusBody
+  type ErrorBody
 } from '@/lib/avatar/protocol';
 import {readEvents} from '@/lib/avatar/sse';
 import {registerAnalyticsProperty, trackEvent} from '@/lib/analytics/events';
 import {latencyBucket} from './chat-utils';
 import {
   buildRequest,
+  canSend,
   initialSession,
+  isStatusBody,
   sessionReducer,
-  type NoticeCode
+  type NoticeCode,
+  type SessionAction
 } from './session-state';
 
 const LIMIT_CODES: readonly NoticeCode[] = [
@@ -34,14 +36,18 @@ function isErrorBody(value: unknown): value is ErrorBody {
 }
 
 export function useAvatarSession(locale: AvatarLocale) {
-  const [state, dispatch] = useReducer(sessionReducer, undefined, () =>
+  const [state, rawDispatch] = useReducer(sessionReducer, undefined, () =>
     initialSession(crypto.randomUUID())
   );
   // Mirror of the latest state for send(), which must not depend on a render.
   const stateRef = useRef(state);
-  useEffect(() => {
-    stateRef.current = state;
-  }, [state]);
+  // The reducer is pure, so the mirror applies each action itself before
+  // dispatching. It then never lags behind: a send right after done already
+  // sees the new history and signature.
+  const dispatch = useCallback((action: SessionAction) => {
+    stateRef.current = sessionReducer(stateRef.current, action);
+    rawDispatch(action);
+  }, []);
   // Set synchronously so two quick presses cannot start two requests before
   // the first dispatch has rendered.
   const busyRef = useRef(false);
@@ -51,13 +57,13 @@ export function useAvatarSession(locale: AvatarLocale) {
     const controller = new AbortController();
     fetch(STATUS_ENDPOINT, {signal: controller.signal})
       .then((response) => (response.ok ? response.json() : null))
-      .then((body: StatusBody | null) => {
-        if (body) dispatch({type: 'mode', mode: body.mode});
+      .then((body: unknown) => {
+        if (isStatusBody(body)) dispatch({type: 'mode', mode: body.mode});
       })
       // Keep 'full': the chat endpoint has the final say on the mode.
       .catch(() => {});
     return () => controller.abort();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => () => abortRef.current?.abort(), []);
 
@@ -65,12 +71,14 @@ export function useAvatarSession(locale: AvatarLocale) {
     (question: string, placement: 'suggested' | 'typed') => {
       const current = stateRef.current;
       const text = question.trim();
-      if (!text || busyRef.current || current.mode === 'paused') return;
+      if (!text || !canSend(current, busyRef.current)) return;
       busyRef.current = true;
       const controller = new AbortController();
       abortRef.current = controller;
 
-      if (current.history.length === 0) {
+      // turns is empty only before the first question of a session; a failed
+      // first question still counts, so it is not reported twice.
+      if (current.turns.length === 0) {
         trackEvent('avatar_conversation_started', {channel: 'text', placement});
         registerAnalyticsProperty('avatar_used');
       }
@@ -139,14 +147,14 @@ export function useAvatarSession(locale: AvatarLocale) {
       };
       void run();
     },
-    [locale]
+    [locale, dispatch]
   );
 
   const reset = useCallback(() => {
     abortRef.current?.abort();
     busyRef.current = false;
     dispatch({type: 'reset', sessionId: crypto.randomUUID()});
-  }, []);
+  }, [dispatch]);
 
   return {state, send, reset};
 }

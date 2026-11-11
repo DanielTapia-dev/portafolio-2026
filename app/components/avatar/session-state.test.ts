@@ -2,7 +2,9 @@ import {describe, expect, it} from 'vitest';
 import type {ChatEvent} from '@/lib/avatar/protocol';
 import {
   buildRequest,
+  canSend,
   initialSession,
+  isStatusBody,
   sessionReducer,
   type NoticeCode,
   type SessionAction,
@@ -184,4 +186,29 @@ describe('buildRequest', () => {
       messages: [...afterOneDone.history, {role: 'user', text: 'Q2'}],
       signature: 'sig-1'
     }));
+});
+
+describe('canSend', () => {
+  it('is true when idle', () => expect(canSend(idle, false)).toBe(true));
+  it('is false while a request is in flight', () =>
+    expect(canSend(idle, true)).toBe(false));
+  it('is false while streaming', () =>
+    expect(canSend(reduce(idle, send('Q')), false)).toBe(false));
+  it('is false once blocked', () =>
+    expect(
+      canSend(reduce(idle, send('Q'), fail('session_limit')), false)
+    ).toBe(false));
+  it('is false while paused', () =>
+    expect(canSend(reduce(idle, {type: 'mode', mode: 'paused'}), false)).toBe(
+      false
+    ));
+});
+
+describe('isStatusBody', () => {
+  it.each([{}, {mode: 'x'}, null, 'full', {mode: 1}])('rejects %j', (v) =>
+    expect(isStatusBody(v)).toBe(false)
+  );
+  it.each(['full', 'text-only', 'paused'])('accepts %s', (mode) =>
+    expect(isStatusBody({mode})).toBe(true)
+  );
 });

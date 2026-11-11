@@ -5,6 +5,7 @@ import type {
   ChatMessage,
   ChatRequest,
   PreStreamErrorCode,
+  StatusBody,
   StreamErrorCode
 } from '@/lib/avatar/protocol';
 
@@ -143,4 +144,16 @@ export function buildRequest(
     messages: [...state.history, {role: 'user', text: question.trim()}],
     signature: state.signature
   };
+}
+
+// A request may start only from idle: not while answering, not after the
+// session limit or a pause, and not while another request is in flight.
+export function canSend(state: SessionState, busy: boolean): boolean {
+  return !busy && state.status === 'idle' && state.mode !== 'paused';
+}
+
+export function isStatusBody(value: unknown): value is StatusBody {
+  if (typeof value !== 'object' || value === null) return false;
+  const mode = (value as {mode?: unknown}).mode;
+  return mode === 'full' || mode === 'text-only' || mode === 'paused';
 }
