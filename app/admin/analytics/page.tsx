@@ -7,6 +7,7 @@ import {CACHE_SECONDS, getDashboardData} from '@/lib/analytics/dashboard';
 import {formatCount} from '@/lib/analytics/format';
 import {missingAnalyticsEnv} from '@/lib/analytics/posthog';
 import {formatPeriod, resolveRange, todayIn, type DashboardRange} from '@/lib/analytics/range';
+import AvatarCard from './_components/avatar-card';
 import PeriodFilter from './_components/period-filter';
 import DashboardSkeleton from './_components/skeleton';
 import TrafficChart from './_components/traffic-chart';
@@ -34,6 +35,10 @@ export default async function AnalyticsPage({searchParams}: PageProps) {
 
       <Suspense key={rangeKey} fallback={<DashboardSkeleton />}>
         <DashboardContent range={range} />
+      </Suspense>
+
+      <Suspense fallback={<p className="text-sm text-muted-foreground">Loading avatar usage…</p>}>
+        <AvatarCard />
       </Suspense>
 
       <Glossary />
